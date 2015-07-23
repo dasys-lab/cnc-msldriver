@@ -87,6 +87,7 @@ int main(int argc, char** argv) {
 			case 't':
 				gonz_set_mode(GONZ_MODE_TEST);
 				break;
+			// Semesterarbeit nb  - Eingabe für starten der Kalibrierungsfahrt schreiben, mode setzen
 			case -1: /* error */
 			case '?': /* help */
 			case 'h': /* help */
@@ -148,6 +149,7 @@ int main(int argc, char** argv) {
 			case GONZ_MODE_TEST:
 		                gonz_test_loop();
 				break;
+			// Semesterarbeit nb  - case of Kalibrierungsfahrt
 			default:
 				printf("Unknown Mode, doing nothing\n");
 

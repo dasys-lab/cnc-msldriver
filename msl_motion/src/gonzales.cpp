@@ -125,6 +125,7 @@ void gonz_control() { //controller comes in here
         gonz_state.currentMotorGoal[i] *= finfactor;
     }
 	if (current_settings.slipControlEnabled > 0  && fabs(gonz_state.currentSlip) > 1.0) {
+		// Semesterarbeit - evtl Anpassung der Gewichtung des PI-Regler
 		double setSlip = current_settings.slipControlP*gonz_state.currentSlip + current_settings.slipControlI*gonz_state.slipI;
 		gonz_state.currentMotorGoal[0] -= setSlip;
 		gonz_state.currentMotorGoal[1] += setSlip;
@@ -171,6 +172,7 @@ void gonz_calc_odometry() { //TODO: Optimise!
 
     //printf("ODO: x: %f\ty: %f\tr: %f\trpm:%d\n",gonz_state.actualMotion.x,gonz_state.actualMotion.y,gonz_state.actualMotion.rotation,ep->ActualRPM(0));
 
+    // Semesterarbeit nb - Berechnung des slips mit Hilfe der Werte aus der Kalribrierungsfahrt
 	gonz_state.currentSlip = (ep->ActualRPM(0)-ep->ActualRPM(1)+ep->ActualRPM(2)-ep->ActualRPM(3));
 	gonz_state.currentSlip /= 4.0;
 	gonz_state.slipI *= fabs(1.0-current_settings.slipControlDecay);
@@ -428,6 +430,8 @@ void gonz_test_loop() {
 	ep->Trigger(-1);
 	//printf("%d\t%d\t%d\t%d\n",mcdc[0].status.actualRPM,mcdc[1].status.actualRPM,mcdc[2].status.actualRPM,mcdc[3].status.actualRPM);
 }
+
+// Semesterarbeit nb - evtl Methode für die Kalibrierungsfahrt
 
 
 void gonz_notify_odometry() {
