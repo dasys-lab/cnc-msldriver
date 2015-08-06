@@ -3,6 +3,9 @@
 
 #include "ros/ros.h"
 #include "msl_actuator_msgs/MotionControl.h"
+#include "msl_actuator_msgs/RawOdometryInfo.h"
+#include "msl_sensor_msgs/VisionControl.h"
+#include "msl_sensor_msgs/WorldModelData.h"
 
 class RosHelperCalib {
 	public:

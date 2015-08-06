@@ -4,10 +4,16 @@ project(msl_motion_calib)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+ find_package(catkin REQUIRED COMPONENTS 
+ roscpp 
+ msl_sensor_msgs
+ msl_actuator_msgs 
+ msl_msgs
+# system_config
+)
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+ find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -63,7 +69,9 @@ find_package(catkin REQUIRED)
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
+#   msl_actuator_msgs
+#   msl_msgs
+#   msl_sensor_msgs
 # )
 
 ###################################
@@ -75,10 +83,10 @@ find_package(catkin REQUIRED)
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
+ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES msl_motion_calib
-#  CATKIN_DEPENDS other_catkin_pkg
+  CATKIN_DEPENDS msl_actuator_msgs msl_msgs  msl_sensor_msgs
 #  DEPENDS system_lib
 )
 
@@ -89,23 +97,32 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
+message("<<<<<<<<<< catkin_INCLUDE_DIRS: ${catkin_INCLUDE_DIRS}")
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 ## Declare a cpp library
-# add_library(msl_motion_calib
-#   src/${PROJECT_NAME}/msl_motion_calib.cpp
+# add_library(msl_motion_calib 
+# src/RosHelperCalib.cpp
 # )
 
 ## Declare a cpp executable
-# add_executable(msl_motion_calib_node src/msl_motion_calib_node.cpp)
+ add_executable(msl_motion_calib 
+ src/CalibDrive.cpp 
+ src/RosHelperCalib.cpp
+ )
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(msl_motion_calib_node msl_motion_calib_generate_messages_cpp)
+ add_dependencies(msl_motion_calib
+  msl_actuator_msgs_generate_messages_cpp 
+  msl_msgs_generate_messages_cpp
+  msl_sensor_msgs_generate_messages_cpp
+  )
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(msl_motion_calib_node
-#   ${catkin_LIBRARIES}
-# )
+ target_link_libraries(msl_motion_calib 
+   ${catkin_LIBRARIES}
+  )
 
 #############
 ## Install ##
