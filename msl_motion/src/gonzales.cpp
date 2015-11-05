@@ -431,7 +431,6 @@ void gonz_test_loop() {
 	//printf("%d\t%d\t%d\t%d\n",mcdc[0].status.actualRPM,mcdc[1].status.actualRPM,mcdc[2].status.actualRPM,mcdc[3].status.actualRPM);
 }
 
-// Semesterarbeit nb - evtl Methode für die Kalibrierungsfahrt
 
 
 void gonz_notify_odometry() {
