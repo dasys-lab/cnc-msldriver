@@ -60,7 +60,7 @@ int gonz_get_mode() {
 void gonz_update_derived_settings() {
     sinphi = sin(current_settings.definingAngle);
     cosphi = cos(current_settings.definingAngle);
-    wheelcirc = TWO_PI * current_settings.wheelRadius;
+    wheelcirc = TWO_PI * current_settings.wheelRadius * calibCoefficient;
     robotcirc = TWO_PI * current_settings.robotRadius;
     finfactor = (double)current_settings.gear_ratio_denominator/(wheelcirc*(double)current_settings.gear_ratio_nominator)*60.0;
 }
@@ -172,7 +172,7 @@ void gonz_calc_odometry() { //TODO: Optimise!
 
     //printf("ODO: x: %f\ty: %f\tr: %f\trpm:%d\n",gonz_state.actualMotion.x,gonz_state.actualMotion.y,gonz_state.actualMotion.rotation,ep->ActualRPM(0));
 
-    // Semesterarbeit nb - Berechnung des slips mit Hilfe der Werte aus der Kalribrierungsfahrt
+
 	gonz_state.currentSlip = (ep->ActualRPM(0)-ep->ActualRPM(1)+ep->ActualRPM(2)-ep->ActualRPM(3));
 	gonz_state.currentSlip /= 4.0;
 	gonz_state.slipI *= fabs(1.0-current_settings.slipControlDecay);

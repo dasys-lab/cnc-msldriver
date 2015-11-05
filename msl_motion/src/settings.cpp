@@ -6,6 +6,7 @@
 
 controller_settings default_settings;
 controller_settings current_settings;
+double calibCoefficient;
 
 
 
@@ -106,5 +107,18 @@ void settings_init() {
 
     current_settings = default_settings;
 
+
+    //reading calibCoefficient out of file
+    string value;
+    string filename = string(sc->getConfigPath())+string(sc->getHostname())+string("/CalibData.txt");
+    ifstream calibData (filename);
+    if (calibData.is_open())
+      {
+        while ( getline (calibData,value) )
+        {
+          calibCoefficient = std::stod(value);
+        }
+        calibData.close();
+    }
 
 }

@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(msl_motion_calib)
 
+## Use c++ 11x std
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -9,7 +12,7 @@ project(msl_motion_calib)
  msl_sensor_msgs
  msl_actuator_msgs 
  msl_msgs
-# system_config
+ system_config
 )
 
 ## System dependencies are found with CMake's conventions

@@ -23,6 +23,7 @@
 
 extern Controlling::EposCan *ep;
 extern controller_settings current_settings;
+extern double calibCoefficient;
 
 typedef struct  {
 	double angle; //in rad/1024
