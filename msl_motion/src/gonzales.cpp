@@ -210,7 +210,7 @@ void gonz_calc_odometry() { //TODO: Optimise!
 	double xtemp1 = cos_h*xtemp - sin_h*ytemp;
 	double ytemp1 = sin_h*xtemp + cos_h*ytemp;
 
-    gonz_state.currentPosition.angle += angle;
+    gonz_state.currentPosition.angle += rot*1024;
 
     if (gonz_state.currentPosition.angle > PI) {
         gonz_state.currentPosition.angle -= TWO_PI;
