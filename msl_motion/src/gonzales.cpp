@@ -189,7 +189,7 @@ void gonz_calc_odometry() { //TODO: Optimise!
     unsigned long long timediff = TIMEDIFFMS(odotime_cur,odotime_last);//(odotime_cur.tv_sec*1000+odotime_cur.tv_usec/1000)-(odotime_last.tv_sec*1000+odotime_last.tv_usec/1000);
     //printf("time: %llu\n",timediff);
     //Position update:
-    //double angle = atan2(gonz_state.actualMotion.y,gonz_state.actualMotion.x);
+    double angle = atan2(gonz_state.actualMotion.y,gonz_state.actualMotion.x);
     double trans = sqrt(gonz_state.actualMotion.y*gonz_state.actualMotion.y+gonz_state.actualMotion.x*gonz_state.actualMotion.x)*(double)timediff/1000.0;
     double rot = gonz_state.actualMotion.rotation/1024.0*(double)timediff/1000.0;
     double xtemp,ytemp;
@@ -204,7 +204,7 @@ void gonz_calc_odometry() { //TODO: Optimise!
         ytemp = 0;
     }
 
-    double h = gonz_state.currentPosition.angle;
+    double h = gonz_state.currentPosition.angle + angle;
     double cos_h = cos(h);
 	double sin_h = sin(h);
 	double xtemp1 = cos_h*xtemp - sin_h*ytemp;
