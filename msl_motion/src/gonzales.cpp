@@ -204,7 +204,7 @@ void gonz_calc_odometry() { //TODO: Optimise!
         ytemp = 0;
     }
 
-    double h = gonz_state.currentPosition.angle + angle;
+    double h = angle;
     double cos_h = cos(h);
 	double sin_h = sin(h);
 	double xtemp1 = cos_h*xtemp - sin_h*ytemp;
