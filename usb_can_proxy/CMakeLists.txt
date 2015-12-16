@@ -9,6 +9,7 @@ find_package(catkin REQUIRED
   system_config 
   roscpp 
   message_generation 
+  msl_actuator_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -45,10 +46,10 @@ find_package(catkin REQUIRED
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  CanMsg.msg
-)
+#add_message_files(
+#  FILES
+#  CanMsg.msg
+#)
 
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
