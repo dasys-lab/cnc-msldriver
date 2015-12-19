@@ -92,6 +92,13 @@ msl_localization::msl_localization(int nParticles_) {
 	startParticle.heading = localization->get<double>("Localization","InitialPosition", SystemConfig::getHostname().c_str(),"Heading",NULL);
 	startParticle.weight = 1.0;
 
+	yellowGoalDirection = (*sc)["Globals"]->get<double>("Globals", "FootballField", "YellowGoalDirection", NULL);
+	int XcompassMinValue = (*sc)["Compass"]->get<double>("Compass", "xMinValue", NULL);
+	int XcompassMaxValue = (*sc)["Compass"]->get<double>("Compass", "xMaxValue", NULL);
+	xShift = -XcompassMinValue - (XcompassMaxValue-XcompassMinValue)/2;
+	int YcompassMinValue = (*sc)["Compass"]->get<double>("Compass", "yMinValue", NULL);
+	int YcompassMaxValue = (*sc)["Compass"]->get<double>("Compass", "yMaxValue", NULL);
+	yShift = -YcompassMinValue - (YcompassMaxValue - YcompassMinValue)/2;
 	resetStartParticle();
 }
 
@@ -111,7 +118,7 @@ void inline msl_localization::normalizeAngle(double &ang){
 }
 
 
-void msl_localization::iterate(msl_sensor_msgs::LinePointListPtr & linePoints, unsigned char* distanceMap){
+void msl_localization::iterate(msl_sensor_msgs::LinePointListPtr & linePoints, unsigned char* distanceMap, msl_actuator_msgs::IMUDataPtr imu){
 	printf("----------------------------------------------------\n");
 
 
@@ -240,7 +247,10 @@ void msl_localization::iterate(msl_sensor_msgs::LinePointListPtr & linePoints, u
 		double inp = 0.0;
 
 		//Do not Consider Particles with an angle difference to compass < pi/3
-		/*if(yellowGoalDirection >= 0 && compassValue >= 0){
+		if(yellowGoalDirection >= 0 && imu){
+			double xmag = imu->magnet.x+xShift;
+			double ymag = imu->magnet.y+yShift;
+			double compassHeading = atan2(ymag, xmag);
 			double diffHeading = compassHeading - particles[i].heading;
 			
 			normalizeAngle(diffHeading);
@@ -253,7 +263,7 @@ void msl_localization::iterate(msl_sensor_msgs::LinePointListPtr & linePoints, u
 					printf("Loc1 : Drop MaxParticle %d %f %f, %f %f %f\n", compassValue, degrees, particles[i].heading, particles[i].posx, particles[i].posy, particles[i].weight);
 			}
 
-		}*/
+		}
 
 		std::vector<Point2dInfo>::const_iterator first, last = linePoints->linePoints.end();
 		std::vector<unsigned char>::const_iterator firstDist, lastDist = linePointDistances.end();
@@ -588,6 +598,7 @@ void msl_localization::iterate(msl_sensor_msgs::LinePointListPtr & linePoints, u
 	coi.motion = (robotVelocity);
 	coi.certainty = (calculateWeightForEstimatedPosition(rawUpdatedPositionNew, linePoints, distanceMap));
 	coi.locType.type = (LocalizationType::ParticleFilter);
+	coi.imageTime = linePoints->imageTime;
 
 	printf("MaxParticle Confidence %f\n", coi.certainty);		
 	oldOdometryInfo = odomotryInfo;
@@ -909,9 +920,6 @@ double msl_localization::calculateWeightForEstimatedPosition(Position pos, msl_s
 void msl_localization::writeCoi()
 {
 	if (coi.certainty != -1 ) {
-		unsigned long long timestamp = ros::Time::now().sec*1000000000ull+ros::Time::now().nsec;
-		coi.timestamp = (timestamp);
-
 		RosMsgReceiver::getInstance()->coipub.publish(coi);
 	}
 	else printf("NewLoc: OOOPS no coi in particlefilter");

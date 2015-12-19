@@ -35,10 +35,12 @@ using namespace msl_actuator_msgs;
 WorldModelData* SpicaHelper::wm;
 VisionDebug* SpicaHelper::vdd;
 VisionImage* SpicaHelper::vi;
+BallHypothesisList* SpicaHelper::ballList;
 //LinePointMessagePtr SpicaHelper::lpmp;
 //Point2dInfoPtrListPtr SpicaHelper::linePointList;
 ros::NodeHandle* SpicaHelper::visionNode;
 ros::Publisher SpicaHelper::womopub;
+ros::Publisher SpicaHelper::ballPub;
 ros::Publisher SpicaHelper::statepub;
 ros::Publisher SpicaHelper::debugPub;
 ros::Publisher SpicaHelper::Imagepub;
@@ -67,6 +69,7 @@ void SpicaHelper::initialize() {
     RelocSub = visionNode->subscribe<msl_actuator_msgs::VisionRelocTrigger>("CNActuator/VisionRelocTrigger",
 				1, &SpicaHelper::handleVisionRelocTrigger);
 
+    ballPub = visionNode->advertise<BallHypothesisList>("/CNVision/BallHypothesisList", 1);
 	womopub = visionNode->advertise<WorldModelData>("/WorldModel/WorldModelData", 1);
     statepub = visionNode->advertise<VisionGameState>("/CNVision/VisionGameState", 1);
 	debugPub = visionNode->advertise<VisionDebug>("/CNVision/VisionDebug", 1);
@@ -76,6 +79,7 @@ void SpicaHelper::initialize() {
 	wm = new WorldModelData();
 	vdd = new VisionDebug();
 	vi = new VisionImage();
+	ballList = new BallHypothesisList();
 	//linePointList = lpmp->getLinepoints()->getLps();
 	//comm->start();
 	key = EOF;
@@ -124,7 +128,13 @@ void SpicaHelper::send() {
 	wm->distanceScan.sectors.clear();
 }
 
-void SpicaHelper::sendLinePoints(std::vector<LinePoint> linePoints)
+void SpicaHelper::sendBallHypothesis() {
+	std::cout << "Sending BallHypothesis " << std::endl;
+	ballPub.publish(*ballList);
+}
+
+
+void SpicaHelper::sendLinePoints(std::vector<LinePoint> linePoints, unsigned long long timestamp)
 {
 	msl_sensor_msgs::LinePointList lpl;
 	for(LinePoint l :linePoints)
@@ -134,6 +144,7 @@ void SpicaHelper::sendLinePoints(std::vector<LinePoint> linePoints)
 		lp.y = l.y;
 		lpl.linePoints.push_back(lp);
 	}
+	lpl.imageTime = timestamp;
 	linePointsPub.publish(lpl);
 }
 

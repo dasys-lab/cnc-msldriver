@@ -12,7 +12,7 @@
 #include "msl_actuator_msgs/VisionRelocTrigger.h"
 #include "msl_actuator_msgs/MotionLight.h"
 #include "msl_actuator_msgs/MotionBurst.h"
-#include "usb_can_proxy/CanMsg.h"
+#include "msl_actuator_msgs/CanMsg.h"
 #include "std_msgs/Empty.h"
 #include "Can.h"
 #include "SystemConfig.h"
@@ -86,7 +86,7 @@ class ActuationControl {
 
 			ros::NodeHandle node;
 
-			actuatorCanSub = node.subscribe<usb_can_proxy::CanMsg, ActuationControl >("/usb_can_proxy/BallHandler", 30,&ActuationControl::handleCanActuator,this);
+			actuatorCanSub = node.subscribe<CanMsg, ActuationControl >("/usb_can_proxy/BallHandler", 30,&ActuationControl::handleCanActuator,this);
 			
 			bhcSub = node.subscribe< BallHandleCmd, ActuationControl >("BallHandleControl", 30,&ActuationControl::handleBallHandleControlMessage,this);
 			bccSub = node.subscribe<BallCatchCmd,ActuationControl >("BallCatchControl", 30,&ActuationControl::handleBallCatchControlMessage,this);
@@ -99,9 +99,9 @@ class ActuationControl {
 			brtPub = node.advertise<std_msgs::Empty>("CNActuator/BundleRestartTrigger", 10);
 			bsPub = node.advertise<VisionRelocTrigger>("CNActuator/BundleStatus", 10);
 			mbPub = node.advertise<MotionBurst>("CNActuator/MotionBurst", 10);
-			canPub = node.advertise<usb_can_proxy::CanMsg>("usb_can_proxy/CanSub", 30);
+			canPub = node.advertise<CanMsg>("usb_can_proxy/CanSub", 30);
 			//change 
-			//canPub = node.advertise<usb_can_proxy::CanMsg>("CNUsbCanProxy/CanSub", 30);
+			//canPub = node.advertise<CanMsg>("CNUsbCanProxy/CanSub", 30);
 
 			spinner = new ros::AsyncSpinner(1);
 			spinner->start();
@@ -116,7 +116,7 @@ class ActuationControl {
 		ros::Subscriber motionlightSub;
 		ros::Subscriber actuatorCanSub;
 				
-		void handleCanActuator(const usb_can_proxy::CanMsg message)
+		void handleCanActuator(const CanMsg message)
 		{
 			int command = message.data[0];
 			//printf("actuator: get val from proxy %d\n",command);
@@ -174,7 +174,7 @@ class ActuationControl {
 				rm = - settings.maxBallHandlerPWM;
 			}
 
-			usb_can_proxy::CanMsg cm;
+			CanMsg cm;
 			cm.id = BallHandler;
 			cm.data.push_back(CMD_DRIBBLE);
 			cm.data.push_back(lm);
@@ -188,7 +188,7 @@ class ActuationControl {
 		void handleBallCatchControlMessage(const BallCatchCmd::ConstPtr& message){
 		//	std::cout << "ActControl " << message->getHostId()<<"\n";
 		//	std::cout << "BC RCVD" << std::endl;
-			usb_can_proxy::CanMsg cm;
+			CanMsg cm;
 			cm.id = BallHandler;
 			cm.data.push_back(CMD_STOP);
 			if (message->down) {
@@ -200,7 +200,7 @@ class ActuationControl {
 		}
 		void handleMotionLightControlMessage(const MotionLight::ConstPtr& message){
 			printf("motion light is : %d\n", message->enable);
-			usb_can_proxy::CanMsg cm;
+			CanMsg cm;
 			cm.id = BallHandler;
 			cm.data.push_back(CMD_LIGHT);
 			//printf("is : %d\n",message->enable);	
@@ -223,7 +223,7 @@ class ActuationControl {
 		void handleShovelSelectControlMessage(const ShovelSelectCmd::ConstPtr& message){
 		//	std::cout << "ActControl " << message->getHostId()<<"\n";
 		//	std::cout << "SH RCVD" << std::endl;
-			usb_can_proxy::CanMsg cm;
+			CanMsg cm;
 			cm.id = BallHandler;
 			cm.data.push_back(CMD_SERVO);
 			if (message->passing) {
@@ -267,7 +267,7 @@ int main(int argc, char** argv) {
 		pingdelta = TIMEDIFFMS(cur_time,last_ping_time);
 		shoveldelta = TIMEDIFFMS(cur_time,last_shovel_time);
 		if (pingdelta > settings.pingInterval) {
-			usb_can_proxy::CanMsg msg;
+			CanMsg msg;
 			msg.id = BallHandler;
 // 			msg.data.push_back(0);
 // 			msg.data.push_back(CanPriNorm);
@@ -283,7 +283,7 @@ int main(int argc, char** argv) {
 		if (TIMEDIFFMS(cur_time,last_bhc_time) > 1000) {
 //std::cout << "Didn't get a msg for 1 sec! Acutual diff is: '" << TIMEDIFFMS(cur_time,last_bhc_time) << "'" << std::endl;
 			
-			usb_can_proxy::CanMsg msg;
+			CanMsg msg;
 			msg.id = BallHandler;
 // 			msg.data.push_back(0);
 // 			msg.data.push_back(CanPriNorm);
@@ -300,7 +300,7 @@ int main(int argc, char** argv) {
 		}
 		if (shoveldelta > settings.shovelInterval) {
 			
-			usb_can_proxy::CanMsg msg;
+			CanMsg msg;
 			msg.id = BallHandler;
 // 			msg.data.push_back(0);
 // 			msg.data.push_back(CanPriNorm);

@@ -3,6 +3,11 @@ project(msl_tmc_motion)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
+	set(CMAKE_CXX_COMPILER_ARG1 "-std=c++11" CACHE STRING "C++ version for eclipse" FORCE)
+	set(CMAKE_ECLIPSE_VERSION "4.5" CACHE STRING "Eclipse version" FORCE)
+	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
+endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
 find_package(catkin REQUIRED COMPONENTS msl_actuator_msgs system_config cnc_geometry) 
 
@@ -30,8 +35,9 @@ include_directories(
   include 
   ${catkin_INCLUDE_DIRS}
 )
-file(GLOB_RECURSE tmc_src "src/*.cpp")
-add_executable(${PROJECT_NAME} ${tmc_src})
-message ("<<<< tmc: ${catkin_LIBRARIES}")
+
+add_executable(${PROJECT_NAME} src/CircleTrace.cpp src/Motion.cpp src/CNMCPacket.cpp)
+
+
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 add_dependencies(${PROJECT_NAME} msl_actuator_msgs_generate_messages_cpp)
