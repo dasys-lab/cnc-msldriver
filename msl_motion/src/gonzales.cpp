@@ -125,7 +125,6 @@ void gonz_control() { //controller comes in here
         gonz_state.currentMotorGoal[i] *= finfactor;
     }
 	if (current_settings.slipControlEnabled > 0  && fabs(gonz_state.currentSlip) > 1.0) {
-		// Semesterarbeit - evtl Anpassung der Gewichtung des PI-Regler
 		double setSlip = current_settings.slipControlP*gonz_state.currentSlip + current_settings.slipControlI*gonz_state.slipI;
 		gonz_state.currentMotorGoal[0] -= setSlip;
 		gonz_state.currentMotorGoal[1] += setSlip;
