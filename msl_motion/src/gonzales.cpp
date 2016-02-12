@@ -193,7 +193,7 @@ void gonz_calc_odometry() { //TODO: Optimise!
     double rot = gonz_state.actualMotion.rotation/1024.0*(double)timediff/1000.0;
     double xtemp,ytemp;
 
-    if (rot!=0) {
+    if (rot < -0.1 || rot > 0.1) {
         double radius = trans / rot;
         xtemp = abs(sin(rot) * radius) * SIGN(trans);
 		ytemp = (radius - (cos(rot)) * radius) * SIGN(rot);
