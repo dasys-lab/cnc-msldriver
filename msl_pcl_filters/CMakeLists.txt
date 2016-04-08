@@ -1,16 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(usb_can_proxy)
+project(msl_pcl_filters)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED 
-  can_connection
-  system_config 
-  roscpp 
-  message_generation 
-  msl_actuator_msgs
-)
+find_package(catkin REQUIRED)
+find_package(PCL 1.7 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -30,10 +25,10 @@ find_package(catkin REQUIRED
 ## * Let MSG_DEP_SET be the set of packages whose message types you use in
 ##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
 ## * In the file package.xml:
+##   * add a build_depend tag for "message_generation"
 ##   * add a build_depend and a run_depend tag for each package in MSG_DEP_SET
-##   * If MSG_DEP_SET isn't empty the following dependencies might have been
-##     pulled in transitively but can be declared for certainty nonetheless:
-##     * add a build_depend tag for "message_generation"
+##   * If MSG_DEP_SET isn't empty the following dependency has been pulled in
+##     but can be declared for certainty nonetheless:
 ##     * add a run_depend tag for "message_runtime"
 ## * In this file (CMakeLists.txt):
 ##   * add "message_generation" and every package in MSG_DEP_SET to
@@ -46,16 +41,51 @@ find_package(catkin REQUIRED
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-#add_message_files(
-#  FILES
-#  CanMsg.msg
-#)
+# add_message_files(
+#   FILES
+#   Message1.msg
+#   Message2.msg
+# )
+
+## Generate services in the 'srv' folder
+# add_service_files(
+#   FILES
+#   Service1.srv
+#   Service2.srv
+# )
+
+## Generate actions in the 'action' folder
+# add_action_files(
+#   FILES
+#   Action1.action
+#   Action2.action
+# )
 
 ## Generate added messages and services with any dependencies listed here
- generate_messages(
-   DEPENDENCIES
- #  msl_actuator_msgs
- )
+# generate_messages(
+#   DEPENDENCIES
+#   std_msgs  # Or other packages containing msgs
+# )
+
+################################################
+## Declare ROS dynamic reconfigure parameters ##
+################################################
+
+## To declare and build dynamic reconfigure parameters within this
+## package, follow these steps:
+## * In the file package.xml:
+##   * add a build_depend and a run_depend tag for "dynamic_reconfigure"
+## * In this file (CMakeLists.txt):
+##   * add "dynamic_reconfigure" to
+##     find_package(catkin REQUIRED COMPONENTS ...)
+##   * uncomment the "generate_dynamic_reconfigure_options" section below
+##     and list every .cfg file to be processed
+
+## Generate dynamic reconfigure parameters in the 'cfg' folder
+# generate_dynamic_reconfigure_options(
+#   cfg/DynReconf1.cfg
+#   cfg/DynReconf2.cfg
+# )
 
 ###################################
 ## catkin specific configuration ##
@@ -67,36 +97,47 @@ find_package(catkin REQUIRED
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES usb_can_proxy
-  CATKIN_DEPENDS system_config can_connection roscpp message_runtime 
-#msl_actuator_msgs
+  INCLUDE_DIRS include
+  LIBRARIES msl_pcl_filters
+#  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
-
+ 
 ###########
 ## Build ##
 ###########
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
+include_directories(include ${catkin_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
 
-include_directories(${catkin_INCLUDE_DIRS})
+## Declare a C++ library
+add_library(msl_pcl_filters
+  src/FilterVoxelGrid.cpp
+)
 
-## Declare a cpp executable
-add_executable(usb_can_proxy src/UsbCanProxy.cpp)
-target_link_libraries(usb_can_proxy ${catkin_LIBRARIES})
-set_target_properties(usb_can_proxy PROPERTIES COMPILE_FLAGS "-O3 -Wall -Werror")
-add_dependencies(usb_can_proxy 
-  ${catkin_LIBRARIES} 
-  usb_can_proxy_generate_messages_cpp
-) 
+## Add cmake target dependencies of the library
+## as an example, code may need to be generated before libraries
+## either from message generation or dynamic reconfigure
+# add_dependencies(msl_pcl_filters ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(usb_can_console src/UsbCanConsole.cpp)
-target_link_libraries(usb_can_console ${catkin_LIBRARIES})
-set_target_properties(usb_can_console PROPERTIES COMPILE_FLAGS "-O3 -Wall -Werror -fPIC -pthread")
-add_dependencies(usb_can_console ${catkin_LIBRARIES} usb_can_proxy_generate_messages_cpp) 
+## Declare a C++ executable
+# add_executable(msl_pcl_filters_node src/msl_pcl_filters_node.cpp)
 
+## Add cmake target dependencies of the executable
+## same as for the library above
+add_dependencies(msl_pcl_filters
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
+
+## Specify libraries to link a library or executable target against
+target_link_libraries(msl_pcl_filters
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
 
 #############
 ## Install ##
@@ -113,7 +154,7 @@ add_dependencies(usb_can_console ${catkin_LIBRARIES} usb_can_proxy_generate_mess
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS usb_can_proxy usb_can_proxy_node
+# install(TARGETS msl_pcl_filters msl_pcl_filters_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -138,7 +179,7 @@ add_dependencies(usb_can_console ${catkin_LIBRARIES} usb_can_proxy_generate_mess
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_usb_can_proxy.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_msl_pcl_filters.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

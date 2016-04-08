@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>msl_tmc_motion</name>
+  <name>msl_goalie_kicker</name>
   <version>0.0.0</version>
-  <description>The msl_tmc_motion package</description>
+  <description>The msl_goalie_kicker package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
   <!-- Example:  -->

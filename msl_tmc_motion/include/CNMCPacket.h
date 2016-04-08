@@ -20,18 +20,6 @@ namespace msl_driver
 	public:
 		CNMCPacket();
 		virtual ~CNMCPacket();
-		//Horrible shit I know that, but it works -- really? my ass
-//		struct VAROBJECT
-//		{
-//		    enum o_t { UNSIGNEDCHAR, INT, SHORT, SIGNEDCHAR } objectType;
-//		    union
-//		    {
-//		    	unsigned char ucValue[4];
-//		    	double dblValue;
-//		    	signed char sByte;
-//		    	short shValue;
-//		    } value;
-//		};
 
 		enum CommandGroup
 			: uint8_t
@@ -71,7 +59,7 @@ namespace msl_driver
 		enum ControlCmd
 			: uint8_t
 			{
-				SetAllPWM = 0x10, // X (int)pwm1, (int)pwm2, (int)pwm3, (byte)sreq
+			SetAllPWM = 0x10, // X (int)pwm1, (int)pwm2, (int)pwm3, (byte)sreq
 			SetPWM = 0x11, // X (byte)motor, (int)pwm, (byte)sreq
 			SetAllRPM = 0x20, // (int)rpm1, (int)rpm2, (int)rpm3, (byte)sreq
 			SetRPM = 0x21, // X (byte)motor, (int)rpm, (byte)sreq
@@ -154,13 +142,14 @@ namespace msl_driver
 
 		std::vector<uint8_t> convertShortToByte(short data);
 		std::vector<uint8_t> convertIntToByte(int data);
+		short convertByteToShort(int start);
 
 		static std::unique_ptr<CNMCPacket> getInstance(uint8_t raw[], int size);
 		std::shared_ptr<std::vector<uint8_t> > data;
 		uint8_t cmd = 0x00;
+		uint8_t cmdgrp = 0x00;
 
 	protected:
-		uint8_t cmdgrp = 0x00;
 		uint8_t crc = 0x00;
 
 		void needQuotes(uint8_t b, std::shared_ptr<std::vector<uint8_t>> list);

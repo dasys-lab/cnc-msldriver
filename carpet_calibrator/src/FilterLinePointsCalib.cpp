@@ -29,6 +29,7 @@
 
 using namespace std;
 #define BLOB_UNDEF 100000
+#define MAX_CARPET_LINECOUNT 10
 
 FilterLinePointsCalib::FilterLinePointsCalib(int area) :
 		Filter(OF_ZERO, area, area)
@@ -352,7 +353,7 @@ unsigned char * FilterLinePointsCalib::process(unsigned char * src, unsigned int
 							//fs << imDist << "\t";
 
 							//Sort into vector
-							if (aprinted < 8 && imDist > 100)
+							if (aprinted < MAX_CARPET_LINECOUNT && imDist > 100)
 							{
 								int ih = i;
 								//Search next and last valid index
@@ -430,32 +431,42 @@ unsigned char * FilterLinePointsCalib::process(unsigned char * src, unsigned int
 	for (unsigned int i = 0; i < LinePointsX.size(); i++)
 	{
 		tgt[LinePointsX[i] * width + LinePointsY[i]] = 0;
-		ofstream ofs("rawLinePoints.txt", fstream::app);
+		ofstream *ofs;
+		ofs = new ofstream(sc->getConfigPath() + sc->getHostname() + "/rawLinePoints.txt", fstream::app);
+//		ofstream ofs(sc->getConfigPath() + sc->getHostname() + "/rawLinePoints.txt", fstream::app);
+		if(!ofs->is_open()) {
+			ofs = new ofstream(sc->getConfigPath() + "/rawLinePoints.txt", fstream::app);
+		}
 		double x = LinePointsX[i] - (short)width / (short)2;
 		double y = LinePointsY[i] - (short)height / (short)2;
-		ofs << atan2(y, x) << " " << sqrt(x * x + y * y) << " " << x << " " << y << endl;
+		*ofs << atan2(y, x) << " " << sqrt(x * x + y * y) << " " << x << " " << y << endl;
 	}
-	ofstream cfs("clearedLP.txt");
+	ofstream *cfs;
+	cfs = new ofstream(sc->getConfigPath() + sc->getHostname() + "/clearedLP.txt");
+	if(!cfs->is_open()) {
+		cfs = new ofstream(sc->getConfigPath() + "/clearedLP.txt");
+	}
+
 	for (int i = 0; i < distanceSum.size(); i++)
 	{
 		int element = (i + 1 + (distanceSum.size() / 2)) % distanceSum.size();
 		if (angles[element] == 0)
 			continue;
-		cfs << angles[element] << " ";
+		*cfs << angles[element] << " ";
 		for (int j = 0; j < distanceSum[element].size(); j++)
 		{
 			if (distanceSum[element][j] != 0)
 			{
-				cfs << distanceSum[element][j] << " ";
+				*cfs << distanceSum[element][j] << " ";
 				//cfs << distanceCount[i][j] << " ";
 			}
 			else
 				break;
 //			else cfs << 0 << " ";
 		}
-		cfs << endl;
+		*cfs << endl;
 	}
-	cfs.close();
+	cfs->close();
 
 	printf("FilterLinePoints - Number of LinePoints: %d\n", (int)LinePointsX.size());
 
@@ -474,7 +485,7 @@ void FilterLinePointsCalib::init()
 {
 	vector<double> tmp;
 	vector<int> tmpint;
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < MAX_CARPET_LINECOUNT; i++)
 	{
 		tmp.push_back(0);
 		tmpint.push_back(0);

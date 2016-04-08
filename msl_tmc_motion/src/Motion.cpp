@@ -19,7 +19,7 @@ namespace msl_driver
 	Motion::Motion(int argc, char** argv) :
 			rosNode(nullptr), spinner(nullptr)
 	{
-
+		this->my_serial = nullptr;
 		this->motionValue = nullptr;
 
 		this->sc = supplementary::SystemConfig::getInstance();
@@ -49,9 +49,6 @@ namespace msl_driver
 			std::cout << "Motion: slip control new min rotation     = " << this->slipControlNewMinRot << std::endl;
 		}
 
-		// Set Trace-Model (according to the impera repository, we always used the CircleTrace model)
-		this->traceModel = new CircleTrace();
-
 		// Read required driver parameters
 		this->driverAlivePeriod = (*sc)["Motion"]->tryGet<int>(250, "Motion", "AlivePeriod", NULL);
 		this->driverOpenAttemptPeriod = (*sc)["Motion"]->tryGet<int>(1000, "Motion", "OpenAttemptPeriod", NULL);
@@ -59,8 +56,8 @@ namespace msl_driver
 
 	Motion::~Motion()
 	{
-		delete motionValue;
-		delete traceModel;
+		if (this->motionValue != nullptr)
+			delete motionValue;
 	}
 
 	/**
@@ -111,115 +108,77 @@ namespace msl_driver
 		getMotorConfig();
 	}
 
-	void Motion::open()
+	bool Motion::open()
 	{
-		//### SERIEAL PORT STUFF
-		this->port = ::open(this->device.c_str(), O_RDWR | O_NOCTTY | O_NDELAY);
+		// TODO: make baudrate a parameter
+		this->my_serial = new serial::Serial(this->device, 57600, serial::Timeout::simpleTimeout(this->initReadTimeout));
 
-		// Read Configuration into newtio
-		memset(&newtio, 0, sizeof newtio); // newtio will contain the configuration of port
-		if (tcgetattr(port, &newtio) != 0)
+		cout << "Is the serial port open?";
+		if (!my_serial->isOpen())
 		{
-			std::cerr << "Error " << errno << " from tcgetattr: " << strerror(errno) << std::endl;
-		}
-		if (cfsetispeed(&newtio, (speed_t)B57600) < 0)
-		{
-			std::cerr << "Error " << errno << " from cfsetispeed: " << strerror(errno) << std::endl;
-		}
-		if (cfsetospeed(&newtio, (speed_t)B57600) < 0)
-		{
-			std::cerr << "Error " << errno << " from cfsetospeed: " << strerror(errno) << std::endl;
+			cerr << "TMC-Motion: Unable to open serial port : " << this->device << " Errno: " << strerror(errno)
+					<< endl;
+			return false;
 		}
 
-		// Setting other Port Stuff
-		newtio.c_cflag &= ~(CSIZE | PARENB | CSTOPB); // Make 8n1
-		newtio.c_cflag |= CS8;
-
-		newtio.c_cflag &= ~CRTSCTS; // no flow control
-		newtio.c_cc[VMIN] = 1; // read doesn't block
-		newtio.c_cc[VTIME] = this->initReadTimeout; // 0.5 seconds read timeout
-		newtio.c_cflag |= CREAD | CLOCAL; // turn on READ & ignore ctrl lines
-
-		/* Make raw */
-		cfmakeraw(&newtio);
-
-		tcflush(port, TCIFLUSH);
-		if (tcsetattr(port, TCSANOW, &newtio) < 0)
-		{
-			std::cerr << "Error " << errno << " from tcsetattr" << std::endl;
-		}
+		this->my_serial->setTimeout(serial::Timeout::max(), this->readTimeout, 0, this->writeTimeout, 0);
 
 		//### SEND MOTOR CONFIG
 		this->sendMotorConfig();
 
 		//### READY
 		this->controllerIsActive = true;
+
+		return true;
 	}
 
 	void Motion::sendData(shared_ptr<CNMCPacket> packet)
 	{
 		auto bytes = packet->getBytes();
-		::write(this->port, (*bytes).data(), bytes->size());
+//		cout << "TMC-Motion: Sending: ";
+//		for (uint8_t byte : (*bytes))
+//		{
+//			cout << hex << static_cast<int>(byte) << " ";
+//		}
+//		cout << endl << dec << endl;
+		size_t numBytesWritten = this->my_serial->write((*bytes).data(), bytes->size());
+
+//		cout << "TMC-Motion: sendData - numBytesWritten: " << numBytesWritten << endl;
+
 	}
 
 	unique_ptr<CNMCPacket> Motion::readData()
 	{
-		uint8_t b;
-		bool finished = false;
+		uint8_t b[1];
 		bool quoted = false;
-
 		vector<uint8_t> data;
-		::read(this->port, &b, 1);
-		bool wrote = false;
-		while (b != CNMCPacket::START_HEADER)
-		{
-			cout << (char)b;
-			::read(this->port, &b, 1);
-			wrote = true;
-		}
-		if (wrote)
-			cout << endl;
 
-		if (b != CNMCPacket::START_HEADER)
-		{
-			return move(unique_ptr<CNMCPacket>());
-		}
-		else
-		{
-			data.push_back(b);
-		}
+		do {
+			if (this->my_serial->read(b, 1) == 0)
+				return move(unique_ptr<CNMCPacket>());
+		} while (b[0] != CNMCPacket::START_HEADER);
 
-		while (!finished)
-		{
-			::read(this->port, &b, 1);
+		data.push_back(b[0]);
 
-			if (b == CNMCPacket::QUOTE)
+		while (true)
+		{
+			if (this->my_serial->read(b, 1) == 0)
+				return move(unique_ptr<CNMCPacket>());
+
+			if (b[0] == CNMCPacket::QUOTE && !quoted)
 			{
-				if (!quoted)
-					quoted = true;
-				else
-				{
-					data.push_back(b);
-					quoted = false;
-				}
+				quoted = true;
+				continue;
 			}
-			else if (b == CNMCPacket::END_HEADER)
+
+			//do not add end header to data
+			if (b[0] == CNMCPacket::END_HEADER && !quoted)
 			{
-				if (!quoted)
-				{ //do not add end header to data
-					finished = true;
-				}
-				else
-				{
-					data.push_back(b);
-					quoted = false;
-				}
+				break;
 			}
-			else
-			{
-				quoted = false;
-				data.push_back(b);
-			}
+
+			quoted = false;
+			data.push_back(b[0]);
 		}
 
 		return CNMCPacket::getInstance(data.data(), data.size());
@@ -494,6 +453,13 @@ namespace msl_driver
 		NULL);
 		this->mc.failSafeCycles = (*sc)["Motion"]->get<short>("Motion", "CNMC", "Controller", "FailSafeCycles", NULL);
 
+
+		this->mc.accelBoundMin = (*sc)["Motion"]->tryGet<double>(0.0, "Motion", "CNMC", "Controller",
+																		"MinimalAccelerationAllowed");
+
+		this->mc.accelBoundMax = (*sc)["Motion"]->tryGet<double>(0.0, "Motion", "CNMC", "Controller",
+																		"MaximalAccelerationAllowed");
+
 		this->mc.rotationAccelBound = (*sc)["Motion"]->tryGet<double>(0.0, "Motion", "CNMC", "Controller",
 																		"MaxRotationAccel");
 
@@ -542,16 +508,17 @@ namespace msl_driver
 
 	void Motion::run()
 	{
+		MotionSet* requestOld = nullptr;
+		MotionSet* request = nullptr;
+
+		chrono::steady_clock::time_point lastCommandTimestamp = std::chrono::steady_clock::now();
+
 		// Loop until the driver is closed
 		while (Motion::running)
 		{
-			//TODO make the times right!
-
 			// 1 Tick = 100ns, 10 Ticks = 1us
 			// remember the time, processing was last triggered
 			this->cycleLastTimestamp = std::chrono::steady_clock::now();
-
-			MotionSet* request;
 
 			// Get the next request from the queue
 			{
@@ -563,17 +530,44 @@ namespace msl_driver
 
 			if (request == nullptr)
 			{
-				chrono::milliseconds dura(1);
-				this_thread::sleep_for(dura);
-				continue;
+				// TODO make time configurable, currently a request is send 250 ms
+				if (requestOld != nullptr && chrono::duration_cast<chrono::milliseconds>(
+						std::chrono::steady_clock::now() - lastCommandTimestamp).count() > 250)
+				{
+					requestOld = nullptr;
+				}
+
+				if (requestOld != nullptr && Motion::running)
+				{
+					this->executeRequest(requestOld);
+				}
+				else
+				{
+					rawOdoInfo.motion.angle = 0;
+					rawOdoInfo.motion.translation = 0;
+					rawOdoInfo.motion.rotation = 0;
+					ros::Time t = ros::Time::now();
+					uint64_t timestamp = (t.sec * 1000000000UL + t.nsec);
+					rawOdoInfo.timestamp = timestamp;
+				}
+			}
+			else
+			{
+				// If there is a request, try to process it
+				if (Motion::running)
+				{
+					this->executeRequest(request);
+				}
+
+				if (requestOld != nullptr)
+					delete requestOld;
+
+				lastCommandTimestamp = this->cycleLastTimestamp;
+				requestOld = request;
 			}
 
-			// If there is a request, try to process it
-			if (Motion::running)
-			{
-				this->executeRequest(request);
-			}
-			delete request;
+			// send raw odometry info
+			this->rawOdometryInfoPub.publish(this->rawOdoInfo);
 
 			// minCycleTime (us), Ticks (tick), cycleLastTimestamp (tick), 1 tick = 100 ns
 			long sleepTime = this->minCycleTime
@@ -591,8 +585,11 @@ namespace msl_driver
 
 	void Motion::executeRequest(MotionSet* ms)
 	{
-		double rot = max(-8 * M_PI, min(8 * M_PI, ms->rotation));
+
+//		trans = Math.Sign(ms.translation)*Math.Min(Math.Abs(ms.translation),this.maxVelocity);
 		double trans = min(abs(ms->translation), this->maxVelocity);
+//		rot = Math.Max(-8*Math.PI, Math.Min(8*Math.PI,ms.rotation));
+		double rot = max(-8 * M_PI, min(8 * M_PI, ms->rotation));
 
 		if (ms->translation < 0)
 			trans *= -1;
@@ -605,6 +602,33 @@ namespace msl_driver
 						(short)(rot * 64));
 
 		sendData(packet);
+
+		// reading from motion
+		auto read = readData();
+
+		// check type
+		if (read->cmd == CNMCPacket::RequestCmd::PathVector && read->cmdgrp == CNMCPacket::CommandGroup::RequestResponse)
+		{
+			auto data = read->getBytes();
+
+			short x1 = read->convertByteToShort(0);
+			short x2 = read->convertByteToShort(2);
+			short x3 = read->convertByteToShort(4);
+
+//			mr.angle = Math.Atan2(rawMotorValues[1],rawMotorValues[0]);
+			double angle = atan2(x2, x1);
+//			mr.translation = Math.Sqrt(rawMotorValues[0]*rawMotorValues[0]+rawMotorValues[1]*rawMotorValues[1]);
+			double translation = sqrt(x1*x1 + x2*x2);
+//			mr.rotation = ((double)rawMotorValues[2])/64.0;
+			double rotation = ((double)x3) / 64.0d;
+
+			rawOdoInfo.motion.angle = angle;
+			rawOdoInfo.motion.translation = translation;
+			rawOdoInfo.motion.rotation = rotation;
+			ros::Time t = ros::Time::now();
+			uint64_t timestamp = (t.sec * 1000000000UL + t.nsec);
+			rawOdoInfo.timestamp = timestamp;
+		}
 	}
 
 	void Motion::handleMotionControl(msl_actuator_msgs::MotionControlPtr mc)
@@ -663,8 +687,19 @@ int main(int argc, char** argv)
 	signal(SIGINT, msl_driver::Motion::pmSigintHandler);
 	signal(SIGTERM, msl_driver::Motion::pmSigTermHandler);
 	motion->initialize();
-	motion->open();
+	bool r = motion->open();
+
+	if (false == r)
+	{
+		delete motion;
+		ros::shutdown();
+
+		return 1;
+	}
+
+	std::cout << "start" << std::endl;
 	motion->start();
+	std::cout << "operating ..." << std::endl;
 
 	while (motion->isRunning())
 	{

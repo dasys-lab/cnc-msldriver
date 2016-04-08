@@ -8,6 +8,8 @@
 #include <SystemConfig.h>
 
 #define NSECTORS 360
+#define LUFILENAME "/DistanceLookup.dat"
+#define LUFILENAMETXT "/DistanceLookup.txt"
 
 using namespace std;
 using namespace supplementary;
@@ -43,6 +45,7 @@ int main(int argc, char * argv[]){
 	SystemConfig* sc = SystemConfig::getInstance();
         std::string confPath = sc->getConfigPath();
 	Configuration *vision = (*sc)["Vision"];
+	Configuration *carpetCalib = (*sc)["CarpetCalibrator"];
         int dcHEIGHT = vision->get<int>("Vision", "ImageArea", NULL);
         int dcWIDTH = vision->get<int>("Vision", "ImageArea", NULL);
 
@@ -53,21 +56,26 @@ int main(int argc, char * argv[]){
 	stringstream ss(stringstream::in | stringstream::out);
 
 	vector<double> realDist;
-	realDist.push_back(0);
-	realDist.push_back(1000);
-	realDist.push_back(2000);
-	realDist.push_back(3000);
-	realDist.push_back(4000);
-	realDist.push_back(5000);
+
+//    int counter = 0;
+
+
+    for(int i = 0; i < 10; i++) {
+    	realDist.push_back(((*sc)["CarpetCalibrator"])->get<int>("Dist", ("dist"+to_string(i)).c_str() , NULL));
+    }
 
 	for(int i=1; i<20; i++) realDist.push_back(5000+i*1000);
 
 
-	ifstream ifs("clearedLP.txt");
-	while(!ifs.eof()) {
+	ifstream* ifs;
+	ifs = new ifstream(sc->getConfigPath() + sc->getHostname() + "/clearedLP.txt");
+	if(!ifs->is_open()) {
+		ifs = new ifstream(sc->getConfigPath() + "/clearedLP.txt");
+	}
+	while(!ifs->eof()) {
 		tmp.clear();
-		ifs.getline(line, 4096);
-		if(ifs.eof()) break;
+		ifs->getline(line, 4096);
+		if(ifs->eof()) break;
 
 		ss << line;
 
@@ -84,8 +92,13 @@ int main(int argc, char * argv[]){
 	for(int i=0; i<8; i++)	cout << distances[44][i] << " ";
 	cout << endl;
 
-	string dbgPath = confPath + "distancelookup.txt";
-	ofstream ofs(dbgPath.c_str());
+	string dbgPath = confPath + sc->getHostname() + "/distancelookup.txt";
+	ofstream* ofs;
+	ofs = new ofstream(dbgPath.c_str());
+	if(!ofs->is_open()) {
+		ofs = new ofstream((confPath + "/distancelookup.txt").c_str());
+	}
+
 	double *lookup = new double[dcHEIGHT*dcWIDTH];
 	memset(lookup, 0, dcHEIGHT*dcWIDTH*sizeof(double));
 
@@ -181,26 +194,38 @@ int main(int argc, char * argv[]){
 				lookup[y*area+x] = d;
 			}*/
 
-			ofs << lookup[y*dcHEIGHT+x] << " ";
+			*ofs << lookup[y*dcHEIGHT+x] << " ";
 		}
-		ofs << endl;
+		*ofs << endl;
 	}
 	cout << maxM << endl;
 
-	std::cout << std::endl << "DistanceLookup2.dat was built" << std::endl;
-        std::string filePath = confPath + "/DistanceLookup2.dat";
+        std::string filePath = confPath + sc->getHostname() + "/" + LUFILENAME;
+        std::cout << std::endl << "Building " << filePath << std::endl;
+
 
         FILE * fd = fopen(filePath.c_str(), "w");
+
+        if(fd == NULL) {
+        	fd = fopen((confPath + LUFILENAME).c_str(), "w");
+        }
+
         fwrite(&(LookupTable[0]), sizeof(double), dcWIDTH*dcHEIGHT, fd);
         fwrite(&(LookupTableInt[0][0]), sizeof(int), dcWIDTH*dcHEIGHT*2, fd);
         fclose(fd);
 
-	ofstream ofs2("DistanceLookUp2.txt");
+        ofstream *ofs2;
+        ofs2 = new ofstream(sc->getConfigPath() + sc->getHostname() + LUFILENAMETXT);
+        if(!ofs2->is_open()) {
+        	ofs2 = new ofstream(sc->getConfigPath() + LUFILENAMETXT);
+        }
+
+
         for(int i=0; i<dcWIDTH; i++) {
                 for(int j=0; j<dcHEIGHT; j++) {
-                        ofs2 << LookupTable[i][j] << " ";
+                        *ofs2 << LookupTable[i][j] << " ";
                 }
-                ofs2 << endl;
+                *ofs2 << endl;
         }
 
 

@@ -1,5 +1,5 @@
 /*
- * Motion.h
+ * Kicker.h
  *
  *  Created on: Aug 19, 2015
  *      Author: Stephan Opfer
@@ -12,14 +12,7 @@
 
 #include <ros/ros.h>
 #include <msl_actuator_msgs/RawOdometryInfo.h>
-#include "msl_actuator_msgs/MotionControl.h"
-#include "msl_actuator_msgs/MotionStatInfo.h"
-#include "msl_msgs/MotionInfo.h"
-
-#include "MotionData.h"
-#include "CircleTrace.h"
-#include "MotorConfig.h"
-#include "CNMCPacket.h"
+#include "msl_actuator_msgs/KickControl.h"
 
 #include <chrono>
 #include <cmath>
@@ -38,33 +31,30 @@ using namespace std;
 namespace msl_driver
 {
 
-	class Motion
+	class Kicker
 	{
 	public:
-		Motion(int argc, char** argv);
-		virtual ~Motion();
+		Kicker(int argc, char** argv);
+		virtual ~Kicker();
 
 		void initCommunication(int argc, char** argv);
 		void initialize();
 		bool open();
 		void start();
-		void handleMotionControl(msl_actuator_msgs::MotionControlPtr mc);bool isRunning();
+		void handleKickControl(msl_actuator_msgs::KickControlPtr mc);
+		bool isRunning();
 
 		static void pmSigintHandler(int sig);
 		static void pmSigTermHandler(int sig);
 
 		std::mutex motionValueMutex;
-		MotionSet* motionValue = nullptr;
-//		CircleTrace traceModel;
 
-		double slipControlFactor = 1.0;
-		double slipControlMinSpeed = 1250.0;
-		double slipControlDiffAngle = ((M_PI / 180.0) * 10.0);
-		double slipControlDiffAngleMinSpeed = 400.0;
-		double slipControlOldMaxRot = (M_PI / 20.0);
-		double slipControlNewMinRot = (M_PI / 2.0);
+		long pulseWidthLeft;
+		long pulseWidthMiddle;
+		long pulseWidthRight;
 
-		bool slipControlEnabled = false;bool quit = false;
+		long extensionMaxTime;
+		long extensionMinSleep;
 
 		int driverAlivePeriod = 250;
 		int driverOpenAttemptPeriod = 1000;
@@ -74,17 +64,12 @@ namespace msl_driver
 		// ROS STUFF
 		ros::NodeHandle* rosNode;
 		ros::AsyncSpinner* spinner;
-		ros::Subscriber handleMotionControlSub;
-		ros::Publisher rawOdometryInfoPub;
-		ros::Publisher motionStatInfoPub;
-		msl_actuator_msgs::RawOdometryInfo rawOdoInfo;
+		ros::Subscriber handleKickerControlSub;
 
 		static bool running;
 		thread runThread;
 
 		// SERIAL PORT STUFF
-//		struct termios newtio;
-//		int port = 0;
 		string device = "";
 		int initReadTimeout = 0; // Initial read timeout (required to read the garbage provided by the VMC after power on
 		int readTimeout = 0; // General read timeout
@@ -95,25 +80,16 @@ namespace msl_driver
 		serial::Serial* my_serial;
 
 		supplementary::SystemConfig* sc;
-		MotorConfig mc;
+//		MotorConfig mc;
 
-		long minCycleTime; // Minimum cycle time in milliseconds
 		chrono::steady_clock::time_point cycleLastTimestamp;
 		chrono::steady_clock::time_point deltaTime;
-		double radius;
-		double maxVelocity;bool logOdometry;
-		shared_ptr<vector<string>> logTypes;
-		shared_ptr<vector<string>> logTypesAvailable;bool controllerIsActive = false;
 
-		void run();
-		void getMotorConfig();
-		void sendMotorConfig();
-		void updateMotorState(DriverData request, CNMCPacketRequestResponse* vmcp);
-		void executeRequest(MotionSet* ms);
+		bool controllerIsActive = false;
 
-		void sendData(shared_ptr<CNMCPacket> packet);
-		unique_ptr<CNMCPacket> readData();
-		void checkSuccess(shared_ptr<CNMCPacket> cmd);
+		bool writeAndCheck(string name);
+		bool checkSuccess(string name, string command, bool display);
+		string readResult(string command);
 	};
 
 } /* namespace msl_driver */

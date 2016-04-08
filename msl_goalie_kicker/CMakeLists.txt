@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(msl_tmc_motion)
+project(msl_goalie_kicker)
 
 ## Use c++ 11x std
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
@@ -22,7 +22,7 @@ find_package(catkin REQUIRED COMPONENTS msl_actuator_msgs system_config cnc_geom
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-#  LIBRARIES msl_tmc_motion
+#  LIBRARIES msl_goalie_kicker
   CATKIN_DEPENDS msl_actuator_msgs system_config cnc_geometry serial
 #  DEPENDS system_lib 
 )
@@ -36,7 +36,9 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(${PROJECT_NAME} src/CircleTrace.cpp src/Motion.cpp src/CNMCPacket.cpp)
+add_executable(${PROJECT_NAME} 
+  src/Kicker.cpp 
+)
 
 
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
