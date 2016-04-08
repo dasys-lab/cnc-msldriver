@@ -103,7 +103,7 @@ int main(int argc,char *argv[]){
 		XVDisplay * xvDisplay2 = NULL;
 
 		for(int i = 1; i < argc; i++){
-			if(std::string(argv[i]) == "--localize")
+			if(std::string(argv[i]) == "--noneLocalize")
 				localize = false;
 			if(std::string(argv[i]) == "--false")
 				display_frames = false;
@@ -161,7 +161,7 @@ int main(int argc,char *argv[]){
 		if(help){
 			printf("\nOptions for VisionPlayer:\n\n");
 			printf("--false: hides window\n");
-			printf("--localize: enables localization (transmission of CorrectedOdometryInfo otherwise Linepoints, Obstacles and Ballhypothesis are executed)\n");
+			printf("--noneLocalize: disables localization (transmission of CorrectedOdometryInfo otherwise Linepoints, Obstacles and Ballhypothesis are executed)\n");
 			printf("--gray: displays gray_image with line points and writes localization debug info\n");
 			printf("--offline: offline mode using images in $VISION_LOG\n");
 			printf("--scanLines: draws scan lines, only available with --gray\n");
@@ -217,6 +217,7 @@ int main(int argc,char *argv[]){
 			cam->setVideoMode(DC1394_VIDEO_MODE_640x480_YUV422);
 			cam->init();
 			std::cout << "Cam init" << std::endl;
+			if(isGoalie) cam->setManualSettingModesGoalie();
 			if(vision->tryGet<bool>(false, "Vision", "Camera1394Settings", "SetManSettingsMode", NULL)) {
 				cam->setManualSettingModes();
 			}
@@ -228,6 +229,7 @@ int main(int argc,char *argv[]){
 			if (vision->get<bool>("Vision", "Camera1394Settings", "AutoGain", NULL)) {
 
 				cam->enableAutoGain(true);
+				std::cout << "A tänchen: Autogain is true!!!!" << std::endl;
 			} else {
 				cam->enableAutoGain(false);
 				cam->setGain(vision->get<int>("Vision", "Camera1394Settings", "Gain", NULL));

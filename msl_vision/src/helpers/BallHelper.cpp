@@ -199,7 +199,7 @@ void BallHelper::sendBallHypotesis(ballCluster * cluster, int clusterCount, std:
 			continue;
 
 		cout << "BallHypothesis: Z-Pos " << p.z << " X: " << p.x << " Y: " << p.y << " FL: " << FootballField::FieldLength << " FW: " << FootballField::FieldWidth << endl;
-		double relFactor = 200;
+		double relFactor = 300;
 		if(fabs(p.x) > FootballField::FieldLength + relFactor ||
 			fabs(p.y) > FootballField::FieldWidth + relFactor) {
 			continue;
@@ -335,7 +335,7 @@ Point BallHelper::getBallFromBlobs(ballCluster * cluster, int clusterCount, std:
 		}
 
 		cout << "Ballintegrator BallHypothesis: Z-Pos " << p.z << " X: " << p.x << " Y: " << p.y << " FL: " << FootballField::FieldLength << " FW: " << FootballField::FieldWidth << endl;
-		double relFactor = 200;
+		double relFactor = 300;
 		if(fabs(p.x) > FootballField::FieldLength + relFactor || 
 			fabs(p.y) > FootballField::FieldWidth + relFactor) {
 			continue;
@@ -408,7 +408,7 @@ Point BallHelper::getBallFromBlobs(ballCluster * cluster, int clusterCount, std:
 		//if(p.z > 350 && p.x*p.x+p.y*p.y>750*750) {
 		//	continue;
 		//}
-		if(p.x*p.x+p.y*p.y>8000*8000) continue;
+		if(p.x*p.x+p.y*p.y>9000*9000) continue;
 		if(isGoalie && p.x*p.x+p.y*p.y>5500*5500) continue;
 
 		ballPos.confidence = 0.3 + (((double)cluster[i].err/(double)cluster[i].balls)*0.1);

@@ -151,7 +151,7 @@ unsigned char * FilterDistanceProfileNew::process(unsigned char * src, unsigned 
 			
 	double threshold = ((double)sum)/((double)(4*frame*frame));
 
-	double addThreshold = threshold - 0.0 + obsThreshOffset;
+	double addThreshold = threshold;
 	if(addThreshold < 3.0)
 		addThreshold = 3.0;
 	if(addThreshold > 10.0)
@@ -251,7 +251,7 @@ unsigned char * FilterDistanceProfileNew::process(unsigned char * src, unsigned 
 		if(luminanceAdd < -5)
 			luminanceAdd = -5;
 
-		unsigned char threshold_ind_new = (unsigned char) ((short) threshold_ind + luminanceAdd);
+		unsigned char threshold_ind_new = (unsigned char) (max((short) threshold_ind + luminanceAdd + obsThreshOffset, 0));
 
 
 

@@ -2,16 +2,17 @@ cmake_minimum_required(VERSION 2.8.3)
 project(msl_directed_depth_vision)
 
 ## Use c++ 11x std
-#set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+set(MRPT_DONT_USE_DBG_LIBS 1)
  
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED system_config nodelet roscpp pcl_conversions)
+find_package(catkin REQUIRED system_config nodelet roscpp pcl_conversions msl_pcl_filters)
  
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
- 
+find_package(MRPT REQUIRED base maps)
 find_package(PCL 1.7  REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -81,8 +82,8 @@ find_package(PCL 1.7  REQUIRED)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-#  LIBRARIES msl_directed_depth_vision
-  CATKIN_DEPENDS system_config
+#  LIBRARIES mrpt mrpt-maps mrpt_maps
+  CATKIN_DEPENDS system_config msl_pcl_filters
 #  DEPENDS system_lib
 )
 
@@ -92,7 +93,8 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
+
+include_directories(include ${catkin_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS} ${MRPT_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
@@ -100,12 +102,10 @@ add_definitions(${PCL_DEFINITIONS})
 ## Declare a cpp library
 add_library(msl_directed_depth_vision
    src/DirectedDepthVisionNodelet.cpp
+   src/FloorCalibrator.cpp
+   src/ClusterTracker.cpp
+   src/Cluster.cpp
 )
-
-## Declare a cpp executable
-#add_executable(msl_directed_depth_vision_node
-#	src/DirectedDepthVisionNodelet.cpp
-#)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -113,18 +113,38 @@ add_dependencies(msl_directed_depth_vision
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
   ${PCL_LIBRARIES}
-  ${PCL_CONVERSIONS_LIBRARIES}
+  ${PCL_CONVERSIONS_LIBRARiIES}
+  ${MRPT_LIBS}
   msl_directed_depth_vision_generate_messages_cpp
 )
-
 ## Specify libraries to link a library or executable target against
 target_link_libraries(msl_directed_depth_vision
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
   ${PCL_LIBRARIES}
   ${PCL_CONVERSIONS_LIBRARIES}
+  ${MRPT_LIBS}
 )
 
+## Declare a cpp executable
+add_executable(msl_directed_depth_vision_node
+        src/DirectedDepthVisionNode.cpp
+)
+add_dependencies(msl_directed_depth_vision_node
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${PCL_LIBRARIES}
+  ${PCL_CONVERSIONS_LIBRARiIES}
+  ${MRPT_LIBS}
+)
+## Specify libraries to link a library or executable target against
+target_link_libraries(msl_directed_depth_vision_node
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${PCL_LIBRARIES}
+  ${PCL_CONVERSIONS_LIBRARIES}
+  ${MRPT_LIBS}
+)
 #############
 ## Install ##
 #############
