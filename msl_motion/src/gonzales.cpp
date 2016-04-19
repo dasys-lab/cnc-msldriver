@@ -252,6 +252,8 @@ void gonz_send_odometry() {
     ro.position = pi;
     RosHelper::rawOdo = ro;
     RosHelper::sendOdometry();
+	std::cout<<"RPM 0: "<<ep->ActualRPM(0)<<"\tRPM 1: "<<ep->ActualRPM(1)<<"\tRPM 2: "<<ep->ActualRPM(2)<<"\tRPM 3: "<<ep->ActualRPM(3)<<std::endl;
+
 //std::cout << pi->getAngle() << "\t" << pi->getX() << "\t" << pi->getY() << "\t" << ro->getTimestamp() <<"\n";
 }
 void gonz_send_cmd() {
