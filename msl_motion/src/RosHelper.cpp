@@ -57,7 +57,8 @@ void RosHelper::sendOdometry() {
 }
 
 void RosHelper::handleCalibrationCoefficientMessage(const CalibrationCoefficient::ConstPtr& message){
-	wheelcirc = TWO_PI * current_settings.wheelRadius * message->calibCoefficient;
+	calibCoefficientX = message->calibCoefficientX;
+	calibCoefficientY = message->calibCoefficientY;
 
 
 }

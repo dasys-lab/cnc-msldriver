@@ -60,7 +60,7 @@ int gonz_get_mode() {
 void gonz_update_derived_settings() {
     sinphi = sin(current_settings.definingAngle);
     cosphi = cos(current_settings.definingAngle);
-    wheelcirc = TWO_PI * current_settings.wheelRadius * calibCoefficient;
+    wheelcirc = TWO_PI * current_settings.wheelRadius;
     robotcirc = TWO_PI * current_settings.robotRadius;
     finfactor = (double)current_settings.gear_ratio_denominator/(wheelcirc*(double)current_settings.gear_ratio_nominator)*60.0;
 }
@@ -161,13 +161,13 @@ void gonz_calc_odometry() { //TODO: Optimise!
     gonz_state.actualMotion.x += -ep->ActualRPM(1);
     gonz_state.actualMotion.x +=  ep->ActualRPM(2);
     gonz_state.actualMotion.x +=  ep->ActualRPM(3);
-    gonz_state.actualMotion.x *= ((double)current_settings.gear_ratio_nominator) / ((double)current_settings.gear_ratio_denominator * cosphi*4.0*60.0)*wheelcirc;
+    gonz_state.actualMotion.x *= ((double)current_settings.gear_ratio_nominator) / ((double)current_settings.gear_ratio_denominator * cosphi*4.0*60.0)*wheelcirc*calibCoefficientX;
 
     gonz_state.actualMotion.y =   ep->ActualRPM(0);
     gonz_state.actualMotion.y += -ep->ActualRPM(1);
     gonz_state.actualMotion.y += -ep->ActualRPM(2);
     gonz_state.actualMotion.y +=  ep->ActualRPM(3);
-    gonz_state.actualMotion.y *= (double)current_settings.gear_ratio_nominator / ((double)current_settings.gear_ratio_denominator*sinphi*4.0*60.0)*wheelcirc/0.7;
+    gonz_state.actualMotion.y *= (double)current_settings.gear_ratio_nominator / ((double)current_settings.gear_ratio_denominator*sinphi*4.0*60.0)*wheelcirc*calibCoefficientY;
 
     //printf("ODO: x: %f\ty: %f\tr: %f\trpm:%d\n",gonz_state.actualMotion.x,gonz_state.actualMotion.y,gonz_state.actualMotion.rotation,ep->ActualRPM(0));
 

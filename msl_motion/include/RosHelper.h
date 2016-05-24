@@ -10,7 +10,9 @@
 #include "msl_msgs/MotionInfo.h"
 //#include "msl_msgs/PositionInfo.h"
 
-extern double wheelcirc;
+extern double calibCoefficientX;
+extern double calibCoefficientY;
+
 
 class RosHelper {
 	public:
