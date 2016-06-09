@@ -151,6 +151,11 @@ void gonz_control() { //controller comes in here
     gonz_send_cmd();
 }
 void gonz_calc_odometry() { //TODO: Optimise!
+
+	if (abs(ep->ActualRPM(0) - ep->ActualRPM(1) + ep->ActualRPM(2) - ep->ActualRPM(3) ) > 100)
+	{
+		std::cout << ep->ActualRPM(0) - ep->ActualRPM(1) + ep->ActualRPM(2) - ep->ActualRPM(3) << std::endl;
+	}
     unsigned char i;
     gonz_state.actualMotion.rotation = 0;
     for (i=0; i<4; i++) {
