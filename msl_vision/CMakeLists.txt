@@ -103,6 +103,7 @@ FILE(GLOB lib_msl_vision_SOURCES
 #	src/filters/FilterYUV2RGB.cpp 
 	src/filters/FilterYUVToRGB.cpp 
 	src/filters/FilterYUVToYUVFull.cpp 
+    src/filters/FilterRGBToGray.cpp
 	src/helpers/BallClusterHelp.cpp 
 	src/helpers/BallHelper.cpp 
 	src/helpers/BallHelperDirected2.cpp 
