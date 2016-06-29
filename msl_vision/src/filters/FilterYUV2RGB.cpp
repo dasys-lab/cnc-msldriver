@@ -56,6 +56,20 @@ FilterYUV2RGB::~FilterYUV2RGB()
 }
 
 
+// YUV -> RGB
+#define C(Y) ( (Y) - 16  )
+#define D(U) ( (U) - 128 )
+#define E(V) ( (V) - 128 )
+
+#define YUV2R(Y, U, V) CLIP(( 298 * C(Y)              + 409 * E(V) + 128) >> 8)
+#define YUV2G(Y, U, V) CLIP(( 298 * C(Y) - 100 * D(U) - 208 * E(V) + 128) >> 8)
+#define YUV2B(Y, U, V) CLIP(( 298 * C(Y) + 516 * D(U)              + 128) >> 8)
+
+
+//Y  =      (0.257 * R) + (0.504 * G) + (0.098 * B) + 16
+//Cr = V =  (0.439 * R) - (0.368 * G) - (0.071 * B) + 128
+//Cb = U = -(0.148 * R) - (0.291 * G) + (0.439 * B) + 128
+
 void FilterYUV2RGB::process(unsigned char * src, unsigned char * &dst)
 {
 	static uint32_t size = height * width * 2;
@@ -68,13 +82,21 @@ void FilterYUV2RGB::process(unsigned char * src, unsigned char * &dst)
 		register int v  = src[i+2];
 		register int y1 = src[i+3];
 		
-		*(pointer++) = t_r[(y0<<8)|v];
-		*(pointer++) = t_g2[(y0<<8)|t_g1[(u<<8)|v]];
-		*(pointer++) = t_b[(y0<<8)|u];
+//		*(pointer++) = t_r[(y0<<8)|v];
+//		*(pointer++) = t_g2[(y0<<8)|t_g1[(u<<8)|v]];
+//		*(pointer++) = t_b[(y0<<8)|u];
+
+//		*(pointer++) = t_r[(y1<<8)|v];
+//		*(pointer++) = t_g2[(y1<<8)|t_g1[(u<<8)|v]];
+//		*(pointer++) = t_b[(y1<<8)|u];
 		
-		*(pointer++) = t_r[(y1<<8)|v];
-		*(pointer++) = t_g2[(y1<<8)|t_g1[(u<<8)|v]];
-		*(pointer++) = t_b[(y1<<8)|u];
+		*(pointer++) = YUV2R(y0, u, v);
+		*(pointer++) = YUV2G(y0, u, v);
+		*(pointer++) = YUV2B(y0, u, v);
+
+		*(pointer++) = YUV2R(y1, u, v);
+		*(pointer++) = YUV2G(y1, u, v);
+		*(pointer++) = YUV2B(y1, u, v);
 	}
 	
 	dst = outputBuffer;
