@@ -513,7 +513,7 @@ int main(int argc,char *argv[]){
 			{
 				imageRGB = filterYUVToRGB.process(currImage, imageWidth*imageHeight*2);
 				image_hsv = filterRGBToHSV.process(imageRGB, imageWidth*imageHeight);
-				roiData = filterLinePointsROI.processHsv((unsigned char *) image_hsv, area, area, linePointsROI, distanceHelper, scanHelperBall);
+				roiData = filterLinePointsROI.process((unsigned char *) image_gray, area, area, linePointsROI, distanceHelper, scanHelperBall);
 			}
 			else
 			{
