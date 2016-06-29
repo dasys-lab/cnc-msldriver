@@ -65,10 +65,11 @@ FilterYUV2RGB::~FilterYUV2RGB()
 #define YUV2G(Y, U, V) CLIP(( 298 * C(Y) - 100 * D(U) - 208 * E(V) + 128) >> 8)
 #define YUV2B(Y, U, V) CLIP(( 298 * C(Y) + 516 * D(U)              + 128) >> 8)
 
+// YCbCr -> RGB
+#define CYCbCr2R(Y, Cb, Cr) CLIP( Y + ( 91881 * Cr >> 16 ) - 179 )
+#define CYCbCr2G(Y, Cb, Cr) CLIP( Y - (( 22544 * Cb + 46793 * Cr ) >> 16) + 135)
+#define CYCbCr2B(Y, Cb, Cr) CLIP( Y + (116129 * Cb >> 16 ) - 226 )
 
-//Y  =      (0.257 * R) + (0.504 * G) + (0.098 * B) + 16
-//Cr = V =  (0.439 * R) - (0.368 * G) - (0.071 * B) + 128
-//Cb = U = -(0.148 * R) - (0.291 * G) + (0.439 * B) + 128
 
 void FilterYUV2RGB::process(unsigned char * src, unsigned char * &dst)
 {
@@ -90,13 +91,13 @@ void FilterYUV2RGB::process(unsigned char * src, unsigned char * &dst)
 //		*(pointer++) = t_g2[(y1<<8)|t_g1[(u<<8)|v]];
 //		*(pointer++) = t_b[(y1<<8)|u];
 		
-		*(pointer++) = YUV2R(y0, u, v);
-		*(pointer++) = YUV2G(y0, u, v);
-		*(pointer++) = YUV2B(y0, u, v);
+		*(pointer++) = CYCbCr2R(y0, u, v);
+		*(pointer++) = CYCbCr2G(y0, u, v);
+		*(pointer++) = CYCbCr2B(y0, u, v);
 
-		*(pointer++) = YUV2R(y1, u, v);
-		*(pointer++) = YUV2G(y1, u, v);
-		*(pointer++) = YUV2B(y1, u, v);
+		*(pointer++) = CYCbCr2R(y1, u, v);
+		*(pointer++) = CYCbCr2G(y1, u, v);
+		*(pointer++) = CYCbCr2B(y1, u, v);
 	}
 	
 	dst = outputBuffer;
