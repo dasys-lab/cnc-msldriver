@@ -394,6 +394,193 @@ std::vector<ROIData> FilterLinePointsROI::process(unsigned char * src, unsigned 
 }
 
 
+std::vector<ROIData> FilterLinePointsROI::processHsv(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperBall & helper)
+{
+	unsigned char * tgt = src;
+	unsigned char * tmp = (unsigned char *) malloc(width * height);
+	double * LookupTable = distanceHelper.getLookupTable();
+	short * lines = helper.getLines();
+	int * lineOffsets = helper.getLineOffsets();
+	short x;
+	short y;
+	short hist[256];
+	short kumhist[256];
+
+	memcpy(tmp, src, width*height);
+	memset(hist, 0, 256*sizeof(short));
+	memset(kumhist, 0, 256*sizeof(short));
+
+	LinePoints.clear();
+	std::vector<short> LinePointsX;
+	LinePointsX.clear();
+	std::vector<short> LinePointsY;
+	LinePointsY.clear();
+	std::vector<short> LinePointsW;
+	LinePointsW.clear();
+	std::vector<short> LinePointsUnrecX;
+	LinePointsUnrecX.clear();
+	std::vector<short> LinePointsUnrecY;
+	LinePointsUnrecY.clear();
+	std::vector<unsigned char> roiMaxInt;
+	LinePointsUnrecY.clear();
+
+	// Over all scanlines
+	for(short i = 0; i < helper.getNumberLines(); i++)
+	{
+		short b = 0;
+		short e = 0;
+		short * line = lines + lineOffsets[i];
+		short * linePtrBegin = line;
+		short * lbegin = NULL;
+		short * lend = NULL;
+		short * lmin = lines + lineOffsets[i];
+		short * lmax = lines + lineOffsets[i+1] - 2;
+
+		x = *line++;
+		y = *line++;
+
+		short vb = src[x*width + y];
+
+		short a = 1;
+
+		for(int j = lineOffsets[i] + 2; j < lineOffsets[i+1]; j+=2)
+		{
+			x = *line++;
+			y = *line++;
+			short va = src[x*width + y];
+
+			if((va > 50) || (va < 70))
+			{
+				short roilen=2;
+				lbegin = line - 2;
+				lend = line + 2;
+				short maxInt=va;
+
+				while(lend<lmax &&
+				      src[(*lend)*width + (*(lend+1))] > LinePointsThreshold-30 &&
+				      src[(*lend)*width + (*(lend+1))] > src[(*(lend+2))*width + (*(lend+3))] + LinePointsJump)
+				{
+					lend += 2;
+					line += 2;
+					j++;
+					roilen++;
+					maxInt = max(maxInt, src[(*lend)*width + (*(lend+1))]);
+				}
+				while(lbegin>lmin &&
+				      src[(*lbegin)*width + (*(lbegin+1))] > LinePointsThreshold-30) {
+				      //src[(*lbegin)*width + (*(lbegin+1))] > src[(*(lbegin+2))*width + (*(lbegin+3))] + LinePointsJump ) {
+					lbegin -= 2;
+					roilen++;
+					maxInt = max(maxInt, src[(*lbegin)*width + (*(lbegin+1))]);
+				}
+
+				if((lend-lbegin)/2 > MinLineWidth && (lend-lbegin)/2 < MaxLineWidth) {
+					short indX = *(lbegin+((roilen/2)*2));
+					short indY = *(lbegin+((roilen/2)*2) + 1);
+					LinePointsX.push_back(indY);
+					LinePointsY.push_back(indX);
+					LinePointsW.push_back(((lend-lbegin)/2 + 12)/2);
+					hist[maxInt]++;
+					roiMaxInt.push_back(maxInt);
+				}
+			}
+			vb = va;
+			a++;
+		}
+	}
+
+	//calc kumulative histogram
+	kumhist[0] = hist[0];
+	for(int i=1; i<256; i++) {
+		kumhist[i] = kumhist[i-1] + hist[i];
+	}
+	unsigned char minCol = ((float)kumhist[255])*0.9;
+	unsigned char minInt;
+	for(minInt=254; minInt>0; minInt--) {
+		if(kumhist[minInt] < minCol) break;
+	}
+
+	//find connected components
+ 	std::vector<ROIData> ROIrects;
+	ROIrects.clear();
+	ROIData rect;
+
+	short left, right, top, bottom;
+	for(int n=0; n<LinePointsX.size(); n++) {
+		if(roiMaxInt[n]<minInt) continue;
+		right  = LinePointsX[n]+LinePointsW[n];
+		left   = LinePointsX[n]-LinePointsW[n];
+		top    = LinePointsY[n]-LinePointsW[n];
+		bottom = LinePointsY[n]+LinePointsW[n];
+
+		//printf("LinePoint: %d %d %d %d\n", left,top, right,bottom);
+
+		for(int m=n; m<LinePointsX.size(); m++) {
+			if(roiMaxInt[n]<minInt) continue;
+			if(right > LinePointsX[m] && left < LinePointsX[m] && top < LinePointsY[m] && bottom > LinePointsY[m]) {
+				//one component? -> connect components together
+				left = min(left, LinePointsX[m]-LinePointsW[m]);
+				right = max(right, LinePointsX[m]+LinePointsW[m]);
+				top = min(top, LinePointsY[m]-LinePointsW[m]);
+				bottom = max(bottom, LinePointsY[m]+LinePointsW[m]);
+			}
+		}
+
+		rect.left = max(left, 1);
+		rect.right = min(right, width-2);
+		rect.top = max(top, 1);
+		rect.bottom = min(bottom, height-2);
+
+		rect.midX = (right+left)/2;
+		rect.midY = (top+bottom)/2;
+
+		bool valid = true;
+		bool replace = false;
+
+		//DASHIER IST EIN ECHT DRECKIGER HACK!!!
+		//if(rect.bottom-rect.top > 100 || rect.right-rect.left>100) valid = false;
+		//HACK ENDE
+
+		for(int m=0; m<ROIrects.size(); m++) {
+			if(ROIrects[m].left < rect.midX && ROIrects[m].right > rect.midX && ROIrects[m].bottom > rect.midY && ROIrects[m].top < rect.midY) {
+			//RIO is a other ROI -> ignore
+				valid = false;
+			}
+			if(ROIrects[m].midX > rect.left && ROIrects[m].midX < rect.right && ROIrects[m].midY > rect.bottom && ROIrects[m].midY < rect.top) {
+				replace = true;
+				valid = false;
+				ROIrects[m] = rect;
+			}
+		}
+		if(valid) ROIrects.push_back(rect);
+	}
+	if(kickerCount>1) ROIrects.push_back(kicker1);
+	if(kickerCount>0) ROIrects.push_back(kicker2);
+	if(kickerCount>2) ROIrects.push_back(kicker3);
+
+	for(int m=ROIrects.size()-1; m>=0; m--) {
+		if(ROIrects[m].bottom-ROIrects[m].top > 100 || ROIrects[m].right-ROIrects[m].left>100) {
+			ROIrects.erase(ROIrects.begin()+m);
+			m++;
+		}
+
+		//This should never happen!!!
+		if((ROIrects[m].left < 0) || (ROIrects[m].top < 0) || (ROIrects[m].bottom >= height) || (ROIrects[m].right >= width)) {
+			ROIrects.erase(ROIrects.begin()+m);
+			m++;
+		}
+	}
+
+//ab hier wird nurnoch umkopiert.
+	printf("FilterLinePointsROI - Number of LinePoints: %d %d\n", (int)LinePointsX.size(), (int)ROIrects.size());
+
+	free(tmp);
+
+	return ROIrects;
+}
+
+
+
 void FilterLinePointsROI::visualizeROIs(unsigned char * src, std::vector<ROIData>& ROIrects, int width, int height) {
 //Visalize ROI
 	for(int m=0; m<ROIrects.size(); m++) {

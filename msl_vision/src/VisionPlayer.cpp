@@ -36,7 +36,7 @@
 #include "filters/FilterYUVExtractSubImages.h"
 #include "filters/FilterYUVToRGB.h"
 #include "filters/FilterYUVToGray.h"
-#include "filters/FilterRGBToGray.h"
+#include "filters/FilterRGBToHSV.h"
 #include "filters/FilterDrawScanLines.h"
 #include "filters/FilterLinePoints.h"
 #include "filters/FilterLinePointsROI.h"
@@ -221,14 +221,7 @@ int main(int argc,char *argv[]){
 		if(!offline)
 		{
 			cam = new camera::ImagingSource(camera_vendor.c_str());
-			if(boHsv)
-			{
-				cam->setVideoMode(DC1394_VIDEO_MODE_640x480_RGB8);
-			}
-			else
-			{
-				cam->setVideoMode(DC1394_VIDEO_MODE_640x480_YUV422);
-			}
+			cam->setVideoMode(DC1394_VIDEO_MODE_640x480_YUV422);
 
 			cam->init();
 			std::cout << "Cam init" << std::endl;
@@ -272,7 +265,7 @@ int main(int argc,char *argv[]){
 
 		unsigned char * currImage = NULL, *currRealImage = NULL, *imageRGB = NULL, *image_gray = NULL, *image_uv = NULL,
 				*image_roi = NULL, *image_roiRoland = NULL, *saved_image = NULL, *image_gray_circle = NULL, *image_gray_seg = NULL,
-				*image_segmented = NULL, *imageSDir = NULL, *imBall = NULL, *imbrightenedGray = NULL;
+				*image_segmented = NULL, *imageSDir = NULL, *imBall = NULL, *imbrightenedGray = NULL, *image_hsv = NULL;
 		unsigned char * image_gray_saved = (unsigned char *) malloc(area*area);
 		unsigned char * prevImage = (unsigned char *) malloc(imageWidth*imageHeight*2);
 
@@ -308,7 +301,7 @@ int main(int argc,char *argv[]){
 		FilterYUVToRGB filterYUVToRGB(imageWidth, imageHeight);
 		FilterHoughCalib filterHoughCalib(imageWidth, imageHeight);
 		FilterYUVToGray filterYUVToGray(imageWidth, imageHeight);
-		FilterRGBToGray filterRGBToGray(imageWidth, imageHeight);
+		FilterRGBToHSV filterRGBToHSV(imageWidth, imageHeight);
 
 		//FilterHistoLin filterHistLin(area, area);
 		FilterSobelDir filterSobelDir(area, area);
@@ -419,14 +412,7 @@ int main(int argc,char *argv[]){
 				if(drawRGB)
 				{
 					std::cout << "DEBUG filterYUVtoRGB" << std::endl;
-					if(boHsv)
-					{
-						imageRGB = frame.getImagePtr();
-					}
-					else
-					{
-						imageRGB = filterYUVToRGB.process((unsigned char *) frame.getImagePtr(), imageWidth*imageHeight * 2);
-					}
+					imageRGB = filterYUVToRGB.process((unsigned char *) frame.getImagePtr(), imageWidth*imageHeight * 2);
 				}
 				currImage = (unsigned char *) frame.getImagePtr();
 				visionTimeOmniCamLong = supplementary::DateTime::getUtcNowC();
@@ -461,7 +447,7 @@ int main(int argc,char *argv[]){
 				FILE * logfile = fopen(path_filename, "r");
 
 				if(logfile != NULL){
-///tempHack					fread(saved_image, sizeof(char), imageWidth*imageHeight*3, logfile);
+					fread(saved_image, sizeof(char), imageWidth*imageHeight*3, logfile);
 					fclose(logfile);
 				}
 				else{
@@ -479,16 +465,7 @@ int main(int argc,char *argv[]){
 
 				currImage = saved_image;
 				if(drawRGB)
-				{
-					if(boHsv)
-					{
-						imageRGB = currImage;
-					}
-					else
-					{
-						imageRGB = filterYUVToRGB.process(currImage, imageWidth*imageHeight*2);
-					}
-				}
+					imageRGB = filterYUVToRGB.process(currImage, imageWidth*imageHeight*2);
 
 				visionTimeOmniCamLong = supplementary::DateTime::getUtcNowC();
 			}
@@ -508,39 +485,21 @@ int main(int argc,char *argv[]){
 			}
 
 			// Filters for calibrating camera middle
-			if(drawCircle)
-			{
-				if(boHsv)
-				{
-					image_gray_circle = filterRGBToGray.process(currImage, imageWidth*imageHeight*2);
-				}
-				else
-				{
-					image_gray_circle = filterYUVToGray.process(currImage, imageWidth*imageHeight*2);
-				}
+			if(drawCircle){
+				image_gray_circle = filterYUVToGray.process(currImage, imageWidth*imageHeight*2);
 				filterHoughCalib.DrawCircle(mx, my, radius, (unsigned char *) image_gray_circle, imageWidth, imageHeight);
 				filterHoughCalib.DrawCircle(mx, my, 10, (unsigned char *) image_gray_circle, imageWidth, imageHeight);
 			}
 
 			//Extract Gray and UV Subimages (area x area) from the camera image
 			//image_gray not modified
-			//image_uv modified with thresholds
-			if(!boHsv)
-			{
-				filterYUVExtractSubImages.process(currImage, imageWidth, imageHeight, mx, my, image_gray, image_uv, image_roi, image_roiRoland, imbrightenedGray);
-			}
+			//image_uv modified with trhesholds
+			filterYUVExtractSubImages.process(currImage, imageWidth, imageHeight, mx, my, image_gray, image_uv, image_roi, image_roiRoland, imbrightenedGray);
 			printf("Stage 2: Copy gray scale Image\n");
 			memcpy(image_gray_saved, image_gray, area*area);
 			printf("Stage 3: Compute Image for Obstacles\n");
 			//Segmentation for collision avoidance and opponent detection
-			if(boHsv)
-			{
-				image_gray_seg = filterGrayToDarkSeg.process(image_gray, image_gray, area, area, imageMaskHelper);
-			}
-			else
-			{
-				image_gray_seg = filterGrayToDarkSeg.process(image_gray, image_uv, area, area, imageMaskHelper);
-			}
+			image_gray_seg = filterGrayToDarkSeg.process(image_gray, image_uv, area, area, imageMaskHelper);
 
 			printf("Stage 4: Detect Linepoints\n");
 			//Get LinePoints for Self-Localization
@@ -552,36 +511,25 @@ int main(int argc,char *argv[]){
 			printf("Stage 5: Detect ROIs\n");
 			if(boHsv)
 			{
-				roiData = filterLinePointsROI.process((unsigned char *) image_gray, area, area, linePointsROI, distanceHelper, scanHelperBall);
+				imageRGB = filterYUVToRGB.process(currImage, imageWidth*imageHeight*2);
+				image_hsv = filterRGBToHSV.process(imageRGB, imageWidth*imageHeight);
+				roiData = filterLinePointsROI.processHsv((unsigned char *) image_hsv, area, area, linePointsROI, distanceHelper, scanHelperBall);
 			}
 			else
 			{
 				roiData = filterLinePointsROI.process((unsigned char *) image_uv, area, area, linePointsROI, distanceHelper, scanHelperBall);
 			}
 
+
 			// rio Data contains which info???
 			printf("Stage 6: Insert Tracked ROI into ROI List\n");
 			roiData.insert(roiData.end()-kickerCount, curBallROI);
 
 			printf("Stage 7: Compute Sobel on ROIs\n");
-			if(boHsv)
-			{
-				imageSDir = filterSobelDir.process(image_gray, image_gray, roiData, area, area, edgethresh, edgemaskthresh);
-			}
-			else
-			{
-				imageSDir = filterSobelDir.process(image_uv, image_uv, roiData, area, area, edgethresh, edgemaskthresh);
-			}
+			imageSDir = filterSobelDir.process(image_uv, image_uv, roiData, area, area, edgethresh, edgemaskthresh);
 
 			printf("Stage 8: Apply Templatematching\n");
-			if(boHsv)
-			{
-				imBall = filterTMatch.process(imageSDir, balls, ballCount, image_gray, roiData, maskThresh, area, area, 4, 19, 6, image_roi);
-			}
-			else
-			{
-				imBall = filterTMatch.process(imageSDir, balls, ballCount, image_uv, roiData, maskThresh, area, area, 4, 19, 6, image_roi);
-			}
+			imBall = filterTMatch.process(imageSDir, balls, ballCount, image_uv, roiData, maskThresh, area, area, 4, 19, 6, image_roi);
 			printf("Stage 9: Clustering Ball Hypothesis\n");
 			clusterCount = ballClusterHelp.clusterBalls(balls, ballCount, cluster, 200);
 			//ballClusterHelp.clusterStdOut(cluster, clusterCount, mx, my, false);
@@ -744,14 +692,7 @@ int main(int argc,char *argv[]){
 						ballClusterHelp.visualizeCluster(image_uv, area, area, cluster, clusterCount);
 					if(drawROI)
 						filterLinePointsROI.visualizeROIs(image_uv, roiData, area, area);
-					if(boHsv)
-					{
-						xvDisplay2->displayFrameGRAY((char *) image_gray);
-					}
-					else
-					{
-						xvDisplay2->displayFrameGRAY((char *) image_uv);
-					}
+					xvDisplay2->displayFrameGRAY((char *) image_uv);
 				}
 			}
 

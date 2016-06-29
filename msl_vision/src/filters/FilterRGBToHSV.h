@@ -1,5 +1,5 @@
 /*
- * $Id: FilterYUVToGray.cpp 1531 2006-08-01 21:36:57Z phbaer $
+ * $Id: FilterRGBToHSV.h 1531 2006-08-01 21:36:57Z phbaer $
  *
  *
  * Copyright 2005,2006 Carpe Noctem, Distributed Systems Group,
@@ -20,50 +20,33 @@
  *
  * <description>
  */
-#include "FilterRGBToGray.h"
+#ifndef FilterRGBToHSV_H
+#define FilterRGBToHSV_H
 
-#include <algorithm>
+#include "Filter.h"
 
-FilterRGBToGray::FilterRGBToGray(int width, int height):Filter(OF_GRAY, width, height){
-
-	init();
-
-}
+class FilterRGBToHSV : public Filter {
 
 
+	public:
+	FilterRGBToHSV(int width, int height);
+		~FilterRGBToHSV();
+		
+		unsigned char * process(unsigned char * src, unsigned int imagesize);
 
-FilterRGBToGray::~FilterRGBToGray(){
+	protected:
 
-	cleanup();
+		void init();
+		void cleanup();
 
-}
+		unsigned char t_h[65536];
+//		unsigned char t_s[65536];
+//		unsigned char t_v[65536];
 
-
-unsigned char * FilterRGBToGray::process(unsigned char * src, unsigned int imagesize){
-
-	unsigned char * tgt = outputBuffer;
-
-	for(unsigned int i = 0; i < imagesize / 3; i++)
-	{
-		*tgt = 0.2989 * src[0] + 0.5870 * src[1] + 0.114 * src[2];
-		tgt++;
-		src += 3;
-	}
-
-	return outputBuffer;
-
-}
+};
 
 
 
-void FilterRGBToGray::init(){
 
-
-}
-
-
-void FilterRGBToGray::cleanup(){
-
-
-}
+#endif
 
