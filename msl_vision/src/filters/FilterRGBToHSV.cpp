@@ -37,60 +37,119 @@ FilterRGBToHSV::~FilterRGBToHSV(){
 	cleanup();
 
 }
+
+void FilterRGBToHSV::RGBtoHSV( float r, float g, float b, float *h, float *s, float *v )
+{
+	float min, max, delta;
+	min = std::fmin( std::fmin(r, g), b );
+	max = std::fmax( std::fmax(r, g), b );
+	*v = max;				// v
+	delta = max - min;
+
+	if( max != 0 )
+	{
+		*s = delta / max;		// s
+	}
+	else
+	{
+		// r = g = b = 0		// s = 0, v is undefined
+		*s = 0;
+		*h = -1;
+		return;
+	}
+
+	if( r == max )
+	{
+		*h = ( g - b ) / delta;		// between yellow & magenta
+	}
+	else if( g == max )
+	{
+		*h = 2 + ( b - r ) / delta;	// between cyan & yellow
+	}
+	else
+	{
+		*h = 4 + ( r - g ) / delta;	// between magenta & cyan
+	}
+	*h *= 60;				// degrees
+	if( *h < 0 )
+	{
+		*h += 360;
+	}
+}
+
+void FilterRGBToHSV::HSVtoRGB( float *r, float *g, float *b, float h, float s, float v )
+{
+	int i;
+	float f, p, q, t;
+	if( s == 0 ) {
+		// achromatic (grey)
+		*r = *g = *b = v;
+		return;
+	}
+	h /= 60;			// sector 0 to 5
+	i = floor( h );
+	f = h - i;			// factorial part of h
+	p = v * ( 1 - s );
+	q = v * ( 1 - s * f );
+	t = v * ( 1 - s * ( 1 - f ) );
+	switch( i ) {
+		case 0:
+			*r = v;
+			*g = t;
+			*b = p;
+			break;
+		case 1:
+			*r = q;
+			*g = v;
+			*b = p;
+			break;
+		case 2:
+			*r = p;
+			*g = v;
+			*b = t;
+			break;
+		case 3:
+			*r = p;
+			*g = q;
+			*b = v;
+			break;
+		case 4:
+			*r = t;
+			*g = p;
+			*b = v;
+			break;
+		default:		// case 5:
+			*r = v;
+			*g = p;
+			*b = q;
+			break;
+	}
+}
 		
 
 unsigned char * FilterRGBToHSV::process(unsigned char * src, unsigned int imagesize)
 {
     unsigned char * tgt = outputBuffer;
 
-    for (unsigned int i = 0; i < imagesize; i++)
+    for (unsigned int i = 0; i < imagesize; i += 3)
     {
-      int r = *src++ / 255;
-      int g = *src++ / 255;
-      int b = *src++ / 255;
-      int h = 0;
-      int s = 0;
-      int v = 0;
+      float r = (float)(*src++) / 255.0;
+      float g = (float)(*src++) / 255.0;
+      float b = (float)(*src++) / 255.0;
+      float h = 0.0;
+      float s = 0.0;
+      float v = 0.0;
 
-      int max = std::max(std::max(r,g),b);
-      int min = std::min(std::min(r,g),b);
+      this->RGBtoHSV(r, g, b, &h, &s, &v);
 
-      if(min == max)
-      {
-    	  h = 0;
-      }
-      else if(max == r)
-      {
-    	  h = 60 * (g-b) / (max-min);
-      }
-      else if(max == g)
-      {
-    	  h = 60 * (b-r) / (max-min);
-      }
-      else if(max == b)
-      {
-    	  h = 60 * (r-g) / (max-min);
-      }
+      s = 1.0;
+      v = 1.0;
 
-      if(h < 0)
-      {
-    	  h += 360;
-      }
+      this->HSVtoRGB(&r, &g, &b, h, s, v);
 
-      if(max == 0)
-      {
-    	  s = 0;
-      }
-      else
-      {
-    	  s = (max - min) / max;
-      }
-
-      v = max;
-
-      *(tgt++) = h;
-//      *(tgt++) = s;
-//      *(tgt++) = v;
+      *(tgt++) = (unsigned char)(h * 255.0 / 360.0);
+      *(tgt++) = (unsigned char)(s * 255.0);
+      *(tgt++) = (unsigned char)(v * 255.0);
     }
 
     return outputBuffer;

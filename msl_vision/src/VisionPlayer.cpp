@@ -409,12 +409,22 @@ int main(int argc,char *argv[]){
                     delete settings;
                 }
 
+				currImage = (unsigned char *) frame.getImagePtr();
+
+				if(boHsv)
+				{
+					imageRGB = filterYUVToRGB.process((unsigned char *) currImage, imageWidth*imageHeight * 2);
+					imageRGB = filterRGBToHSV.process((unsigned char *) imageRGB, imageWidth*imageHeight);
+				}
+
 				if(drawRGB)
 				{
 					std::cout << "DEBUG filterYUVtoRGB" << std::endl;
-					imageRGB = filterYUVToRGB.process((unsigned char *) frame.getImagePtr(), imageWidth*imageHeight * 2);
+					imageRGB = filterYUVToRGB.process((unsigned char *) currImage, imageWidth*imageHeight * 2);
 				}
-				currImage = (unsigned char *) frame.getImagePtr();
+
+
+
 				visionTimeOmniCamLong = supplementary::DateTime::getUtcNowC();
 				counter++;
 
@@ -509,16 +519,7 @@ int main(int argc,char *argv[]){
 
 
 			printf("Stage 5: Detect ROIs\n");
-			if(boHsv)
-			{
-				imageRGB = filterYUVToRGB.process(currImage, imageWidth*imageHeight*2);
-				image_hsv = filterRGBToHSV.process(imageRGB, imageWidth*imageHeight);
-				roiData = filterLinePointsROI.process((unsigned char *) image_gray, area, area, linePointsROI, distanceHelper, scanHelperBall);
-			}
-			else
-			{
-				roiData = filterLinePointsROI.process((unsigned char *) image_uv, area, area, linePointsROI, distanceHelper, scanHelperBall);
-			}
+			roiData = filterLinePointsROI.process((unsigned char *) image_uv, area, area, linePointsROI, distanceHelper, scanHelperBall);
 
 
 			// rio Data contains which info???

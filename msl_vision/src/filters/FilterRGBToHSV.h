@@ -38,11 +38,8 @@ class FilterRGBToHSV : public Filter {
 
 		void init();
 		void cleanup();
-
-		unsigned char t_h[65536];
-//		unsigned char t_s[65536];
-//		unsigned char t_v[65536];
-
+		void RGBtoHSV( float r, float g, float b, float *h, float *s, float *v );
+		void HSVtoRGB( float *r, float *g, float *b, float h, float s, float v );
 };
 
 
