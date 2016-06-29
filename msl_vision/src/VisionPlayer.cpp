@@ -97,7 +97,7 @@ int main(int argc,char *argv[]){
 				drawRGB = false, drawSegmented = false, lines = false, log = false, roi = false,
 				drawBall = false, directions = false, drawROI = false, drawRoland=false, localizeDebugFlag = false,
 				softhdr=false, input=false, isGoalie=false, streamMJpeg=false, sendROIImage=false, sendGrayImage=false,
-				localize=true;
+				localize=true, boHsv=false, boBigSize=false;
 		int fixed_number = 1;
 		XVDisplay * xvDisplay = NULL;
 		XVDisplay * xvDisplay2 = NULL;
@@ -156,6 +156,14 @@ int main(int argc,char *argv[]){
 				drawObstacles = true;
 			if(std::string(argv[i]) == "--mjpg")
 				streamMJpeg = true;
+			if(std::string(argv[i]) == "--hsv")
+			{
+				boHsv = true;
+			}
+			if(std::string(argv[i]) == "--bigSize")
+			{
+				boBigSize = true;
+			}
 		}
 
 		if(help){
@@ -190,8 +198,14 @@ int main(int argc,char *argv[]){
         short mx = vision->get<short>("Vision", "CameraMX", NULL);
         short my = vision->get<short>("Vision", "CameraMY", NULL);
 		short radius = vision->get<short>("Vision", "CameraRadius", NULL);
-		short imageWidth = 640;
-		short imageHeight = 480;
+		short imageWidth = 640; // 1280
+		short imageHeight = 480; // 960
+
+		if(boBigSize)
+		{
+			imageWidth = 1280;
+			imageHeight = 960;
+		}
 
         int edgethresh = vision->get<int>("Vision", "BallEdgethres", NULL);
         int edgemaskthresh = vision->get<int>("Vision", "BallEdgemaskthres", NULL);
@@ -199,7 +213,12 @@ int main(int argc,char *argv[]){
             Configuration *kh = (*sc)["KickHelper"];
             int kickerCount = (int)kh->tryGet<int>(3, "KickConfiguration", "KickerCount", NULL);
 		if(kickerCount>3) kickerCount=3;
+
 		int area = vision->get<int>("Vision", "ImageArea", NULL);
+		if(boBigSize)
+		{
+			area = 900;
+		}
 
 		if(display_frames){
 			xvDisplay = new XVDisplay(imageWidth, imageHeight, XV_UYVY);
@@ -214,7 +233,14 @@ int main(int argc,char *argv[]){
 
 		if(!offline) {
 			cam = new camera::ImagingSource(camera_vendor.c_str());
-			cam->setVideoMode(DC1394_VIDEO_MODE_640x480_YUV422);
+			if(boBigSize)
+			{
+				cam->setVideoMode(DC1394_VIDEO_MODE_1280x960_YUV422);
+			}
+			else
+			{
+				cam->setVideoMode(DC1394_VIDEO_MODE_640x480_YUV422);
+			}
 			cam->init();
 			std::cout << "Cam init" << std::endl;
 			if(isGoalie) cam->setManualSettingModesGoalie();
