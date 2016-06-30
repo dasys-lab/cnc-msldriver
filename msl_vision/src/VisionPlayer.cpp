@@ -531,7 +531,7 @@ int main(int argc,char *argv[]){
 			imageSDir = filterSobelDir.process(image_uv, image_uv, roiData, area, area, edgethresh, edgemaskthresh);
 
 			printf("Stage 8: Apply Templatematching\n");
-			imBall = filterTMatch.process(imageSDir, balls, ballCount, image_uv, roiData, maskThresh, area, area, 4, 19, 6, image_roi);
+			imBall = filterTMatch.process(imageSDir, balls, ballCount, image_uv, roiData, maskThresh, area, area, 3, 19, 6, image_roi);
 			printf("Stage 9: Clustering Ball Hypothesis\n");
 			clusterCount = ballClusterHelp.clusterBalls(balls, ballCount, cluster, 200);
 			//ballClusterHelp.clusterStdOut(cluster, clusterCount, mx, my, false);

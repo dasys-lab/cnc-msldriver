@@ -21,6 +21,7 @@
  * <description>
  */
 #include "FilterRGBToHSV.h"
+#include "../helpers/KeyHelper.h"
 
 #include <algorithm>
 
@@ -130,6 +131,28 @@ void FilterRGBToHSV::HSVtoRGB( float *r, float *g, float *b, float h, float s, f
 unsigned char * FilterRGBToHSV::process(unsigned char * src, unsigned int imagesize)
 {
     unsigned char * tgt = outputBuffer;
+	static float ms = 0.0, mv = 0.0;
+
+	if(KeyHelper::checkKey('t'))
+	{
+		ms += 1;
+		printf("Parameter s: %f\n", ms);
+	}
+	else if(KeyHelper::checkKey('T'))
+	{
+		ms -= 1;
+		printf("Parameter s: %f\n", ms);
+	}
+	else if(KeyHelper::checkKey('g'))
+	{
+		mv += 1;
+		printf("Parameter v: %f\n", mv);
+	}
+	else if(KeyHelper::checkKey('G'))
+	{
+		mv -= 1;
+		printf("Parameter v: %f\n", mv);
+	}
 
     for (unsigned int i = 0; i < imagesize; i += 3)
     {
@@ -142,17 +165,20 @@ unsigned char * FilterRGBToHSV::process(unsigned char * src, unsigned int images
 
       this->RGBtoHSV(r, g, b, &h, &s, &v);
 
-      //h = 30;
-	float yellow = 55;
-	float yWindow = 10.0;
+	float yellow = 60;
+	float yWindow = 40.0;
 	float green = 165;
-	float gWindow = 30.0;
-	if( (v > 0.9) && (h <= (yellow-yWindow) || (h >= (yellow+yWindow) ) ) )
+	float gWindow = 40.0;
+	
+//	s = 0.5;
+//	v = 0.5;
+	
+	if( (v > 0.75) && (h <= (yellow-yWindow) || (h >= (yellow+yWindow) ) ) )
 	{
 		s = 0; // white
 		v = 1;
 	}
-	else if( (v < 0.05) )
+	else if(v < 0.05)
 	{
 		v = 0; // black
 	}
@@ -160,16 +186,35 @@ unsigned char * FilterRGBToHSV::process(unsigned char * src, unsigned int images
 	{
 		if( (h > (yellow-yWindow)) && (h < (yellow+yWindow)) )
 		{
-			//h = 0; // red
 			h = yellow;
-			s = 1;
-			v = 1;
+//			h = 0; // red
+			if( (v > 0.1) && (s > 0.9)  )
+			{
+				s = 1;
+				v = 1;
+			}
+			else
+			{
+				// white
+				h = 120;
+				s = 0;
+				v = 1;
+			}
 		}
 		else if( (h > (green-gWindow)) && (h < (green+gWindow)) )
 		{
 			h = 120; // green
-			s = 1;
-			v = 1;
+			if( v > 0.1 )
+			{
+				s = 1;
+				v = 1;
+			}
+			else
+			{
+				// black
+				s = 0;
+				v = 0;
+			}
 		}
 		else
 		{
