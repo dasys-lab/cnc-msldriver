@@ -33,6 +33,7 @@ class FilterYUVToRGB : public Filter {
 		~FilterYUVToRGB();
 		
 		unsigned char * process(unsigned char * src, unsigned int imagesize);
+		unsigned char * processBack(unsigned char * src, unsigned int imagesize);
 
 	protected:
 

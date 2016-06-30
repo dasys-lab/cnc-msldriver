@@ -411,16 +411,17 @@ int main(int argc,char *argv[]){
 
 				currImage = (unsigned char *) frame.getImagePtr();
 
-				if(boHsv)
-				{
-					imageRGB = filterYUVToRGB.process((unsigned char *) currImage, imageWidth*imageHeight * 2);
-					imageRGB = filterRGBToHSV.process((unsigned char *) imageRGB, imageWidth*imageHeight);
-				}
-
 				if(drawRGB)
 				{
 					std::cout << "DEBUG filterYUVtoRGB" << std::endl;
 					imageRGB = filterYUVToRGB.process((unsigned char *) currImage, imageWidth*imageHeight * 2);
+				}
+
+				if(boHsv)
+				{
+					imageRGB  = filterYUVToRGB.process((unsigned char *) currImage, imageWidth*imageHeight * 2);
+					imageRGB  = filterRGBToHSV.process((unsigned char *) imageRGB,  imageWidth*imageHeight * 3);
+					currImage = filterYUVToRGB.processBack((unsigned char *)imageRGB, imageWidth*imageHeight * 3);
 				}
 
 

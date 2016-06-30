@@ -142,14 +142,49 @@ unsigned char * FilterRGBToHSV::process(unsigned char * src, unsigned int images
 
       this->RGBtoHSV(r, g, b, &h, &s, &v);
 
-      s = 1.0;
-      v = 1.0;
+      //h = 30;
+	float yellow = 55;
+	float yWindow = 10.0;
+	float green = 165;
+	float gWindow = 30.0;
+	if( (v > 0.9) && (h <= (yellow-yWindow) || (h >= (yellow+yWindow) ) ) )
+	{
+		s = 0; // white
+		v = 1;
+	}
+	else if( (v < 0.05) )
+	{
+		v = 0; // black
+	}
+	else
+	{
+		if( (h > (yellow-yWindow)) && (h < (yellow+yWindow)) )
+		{
+			//h = 0; // red
+			h = yellow;
+			s = 1;
+			v = 1;
+		}
+		else if( (h > (green-gWindow)) && (h < (green+gWindow)) )
+		{
+			h = 120; // green
+			s = 1;
+			v = 1;
+		}
+		else
+		{
+			//h = 240; // blue
+			s = 1;
+			//v = 1;
+		}
+	}
+	
 
       this->HSVtoRGB(&r, &g, &b, h, s, v);
 
-      *(tgt++) = (unsigned char)(h * 255.0 / 360.0);
-      *(tgt++) = (unsigned char)(s * 255.0);
-      *(tgt++) = (unsigned char)(v * 255.0);
+      *(tgt++) = (unsigned char)(r * 255.0);
+      *(tgt++) = (unsigned char)(g * 255.0);
+      *(tgt++) = (unsigned char)(b * 255.0);
     }
 
     return outputBuffer;
