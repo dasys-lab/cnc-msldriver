@@ -45,6 +45,17 @@
 
 #include <algorithm>
 
+#define CLIP(X) ( (X) > 255 ? 255 : (X) < 0 ? 0 : (X) )
+
+// YUV -> RGB
+#define C(Y) ( (Y) - 16  )
+#define D(U) ( (U) - 128 )
+#define E(V) ( (V) - 128 )
+
+#define YUV2R(Y, U, V) CLIP(( 298 * C(Y)              + 409 * E(V) + 128) >> 8)
+#define YUV2G(Y, U, V) CLIP(( 298 * C(Y) - 100 * D(U) - 208 * E(V) + 128) >> 8)
+#define YUV2B(Y, U, V) CLIP(( 298 * C(Y) + 516 * D(U)              + 128) >> 8)
+
 FilterYUVToRGB::FilterYUVToRGB(int width, int height):Filter(OF_RGB, width, height) {
 
 	init();
