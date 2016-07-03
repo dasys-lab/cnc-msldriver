@@ -126,9 +126,41 @@ void FilterRGBToHSV::HSVtoRGB( float *r, float *g, float *b, float h, float s, f
 			break;
 	}
 }
+
+
+unsigned char * FilterRGBToHSV::blackParts(unsigned char * src, unsigned int imagesize)
+{
+    unsigned char * tgt = outputBuffer;
+
+    for (unsigned int i = 0; i < imagesize; i += 3)
+    {
+        float r = (float)(*src++) / 255.0;
+        float g = (float)(*src++) / 255.0;
+        float b = (float)(*src++) / 255.0;
+        float h = 0.0;
+        float s = 0.0;
+        float v = 0.0;
+
+        // convert to hsv
+        this->RGBtoHSV(r, g, b, &h, &s, &v);
+
+        if(v > 0.05)
+       	{
+            // black
+            *(tgt++) = 0;
+       	}
+       	else if(v < 0.05)
+       	{
+            // white
+            *(tgt++) = 1;
+       	}
+    }
+
+    return outputBuffer;
+}
 		
 
-unsigned char * FilterRGBToHSV::process(unsigned char * src, unsigned int imagesize)
+unsigned char * FilterRGBToHSV::segmentRgb(unsigned char * src, unsigned int imagesize)
 {
     unsigned char * tgt = outputBuffer;
 	static float ms = 0.0, mv = 0.0;

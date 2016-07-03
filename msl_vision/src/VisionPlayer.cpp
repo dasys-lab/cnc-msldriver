@@ -409,28 +409,12 @@ int main(int argc,char *argv[]){
                     delete settings;
                 }
 
+                // Get raw image from the camera
 				currImage = (unsigned char *) frame.getImagePtr();
 
-				if(drawRGB)
-				{
-					std::cout << "DEBUG filterYUVtoRGB" << std::endl;
-					imageRGB = filterYUVToRGB.process((unsigned char *) currImage, imageWidth*imageHeight * 2);
-				}
-
-				if(boHsv)
-				{
-					imageRGB  = filterYUVToRGB.process((unsigned char *) currImage, imageWidth*imageHeight * 2);
-					imageRGB  = filterRGBToHSV.process((unsigned char *) imageRGB,  imageWidth*imageHeight * 3);
-					currImage = filterYUVToRGB.processBack((unsigned char *)imageRGB, imageWidth*imageHeight * 3);
-				}
-
-
-
-				visionTimeOmniCamLong = supplementary::DateTime::getUtcNowC();
-				counter++;
-
-				if(log && counter >= 200 && counter % 10 >= 0){
-
+                // Log image by writing the camera image to the file system 
+				if(log && counter >= 200 && counter % 10 >= 0)
+                {
 					char filename[256];
 					char path[256];
 					strcpy(path, getenv("VISION_LOG"));
@@ -442,8 +426,30 @@ int main(int argc,char *argv[]){
 					fclose(logfile);
 					writeCounter++;
 				}
+
+				if(drawRGB)
+				{
+					std::cout << "DEBUG filterYUVtoRGB" << std::endl;
+					imageRGB = filterYUVToRGB.process((unsigned char *) currImage, imageWidth*imageHeight * 2);
+				}
+
+				if(boHsv)
+				{
+                    // Convert raw image (yuv) to rgb
+					imageRGB  = filterYUVToRGB.process((unsigned char *) currImage, imageWidth * imageHeight * 2);
+                    // Convert rgb to hsv modify it and calculate it back to rgb
+					imageRGB  = filterRGBToHSV.segmentRgb((unsigned char *)imageRGB,  imageWidth * imageHeight * 3);
+                    // Generate black image for obstacle detection
+                    image_gray_seg = filterRGBToHSV.blackParts((unsigned char *)imageRGB, imageWidth * imageHeight * 3);
+                    // Convert the modifyed rgb back to yuv
+					currImage = filterYUVToRGB.processBack((unsigned char *)imageRGB, imageWidth * imageHeight * 3);
+				}
+
+				visionTimeOmniCamLong = supplementary::DateTime::getUtcNowC();
+				counter++;
 			}
-			else {
+			else
+            {
 				char filename[256], filename2[256];
 				char path[256], path2[256];
 				strcpy(path, getenv("VISION_LOG"));
@@ -480,6 +486,7 @@ int main(int argc,char *argv[]){
 
 				visionTimeOmniCamLong = supplementary::DateTime::getUtcNowC();
 			}
+
 			struct timeval tv_before;
 			gettimeofday(&tv_before, NULL);
 			visionTimeOmniCamLong -= 700000;
@@ -510,7 +517,10 @@ int main(int argc,char *argv[]){
 			memcpy(image_gray_saved, image_gray, area*area);
 			printf("Stage 3: Compute Image for Obstacles\n");
 			//Segmentation for collision avoidance and opponent detection
-			image_gray_seg = filterGrayToDarkSeg.process(image_gray, image_uv, area, area, imageMaskHelper);
+            if( !boHsv )
+            {
+			    image_gray_seg = filterGrayToDarkSeg.process(image_gray, image_uv, area, area, imageMaskHelper);
+            }
 
 			printf("Stage 4: Detect Linepoints\n");
 			//Get LinePoints for Self-Localization

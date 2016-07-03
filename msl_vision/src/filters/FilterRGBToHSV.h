@@ -29,10 +29,11 @@ class FilterRGBToHSV : public Filter {
 
 
 	public:
-	FilterRGBToHSV(int width, int height);
+	    FilterRGBToHSV(int width, int height);
 		~FilterRGBToHSV();
-		
-		unsigned char * process(unsigned char * src, unsigned int imagesize);
+        
+        unsigned char * segmentRgb(unsigned char * src, unsigned int imagesize);
+        unsigned char * blackParts(unsigned char * src, unsigned int imagesize);
 
 	protected:
 

@@ -46,7 +46,6 @@ class FilterLinePointsROI  : public Filter {
 		//unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperBall & helper);
 
 		std::vector<ROIData> process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperBall & helper);
-		std::vector<ROIData> processHsv(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperBall & helper);
 
 		void visualizeROIs(unsigned char * src, std::vector<ROIData>& ROIrects, int width, int height);
 	protected:
