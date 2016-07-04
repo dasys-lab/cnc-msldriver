@@ -53,18 +53,9 @@ FilterTemplateMatching::FilterTemplateMatching(int width, int height):Filter(OF_
 
 	this->sc = SystemConfig::getInstance();
 	Configuration *loc = (*this->sc)["ROI"];
-
-        Bx1 = (int)loc->get<int>("ROI", "Kicker1X", NULL);
-        By1 = (int)loc->get<int>("ROI", "Kicker1Y", NULL);
-
-        Bx2 = (int)loc->get<int>("ROI", "Kicker2X", NULL);
-        By2 = (int)loc->get<int>("ROI", "Kicker2Y", NULL);
-
-        Bx3 = (int)loc->get<int>("ROI", "Kicker3X", NULL);
-        By3 = (int)loc->get<int>("ROI", "Kicker3Y", NULL);
-
-	Configuration *kh = (*this->sc)["KickHelper"];
-	this->kickerCount = (int)kh->tryGet<int>(3, "KickConfiguration", "KickerCount", NULL);
+    
+    Bx = (int)loc->get<int>("ROI", "KickerX", NULL);
+    By = (int)loc->get<int>("ROI", "KickerY", NULL);
 
     Configuration *vision = (*sc)["Vision"];
     duelBlackCountThreshold = vision->tryGet<int>(800, "Vision", "DuelBlackCountThreshold", NULL);
@@ -112,40 +103,18 @@ float inline FilterTemplateMatching::dir(int gx, int gy, int threshold) {
 	return grad;
 }
 
-int FilterTemplateMatching::ballInKickerTest(unsigned char * src, int kickerNum, int* &ballb, int& ballCount, int bc) {
+int FilterTemplateMatching::ballInKickerTest(unsigned char * src, int* &ballb, int& ballCount, int bc) {
 	int sum, ist, index, minT, maxT, lookUpPos=0;
 	int ret=0;
 	int err;
-	switch(kickerNum) {
-		case 0:
-			minT = 3;
-			maxT = 8;
-			err = 4; //3 ?
-			break;
-		case 1:
-			minT = 6;
-			maxT = 6+6;
-			err = 4; // 3?
-			break;
-		case 2:
-			minT = 10;
-			maxT = 10+5;
-			err = 4; //3 ?
-			
-			break;
-		default:
-			return false;
-	}
 
-	int inc=3;
-	int maxPoints = extendedPoints;
-	if(kickerNum==1) maxPoints = kickersPoints;
-	for(int k=kickerNum; k<maxPoints; k+=inc) {
-		if(k>kickersPoints) { 
-			inc = 2;
-			err = 2;
-		}
-		//cout << k << " " << maxPoints << " " << kickersPoints << " " << ballKickerPos[k] <<  endl;
+	minT = 6;
+	maxT = 6+6;
+	err = 4; // 3?
+
+	int maxPoints = kickersPoints;
+    
+    for(int k=0; k<maxPoints; k++) {
 		index = ballKickerPos[k];
 		//src[index]=255;
 		for(int i=15; i<18; i++) {
@@ -194,7 +163,6 @@ unsigned char * FilterTemplateMatching::process(unsigned char * src, int* &ballb
 	int ist;
 	int index;
 	int lookUpPos;
-	//int Bx1 = 202, Bx2 = 233, Bx3 = 263, By1 = 265, By2 = 209, By3 = 265;
 
 	ballb = balls;
 
@@ -255,19 +223,8 @@ unsigned char * FilterTemplateMatching::process(unsigned char * src, int* &ballb
 		}
 	}
 
-	if(kickerCount>1) {
-		if(ballInKickerTest(src, 0, ballb, ballCount, bc)) {
-		return outputBuffer;
-		}
-	}
-	if(kickerCount>0) {
-		if(ballInKickerTest(src, 1, ballb, ballCount, bc)) {
-			return outputBuffer;
-		}
-	}
-	if(kickerCount>2) {
-		ballInKickerTest(src, 2, ballb, ballCount, bc);
-	}
+	ballInKickerTest(src, ballb, ballCount, bc);
+
 	return outputBuffer;
 }
 
@@ -294,7 +251,6 @@ unsigned char * FilterTemplateMatching::process(unsigned char * src, int* &ballb
 	int ist;
 	int index;
 	int lookUpPos;
-	//int Bx1 = 202, Bx2 = 233, Bx3 = 263, By1 = 265, By2 = 209, By3 = 265;
 
 	//int minBallSize=minRad;
 	//int minballSizeROI=minRad;
@@ -308,7 +264,7 @@ unsigned char * FilterTemplateMatching::process(unsigned char * src, int* &ballb
 	ballCount = 0;
 	int bc = 0;
 
-	for(int n=0; n<roiData.size()-kickerCount; n++){
+	for(int n=0; n<roiData.size(); n++){
 		dat = roiData[n];
 
 
@@ -383,31 +339,10 @@ unsigned char * FilterTemplateMatching::process(unsigned char * src, int* &ballb
         SpicaHelper::duel = false;
     }
 
-    if(avgROIInt(roiData[roiData.size()-3], width, gray, 80)>80 && kickerCount>1) {
-		if(ballInKickerTest(src, 0, ballb, ballCount, bc)) {
+    if(avgROIInt(roiData[roiData.size()-(2)], width, gray, 80)>80) {
+		if(ballInKickerTest(src, ballb, ballCount, bc)) {
             SpicaHelper::haveBall = true;
-			return outputBuffer;
 		}
-	}
-	if(kickerCount>1) {
-        if(avgROIInt(roiData[roiData.size()-(2)], width, gray, 80)>80) {
-			if(ballInKickerTest(src, 1, ballb, ballCount, bc)) {
-                SpicaHelper::haveBall = true;
-				return outputBuffer;
-			}
-		}
-	} else if (kickerCount ==1) {
-        if(avgROIInt(roiData[roiData.size()-1], width, gray, 80)>80) {
-                if(ballInKickerTest(src, 1, ballb, ballCount, bc)) {
-                        SpicaHelper::haveBall = true;
-                        return outputBuffer;
-                }
-        }
-	}
-    if(avgROIInt(roiData[roiData.size()-1], width, gray, 80)>80 && kickerCount>2) {
-        if(ballInKickerTest(src, 2, ballb, ballCount, bc)) {
-            SpicaHelper::haveBall = true;
-        }
 	}
 	return outputBuffer;
 }
@@ -423,35 +358,13 @@ void FilterTemplateMatching::init(int width, int height){
 	balls = (int*) malloc(MAXBALLNUM * B_SIZE * sizeof(int));
 	ballKickerPos = (int*) malloc(3000*sizeof(int));
 	
-	int B1 = Bx1 + By1*width;
-	int B2 = Bx2 + By2*width;
-	int B3 = Bx3 + By3*width;
+	int B = Bx + By*width;
 
 	kickersPoints = 0;
 
-
 	for(int x=-14; x<15; x++) {
 		for(int y=-13; y<14; y++) {
-			ballKickerPos[kickersPoints++] = B1 + (x-5) + (y)*width; 
-			ballKickerPos[kickersPoints++] = B3 + (x+5) + (y)*width;
-		}
-	}
-
-	for(int x=-14; x<15; x++) {
-		for(int y=-13; y<14; y++) {
-			ballKickerPos[kickersPoints++] = B2 + (y) + (x-8)*width;
-		}
-	}
-
-
-	extendedPoints = kickersPoints;
-	//Extended Kickerspositions
-	
-        for(int x=-6; x<8; x++) {
-		for(int y=6; y<26; y++) {
-			ballKickerPos[extendedPoints++] = B1 + (x-8) + (y)*width;
-			ballKickerPos[extendedPoints++] = B3 + (x+7) + (y)*width;
-			//cout << "blub " << extendedPoints << " " << ballKickerPos[extendedPoints-1] << " " << ballKickerPos[extendedPoints-2] << endl;
+			ballKickerPos[kickersPoints++] = B + (y) + (x-8)*width;
 		}
 	}
 

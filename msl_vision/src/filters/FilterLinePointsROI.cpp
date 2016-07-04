@@ -36,7 +36,6 @@ FilterLinePointsROI::FilterLinePointsROI(int area):Filter(OF_ZERO, area, area){
 	MY = area/2;
 
 	Configuration *kh = (*this->sc)["KickHelper"];
-	kickerCount = (int)kh->tryGet<int>(3, "KickConfiguration", "KickerCount", NULL);
 
 	Configuration *loc = (*this->sc)["ROI"];
 	LinePointsThreshold = (unsigned char)loc->get<int>("ROI", "LinePointsThreshold", NULL);
@@ -44,31 +43,14 @@ FilterLinePointsROI::FilterLinePointsROI(int area):Filter(OF_ZERO, area, area){
 	MinLineWidth = (unsigned char)loc->get<int>("ROI", "MinLineWidth", NULL);
 	MaxLineWidth = (unsigned char)loc->get<int>("ROI", "MaxLineWidth", NULL);
 
-	kicker1.midX = (int)loc->get<int>("ROI", "Kicker1X", NULL);
-	kicker1.midY = (int)loc->get<int>("ROI", "Kicker1Y", NULL);
-	kicker1.left = kicker1.midX - 26;
-	kicker1.right = kicker1.midX;
-	kicker1.top = kicker1.midY - 28;
-	kicker1.bottom = kicker1.midY + 28;
-
-
-	kicker2.midX = (int)loc->get<int>("ROI", "Kicker2X", NULL);
-	kicker2.midY = (int)loc->get<int>("ROI", "Kicker2Y", NULL);
-	kicker2.left = kicker2.midX - 28;
-	kicker2.right = kicker2.midX + 28;
-	kicker2.top = kicker2.midY - 30;
-	kicker2.bottom = kicker2.midY;
-
-	kicker3.midX = (int)loc->get<int>("ROI", "Kicker3X", NULL);
-	kicker3.midY = (int)loc->get<int>("ROI", "Kicker3Y", NULL);
-	kicker3.left = kicker3.midX;
-	kicker3.right = kicker3.midX + 26;
-	kicker3.top = kicker3.midY - 28;
-	kicker3.bottom = kicker3.midY + 28;
-
+	kicker.midX = (int)loc->get<int>("ROI", "KickerX", NULL);
+	kicker.midY = (int)loc->get<int>("ROI", "KickerY", NULL);
+	kicker.left = kicker.midX - 28;
+	kicker.right = kicker.midX + 28;
+	kicker.top = kicker.midY - 30;
+	kicker.bottom = kicker.midY;
 
 	init();
-
 }
 
 
@@ -291,9 +273,8 @@ std::vector<ROIData> FilterLinePointsROI::process(unsigned char * src, unsigned 
 		}
 		if(valid) ROIrects.push_back(rect);
 	}
-	if(kickerCount>1) ROIrects.push_back(kicker1);
-	if(kickerCount>0) ROIrects.push_back(kicker2);
-	if(kickerCount>2) ROIrects.push_back(kicker3);
+
+	ROIrects.push_back(kicker);
 
 	for(int m=ROIrects.size()-1; m>=0; m--) {
 		if(ROIrects[m].bottom-ROIrects[m].top > 100 || ROIrects[m].right-ROIrects[m].left>100) {

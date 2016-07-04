@@ -353,8 +353,6 @@ void MainWindow::processFilter() {
         int edgemaskthresh = vision->get<int>("Vision", "BallEdgemaskthres", NULL);
         int maskThresh = vision->get<int>("Vision", "BallTemplMaskThres", NULL);
         Configuration *kh = (*sc)["KickHelper"];
-        int kickerCount = (int)kh->tryGet<int>(3, "KickConfiguration", "KickerCount", NULL);
-        if(kickerCount>3) kickerCount=3;
 
         unsigned char * currImage = NULL;
 

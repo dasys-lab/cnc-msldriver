@@ -92,30 +92,15 @@ float inline FilterTemplateMatchingGoalie::dir(int gx, int gy, int threshold) {
 	return grad;
 }
 
-bool FilterTemplateMatchingGoalie::ballInKickerTest(unsigned char * src, int kickerNum) {
+bool FilterTemplateMatchingGoalie::ballInKickerTest(unsigned char * src) {
 	int sum, ist, index, minT, maxT, lookUpPos=0;
 	int err;
-	switch(kickerNum) {
-		case 0:
-			minT = 3;
-			maxT = 8;
-			err = 2;
-			break;
-		case 1:
-			minT = 6;
-			maxT = 6+6;
-			err = 3;
-			break;
-		case 2:
-			minT = 10;
-			maxT = 10+5;
-			err = 2;
-			break;
-		default:
-			return false;
-	}
+	
+    minT = 6;
+	maxT = 6+6;
+	err = 3;
 
-	for(int k=kickerNum; k<kickersPoints; k+=3) {
+	for(int k=0; k<kickersPoints; k++) {
 		index = ballKickerPos[k];
 		for(int i=15; i<16; i++) {
 			sum=err;
@@ -165,7 +150,6 @@ unsigned char * FilterTemplateMatchingGoalie::process(unsigned char * src, int* 
 	int ist;
 	register int index;
 	int lookUpPos;
-	//int Bx1 = 202, Bx2 = 233, Bx3 = 263, By1 = 265, By2 = 209, By3 = 265;
 
 	ballb = balls;
 	ROIData dat;
@@ -289,17 +273,13 @@ void FilterTemplateMatchingGoalie::init(int width, int height){
 	int rx, ry;
 	balls = (int*) malloc(MAXBALLNUM * B_SIZE * sizeof(int));
 	
-	int B1 = Bx1 + By1*width;
-	int B2 = Bx2 + By2*width;
-	int B3 = Bx3 + By3*width;
+	int B = Bx + By*width;
 
 	kickersPoints = 0;
 
 	for(int x=-3; x<4; x++) {
 		for(int y=-3; y<4; y++) {
-			ballKickerPos[kickersPoints++] = B1 + x + y*width; 
-			ballKickerPos[kickersPoints++] = B2 + x + y*width;
-			ballKickerPos[kickersPoints++] = B3 + x + y*width;
+			ballKickerPos[kickersPoints++] = B + x + y*width;
 		}
 	}
 

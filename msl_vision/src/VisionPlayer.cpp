@@ -201,9 +201,6 @@ int main(int argc,char *argv[]){
         int edgethresh = vision->get<int>("Vision", "BallEdgethres", NULL);
         int edgemaskthresh = vision->get<int>("Vision", "BallEdgemaskthres", NULL);
         int maskThresh = vision->get<int>("Vision", "BallTemplMaskThres", NULL);
-            Configuration *kh = (*sc)["KickHelper"];
-            int kickerCount = (int)kh->tryGet<int>(3, "KickConfiguration", "KickerCount", NULL);
-		if(kickerCount>3) kickerCount=3;
 
 		int area = vision->get<int>("Vision", "ImageArea", NULL);
 
@@ -535,7 +532,7 @@ int main(int argc,char *argv[]){
 
 			// rio Data contains which info???
 			printf("Stage 6: Insert Tracked ROI into ROI List\n");
-			roiData.insert(roiData.end()-kickerCount, curBallROI);
+			roiData.push_back(curBallROI);
 
 			printf("Stage 7: Compute Sobel on ROIs\n");
 			imageSDir = filterSobelDir.process(image_uv, image_uv, roiData, area, area, edgethresh, edgemaskthresh);

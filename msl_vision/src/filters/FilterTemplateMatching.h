@@ -39,7 +39,7 @@ class  FilterTemplateMatching : public Filter {
 		FilterTemplateMatching(int width, int height);
 		~FilterTemplateMatching();
 		
-		int ballInKickerTest(unsigned char * src, int kickerNum, int* &ballb, int& ballCount, int bc);
+		int ballInKickerTest(unsigned char * src, int* &ballb, int& ballCount, int bc);
 		unsigned char * process(unsigned char * src, int* &ballb, int& ballCount, unsigned char * mask, int maskThresh, int width, int height, int minRad, int maxRad,int threshold);
 
 		unsigned char * process(unsigned char * src, int* &ballb, int& ballCount, unsigned char * mask, std::vector<ROIData> &roiData, int maskThresh, int width, int height, int minRad, int maxRad,int threshold, unsigned char * gray);
@@ -63,8 +63,7 @@ class  FilterTemplateMatching : public Filter {
 		static const int CIRCPOINTS = 12;
 		static const int COFFSET = 3*CIRCPOINTS;
 		//static const int Bx1 = 202, Bx2 = 232, Bx3 = 262, By1 = 249, By2 = 196, By3 = 248;
-		int Bx1, Bx2, Bx3, By1, By2, By3;
-		int kickerCount;
+		int Bx, By;
 
 		void init(int width, int height);
 		void cleanup();

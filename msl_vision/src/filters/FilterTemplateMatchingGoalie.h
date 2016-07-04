@@ -37,7 +37,7 @@ class  FilterTemplateMatchingGoalie : public Filter {
 		FilterTemplateMatchingGoalie(int width, int height);
 		~FilterTemplateMatchingGoalie();
 		
-		bool ballInKickerTest(unsigned char * src, int kickerNum);
+		bool ballInKickerTest(unsigned char * src);
 		unsigned char * process(unsigned char * src, int* &ballb, int& ballCount, unsigned char * mask, std::vector<ROIData> &roiData, int maskThresh, int width, int height, int minRad, int maxRad,int threshold, unsigned char * gray);
 
 	protected:
@@ -55,7 +55,7 @@ class  FilterTemplateMatchingGoalie : public Filter {
 		static const float pi;
 		static const int CIRCPOINTS = 12;
 		static const int COFFSET = 3*CIRCPOINTS;
-		static const int Bx1 = 202, Bx2 = 233, Bx3 = 262, By1 = 247, By2 = 198, By3 = 246;
+		static const int Bx = 233, By = 198;
 
 		void init(int width, int height);
 		void cleanup();

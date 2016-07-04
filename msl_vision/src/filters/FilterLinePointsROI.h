@@ -58,8 +58,7 @@ class FilterLinePointsROI  : public Filter {
 		int MX;
 		int MY;
 	
-		ROIData kicker1, kicker2, kicker3;
-		int kickerCount;
+		ROIData kicker;
 
 		unsigned char LinePointsThreshold;
 		unsigned char LinePointsJump;
