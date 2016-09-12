@@ -60,7 +60,7 @@ int gonz_get_mode() {
 void gonz_update_derived_settings() {
     sinphi = sin(current_settings.definingAngle);
     cosphi = cos(current_settings.definingAngle);
-    wheelcirc = TWO_PI * current_settings.wheelRadius * calibCoefficient;
+    wheelcirc = TWO_PI * current_settings.wheelRadius;
     robotcirc = TWO_PI * current_settings.robotRadius;
     finfactor = (double)current_settings.gear_ratio_denominator/(wheelcirc*(double)current_settings.gear_ratio_nominator)*60.0;
 }
@@ -151,6 +151,11 @@ void gonz_control() { //controller comes in here
     gonz_send_cmd();
 }
 void gonz_calc_odometry() { //TODO: Optimise!
+
+	//if (abs(ep->ActualRPM(0) - ep->ActualRPM(1) + ep->ActualRPM(2) - ep->ActualRPM(3) ) > 100)
+	//{
+		std::cout << "0: " << ep->ActualRPM(0) << "\t1: " << ep->ActualRPM(1) << "\t2: " << ep->ActualRPM(2) << "\t3: " << ep->ActualRPM(3) << "\t" << ep->ActualRPM(0) - ep->ActualRPM(1) + ep->ActualRPM(2) - ep->ActualRPM(3) << std::endl;
+	//}
     unsigned char i;
     gonz_state.actualMotion.rotation = 0;
     for (i=0; i<4; i++) {
@@ -161,13 +166,13 @@ void gonz_calc_odometry() { //TODO: Optimise!
     gonz_state.actualMotion.x += -ep->ActualRPM(1);
     gonz_state.actualMotion.x +=  ep->ActualRPM(2);
     gonz_state.actualMotion.x +=  ep->ActualRPM(3);
-    gonz_state.actualMotion.x *= ((double)current_settings.gear_ratio_nominator) / ((double)current_settings.gear_ratio_denominator * cosphi*4.0*60.0)*wheelcirc;
+    gonz_state.actualMotion.x *= ((double)current_settings.gear_ratio_nominator) / ((double)current_settings.gear_ratio_denominator * cosphi*4.0*60.0)*wheelcirc*calibCoefficientX;
 
     gonz_state.actualMotion.y =   ep->ActualRPM(0);
     gonz_state.actualMotion.y += -ep->ActualRPM(1);
     gonz_state.actualMotion.y += -ep->ActualRPM(2);
     gonz_state.actualMotion.y +=  ep->ActualRPM(3);
-    gonz_state.actualMotion.y *= (double)current_settings.gear_ratio_nominator / ((double)current_settings.gear_ratio_denominator*sinphi*4.0*60.0)*wheelcirc;
+    gonz_state.actualMotion.y *= (double)current_settings.gear_ratio_nominator / ((double)current_settings.gear_ratio_denominator*sinphi*4.0*60.0)*wheelcirc*calibCoefficientY;
 
     //printf("ODO: x: %f\ty: %f\tr: %f\trpm:%d\n",gonz_state.actualMotion.x,gonz_state.actualMotion.y,gonz_state.actualMotion.rotation,ep->ActualRPM(0));
 
@@ -252,7 +257,7 @@ void gonz_send_odometry() {
     ro.position = pi;
     RosHelper::rawOdo = ro;
     RosHelper::sendOdometry();
-	std::cout<<"RPM 0: "<<ep->ActualRPM(0)<<"\tRPM 1: "<<ep->ActualRPM(1)<<"\tRPM 2: "<<ep->ActualRPM(2)<<"\tRPM 3: "<<ep->ActualRPM(3)<<std::endl;
+	//std::cout<<"WheelCirc: "<<wheelcirc<<std::endl;
 
 //std::cout << pi->getAngle() << "\t" << pi->getX() << "\t" << pi->getY() << "\t" << ro->getTimestamp() <<"\n";
 }

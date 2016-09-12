@@ -19,11 +19,11 @@
 #define GONZ_MODE_TEST 1
 
 
-
+extern double calibCoefficientX;
+extern double calibCoefficientY;
 
 extern Controlling::EposCan *ep;
 extern controller_settings current_settings;
-extern double calibCoefficient;
 
 typedef struct  {
 	double angle; //in rad/1024

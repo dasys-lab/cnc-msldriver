@@ -11,6 +11,7 @@ struct timeval RosHelper::last_cmd_received;
 ros::Publisher RosHelper::rawOdo_pub;
 ros::Subscriber RosHelper::motionControl_sub;
 ros::AsyncSpinner *RosHelper::spinner;
+ros::Subscriber RosHelper::calibCoefficient_sub;
 
 
 void RosHelper::initialize(int argc, char** argv) { 
@@ -22,6 +23,7 @@ void RosHelper::initialize(int argc, char** argv) {
 	RosHelper::rawOdo_pub = motionCEP.advertise<RawOdometryInfo>("RawOdometry", 1);
 	
 	RosHelper::motionControl_sub = motionCEP.subscribe<MotionControl>("MotionControl", 1, handleMotionControlMessage);
+	RosHelper::calibCoefficient_sub = motionCEP.subscribe<CalibrationCoefficient>("CalibrationCoefficient", 1, handleCalibrationCoefficientMessage);
 	
 	gettimeofday(&last_cmd_received,NULL);
 	
@@ -54,3 +56,9 @@ void RosHelper::sendOdometry() {
 	rawOdo_pub.publish(rawOdo);
 }
 
+void RosHelper::handleCalibrationCoefficientMessage(const CalibrationCoefficient::ConstPtr& message){
+	calibCoefficientX = message->calibCoefficientX;
+	calibCoefficientY = message->calibCoefficientY;
+
+
+}

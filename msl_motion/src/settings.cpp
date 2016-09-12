@@ -6,9 +6,9 @@
 
 controller_settings default_settings;
 controller_settings current_settings;
-double calibCoefficient;
 
-
+double calibCoefficientX;
+double calibCoefficientY;
 
 SystemConfig* sc;
 
@@ -114,9 +114,16 @@ void settings_init() {
     ifstream calibData (filename);
     if (calibData.is_open())
       {
-        while ( getline (calibData,value) )
+        for (int lineno = 0; getline(calibData,value) && lineno<2; lineno++)
         {
-          calibCoefficient = std::stod(value);
+		if (lineno == 0)
+		{
+			calibCoefficientX = std::stod(value);
+		}
+		if (lineno == 1)
+		{
+          		calibCoefficientY = std::stod(value);
+		}
         }
         calibData.close();
     }
