@@ -1,3 +1,4 @@
+/*
 #include "RosHelperCalib.h"
 #include <iostream>
 #include "SystemConfig.h"
@@ -97,5 +98,4 @@ void RosHelperCalib::sendOdometry() {
 		//calibOdo.senderID = supplementary::SystemConfig::getOwnRobotID();
 		//calibOdo_pub.publish(calibOdo);
 }
-
-
+*/
