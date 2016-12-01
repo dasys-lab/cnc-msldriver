@@ -116,12 +116,27 @@ void settings_init() {
       {
         for (int lineno = 0; getline(calibData,value) && lineno<2; lineno++)
         {
+		const char* str = value.c_str();
+		char* endptr = 0;
+		strtod(str, &endptr);
 		if (lineno == 0)
 		{
-			calibCoefficientX = std::stod(value);
+			if (*endptr != '\0' || endptr == str)
+			{
+				std::cout << "==================================" << std::endl;
+				std::cout << "CalibCoefficientX ist kein double!" << std::endl;
+				std::cout << "==================================" << std::endl;
+			}
+			calibCoefficientX = std::stod(value.c_str());
 		}
 		if (lineno == 1)
 		{
+			if (*endptr != '\0' || endptr == str)
+			{
+				std::cout << "==================================" << std::endl;
+				std::cout << "CalibCoefficientY ist kein double!" << std::endl;
+				std::cout << "==================================" << std::endl; 
+			}
           		calibCoefficientY = std::stod(value);
 		}
         }
