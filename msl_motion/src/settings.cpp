@@ -127,7 +127,7 @@ void settings_init() {
 				std::cout << "CalibCoefficientX ist kein double!" << std::endl;
 				std::cout << "==================================" << std::endl;
 			}
-			calibCoefficientX = std::stod(value.c_str());
+			calibCoefficientX = std::stod(value);
 		}
 		if (lineno == 1)
 		{
