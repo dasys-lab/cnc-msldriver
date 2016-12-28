@@ -33,22 +33,22 @@ using namespace msl_sensor_msgs;
 
 class SharedBallHelper{
 
-	public:
-		SharedBallHelper();
-		~SharedBallHelper();
+    public:
+        SharedBallHelper();
+        ~SharedBallHelper();
 
-		static SharedBallHelper *getInstance();
+        static SharedBallHelper *getInstance();
 
-	protected:
+    protected:
 
-		void init();
-		void cleanup();
+        void init();
+        void cleanup();
 
-		void handleSharedBallInfo(const SharedBallInfo::ConstPtr& message);
+        void handleSharedBallInfo(const SharedBallInfo::ConstPtr& message);
 
-		bool initialized;
+        bool initialized;
 
-		static SharedBallHelper *instance;
+        static SharedBallHelper *instance;
 };
 
 

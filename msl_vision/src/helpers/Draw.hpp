@@ -33,16 +33,16 @@
 
 class Draw : ScanLineHelper3D
 {
-	public:
-		Draw();
-		~Draw();
-		
-		void	Circle	(unsigned char * &dst, struct Circle &circ);
-		void	ScanLine	(unsigned char * &dst);
-		
-	protected:		
-		uint16_t width;
-		uint16_t height;
+    public:
+        Draw();
+        ~Draw();
+
+        void    Circle  (unsigned char * &dst, struct Circle &circ);
+        void    ScanLine    (unsigned char * &dst);
+
+    protected:
+        uint16_t width;
+        uint16_t height;
 };
 
 #endif

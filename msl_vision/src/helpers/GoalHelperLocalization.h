@@ -32,20 +32,20 @@
 class GoalHelperLocalization{
 
 
-	public:
-		GoalHelperLocalization();
-		~GoalHelperLocalization();
-	
-		void getGoalsFromPosition(Position & position);
+    public:
+        GoalHelperLocalization();
+        ~GoalHelperLocalization();
 
-	protected:
-		
-		void init();
-		void cleanup();
+        void getGoalsFromPosition(Position & position);
 
-		Point getAlloPoint(Point point, Position position);
+    protected:
 
-		unsigned short msgid;
+        void init();
+        void cleanup();
+
+        Point getAlloPoint(Point point, Position position);
+
+        unsigned short msgid;
 
 };
 

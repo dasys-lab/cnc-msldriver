@@ -31,22 +31,22 @@
 
 class CorrectedOdometryHelper{
 
-	public:
-		CorrectedOdometryHelper();
-		~CorrectedOdometryHelper();
+    public:
+        CorrectedOdometryHelper();
+        ~CorrectedOdometryHelper();
 
-		static CorrectedOdometryHelper *getInstance();
+        static CorrectedOdometryHelper *getInstance();
 
-	protected:
+    protected:
 
-		void init();
-		void cleanup();
+        void init();
+        void cleanup();
 
-		void handleCorrectedOdometryInfo();
+        void handleCorrectedOdometryInfo();
 
-		bool initialized;
+        bool initialized;
 
-		static CorrectedOdometryHelper *instance;
+        static CorrectedOdometryHelper *instance;
 };
 
 

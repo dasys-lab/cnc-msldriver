@@ -41,13 +41,13 @@ using namespace std;
 
 class Brightness : public BasisAutoParam{
 
-	public:
+    public:
         static Brightness *getInstance(int width, int height, camera::ImagingSource *_cam);
         static Brightness *getInstance(int width, int height, camera::ImagingSource *_cam, string area, int zielHell);
-		
-		void process(unsigned char *scr, int counter=-1);
-		void testHelligkeit(unsigned char *scr, int gain, int shutter);
-		void setNewParam();
+
+        void process(unsigned char *scr, int counter=-1);
+        void testHelligkeit(unsigned char *scr, int gain, int shutter);
+        void setNewParam();
         int getGain();
         int getShutter();
         double getBrightness();
@@ -57,30 +57,30 @@ class Brightness : public BasisAutoParam{
 
         void addBrightness(double addVal);
 
-	private:
-		//Singelton
+    private:
+        //Singelton
         static Brightness* theBrightnessInstance;
         Brightness(int width, int height, camera::ImagingSource *_cam);
         Brightness(int width, int height, camera::ImagingSource *_cam, string area, int zielHell);
         ~Brightness();
-		Brightness():BasisAutoParam(0, 0, 0, NULL){}
-		Brightness(const Brightness&):BasisAutoParam(0, 0, 0, NULL){}
+        Brightness():BasisAutoParam(0, 0, 0, NULL){}
+        Brightness(const Brightness&):BasisAutoParam(0, 0, 0, NULL){}
         Brightness & operator = (const Brightness&);
 
-		void computeCamParam();
+        void computeCamParam();
 
-		ReferenceArea *ra;
-		BasisControl *sc;
-		GainControl *gc;
+        ReferenceArea *ra;
+        BasisControl *sc;
+        GainControl *gc;
 
-		double brightness;
-		int tBrigtness, tShutter;
-		int gain, shutter, newGain, newShutter;
-		int minGain, maxGain;
-		int tRegion, tRegionMinAdd;
+        double brightness;
+        int tBrigtness, tShutter;
+        int gain, shutter, newGain, newShutter;
+        int minGain, maxGain;
+        int tRegion, tRegionMinAdd;
 
-		int LUTGainAdd;
-		char hellGainLUT[256];
+        int LUTGainAdd;
+        char hellGainLUT[256];
 };
 
 #endif

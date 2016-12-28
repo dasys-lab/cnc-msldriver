@@ -27,7 +27,7 @@
 
 FilterSegToRGB::FilterSegToRGB(int width, int height):Filter(OF_RGB, width, height){
 
-	init();
+    init();
 
 }
 
@@ -35,53 +35,53 @@ FilterSegToRGB::FilterSegToRGB(int width, int height):Filter(OF_RGB, width, heig
 
 FilterSegToRGB::~FilterSegToRGB(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned char * FilterSegToRGB::process(unsigned char * src, unsigned int imagesize){
 
-	unsigned char * tgt = outputBuffer;	
+    unsigned char * tgt = outputBuffer;
 
-	unsigned char color;
+    unsigned char color;
 
-	for(unsigned int i = 0; i < imagesize; i++){
-		color = *src++;
-		if(color == COLOR_UDEF){
-			*tgt++ = 255;
-			*tgt++ = 255;
-			*tgt++ = 255;
-		}
-		else if(color == COLOR_RED){
-			*tgt++ = 255;
-			*tgt++ = 0;
-			*tgt++ = 0;
-		}
-		else if(color == COLOR_BLACK){
-			*tgt++ = 0;
-			*tgt++ = 0;
-			*tgt++ = 0;
-		}
-		else if(color == COLOR_BLUE){
-			*tgt++ = 0;
-			*tgt++ = 0;
-			*tgt++ = 255;
-		}
-		else if(color == COLOR_YELLOW){
-			*tgt++ = 255;
-			*tgt++ = 255;
-			*tgt++ = 0;
-		}
-		else if(color == COLOR_GREEN){
-			*tgt++ = 0;
-			*tgt++ = 255;
-			*tgt++ = 0;
-		}
+    for(unsigned int i = 0; i < imagesize; i++){
+        color = *src++;
+        if(color == COLOR_UDEF){
+            *tgt++ = 255;
+            *tgt++ = 255;
+            *tgt++ = 255;
+        }
+        else if(color == COLOR_RED){
+            *tgt++ = 255;
+            *tgt++ = 0;
+            *tgt++ = 0;
+        }
+        else if(color == COLOR_BLACK){
+            *tgt++ = 0;
+            *tgt++ = 0;
+            *tgt++ = 0;
+        }
+        else if(color == COLOR_BLUE){
+            *tgt++ = 0;
+            *tgt++ = 0;
+            *tgt++ = 255;
+        }
+        else if(color == COLOR_YELLOW){
+            *tgt++ = 255;
+            *tgt++ = 255;
+            *tgt++ = 0;
+        }
+        else if(color == COLOR_GREEN){
+            *tgt++ = 0;
+            *tgt++ = 255;
+            *tgt++ = 0;
+        }
 
-	}
+    }
 
-	return outputBuffer;
+    return outputBuffer;
 
 }
 

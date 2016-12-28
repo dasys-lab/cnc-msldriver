@@ -500,29 +500,29 @@ bool RTIMUBMX055::IMURead()
 }
 
 /*!
- *	@brief This API reads remapped compensated Magnetometer
- *	data of X,Y,Z values
- *	@note The output value of compensated X, Y, Z as float
+ *  @brief This API reads remapped compensated Magnetometer
+ *  data of X,Y,Z values
+ *  @note The output value of compensated X, Y, Z as float
  *
- *	@note In this function X and Y axis is remapped
- *	@note X is read from the address 0x44 & 0x45
- *	@note Y is read from the address 0x42 & 0x43
- *	@note this API is only applicable for BMX055 sensor
+ *  @note In this function X and Y axis is remapped
+ *  @note X is read from the address 0x44 & 0x45
+ *  @note Y is read from the address 0x42 & 0x43
+ *  @note this API is only applicable for BMX055 sensor
  * *
  *
 */
 
 /****************************************************/
-/**\name	ARRAY PARAMETERS      */
+/**\name    ARRAY PARAMETERS      */
 /***************************************************/
-#define LSB_ZERO	0
-#define MSB_ONE		1
-#define LSB_TWO		2
-#define MSB_THREE	3
-#define LSB_FOUR	4
-#define MSB_FIVE	5
-#define LSB_SIX		6
-#define MSB_SEVEN	7
+#define LSB_ZERO    0
+#define MSB_ONE     1
+#define LSB_TWO     2
+#define MSB_THREE   3
+#define LSB_FOUR    4
+#define MSB_FIVE    5
+#define LSB_SIX     6
+#define MSB_SEVEN   7
 
 /********************************************/
 /**\name BIT MASK, LENGTH AND POSITION OF REMAPPED DATA REGISTERS   */
@@ -632,23 +632,23 @@ BMM050_BMX055_REMAPPED_DATAY_LSB
 #define SHIFT_LEFT_16_POSITION                  16
 
 /****************************************************/
-/**\name	COMPENSATED FORMULA DEFINITIONS      */
+/**\name    COMPENSATED FORMULA DEFINITIONS      */
 /***************************************************/
-#define BMM050_HEX_FOUR_THOUSAND			0x4000
-#define BMM050_HEX_ONE_LACK					0x100000
-#define BMM050_HEX_A_ZERO					0xA0
+#define BMM050_HEX_FOUR_THOUSAND            0x4000
+#define BMM050_HEX_ONE_LACK                 0x100000
+#define BMM050_HEX_A_ZERO                   0xA0
 
-#define	BMM050_FLOAT_ONE_SIX_THREE_EIGHT_FOUR		16384.0f
-#define	BMM050_FLOAT_2_6_8_4_3_5_4_5_6_DATA			268435456.0f
-#define	BMM050_FLOAT_1_6_3_8_4_DATA					16384.0f
-#define	BMM050_FLOAT_2_5_6_DATA						256.0f
-#define	BMM050_FLOAT_1_6_0_DATA						160.0f
-#define	BMM050_FLOAT_8_1_9_2_DATA					8192.0f
-#define	BMM050_FLOAT_EIGHT_DATA						8.0f
-#define	BMM050_FLOAT_SIXTEEN_DATA					16.0f
-#define	BMM050_FLOAT_1_3_1_0_7_2_DATA				131072.0f
-#define	BMM050_FLOAT_3_2_7_6_8_DATA					32768.0
-#define	BMM050_FLOAT_4_DATA                         4.0
+#define BMM050_FLOAT_ONE_SIX_THREE_EIGHT_FOUR       16384.0f
+#define BMM050_FLOAT_2_6_8_4_3_5_4_5_6_DATA         268435456.0f
+#define BMM050_FLOAT_1_6_3_8_4_DATA                 16384.0f
+#define BMM050_FLOAT_2_5_6_DATA                     256.0f
+#define BMM050_FLOAT_1_6_0_DATA                     160.0f
+#define BMM050_FLOAT_8_1_9_2_DATA                   8192.0f
+#define BMM050_FLOAT_EIGHT_DATA                     8.0f
+#define BMM050_FLOAT_SIXTEEN_DATA                   16.0f
+#define BMM050_FLOAT_1_3_1_0_7_2_DATA               131072.0f
+#define BMM050_FLOAT_3_2_7_6_8_DATA                 32768.0
+#define BMM050_FLOAT_4_DATA                         4.0
 
 /********************************************/
 /**\name ENABLE/DISABLE DEFINITIONS  */
@@ -667,23 +667,23 @@ BMM050_BMX055_REMAPPED_DATAY_LSB
 /**\name OVERFLOW DEFINITIONS  */
 /********************************************/
 /* compensated output value returned if sensor had overflow */
-#define BMM050_OVERFLOW_OUTPUT			-32768
-#define BMM050_OVERFLOW_OUTPUT_S32		((int32_t)(-2147483647-1))
-#define BMM050_OVERFLOW_OUTPUT_FLOAT	0.0f
-#define BMM050_FLIP_OVERFLOW_ADCVAL		-4096
-#define BMM050_HALL_OVERFLOW_ADCVAL		-16384
+#define BMM050_OVERFLOW_OUTPUT          -32768
+#define BMM050_OVERFLOW_OUTPUT_S32      ((int32_t)(-2147483647-1))
+#define BMM050_OVERFLOW_OUTPUT_FLOAT    0.0f
+#define BMM050_FLIP_OVERFLOW_ADCVAL     -4096
+#define BMM050_HALL_OVERFLOW_ADCVAL     -16384
 
 /********************************************/
 /**\name NUMERIC DEFINITIONS  */
 /********************************************/
-#define         C_BMM050_ZERO_U8X				((uint8_t)0)
-#define         C_BMM050_ONE_U8X				((uint8_t)1)
-#define         C_BMM050_TWO_U8X				((uint8_t)2)
-#define         C_BMM050_FOUR_U8X				((uint8_t)4)
-#define         C_BMM050_FIVE_U8X				((uint8_t)5)
-#define         C_BMM050_EIGHT_U8X				((uint8_t)8)
+#define         C_BMM050_ZERO_U8X               ((uint8_t)0)
+#define         C_BMM050_ONE_U8X                ((uint8_t)1)
+#define         C_BMM050_TWO_U8X                ((uint8_t)2)
+#define         C_BMM050_FOUR_U8X               ((uint8_t)4)
+#define         C_BMM050_FIVE_U8X               ((uint8_t)5)
+#define         C_BMM050_EIGHT_U8X              ((uint8_t)8)
 
-#define BMM0505_HEX_ZERO_ZERO	0x00
+#define BMM0505_HEX_ZERO_ZERO   0x00
 /* Conversion factors*/
 #define BMM050_CONVFACTOR_LSB_UT                6
 
@@ -818,7 +818,7 @@ void RTIMUBMX055::processMagData(unsigned char *v_data_u8, float& magX, float& m
 float RTIMUBMX055::bmm050_compensate_X_float(int16_t mag_data_x, uint16_t data_r)
 {
     float inter_retval = BMM050_ZERO_U8X;
-    if (mag_data_x != BMM050_FLIP_OVERFLOW_ADCVAL	/* no overflow */
+    if (mag_data_x != BMM050_FLIP_OVERFLOW_ADCVAL   /* no overflow */
        ) {
         if (data_r != C_BMM050_ZERO_U8X) {
             inter_retval = ((((float)m_dig_xyz1)

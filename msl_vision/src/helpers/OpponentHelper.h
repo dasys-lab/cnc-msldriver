@@ -37,23 +37,23 @@
 class OpponentHelper{
 
 
-	public:
-		OpponentHelper();
-		~OpponentHelper();
+    public:
+        OpponentHelper();
+        ~OpponentHelper();
 
-		void processOpponentBlobs(std::vector<BlobBounds> & potOpponentBlobs, Particle * maxParticle);
+        void processOpponentBlobs(std::vector<BlobBounds> & potOpponentBlobs, Particle * maxParticle);
 
-	protected:
+    protected:
 
-		SystemConfig* sc;
+        SystemConfig* sc;
 
-		void init();
-		void cleanup();
+        void init();
+        void cleanup();
 
-		int MX;
-		int MY;
+        int MX;
+        int MY;
 
-		double LocalizationSuccess;
+        double LocalizationSuccess;
 
 
 

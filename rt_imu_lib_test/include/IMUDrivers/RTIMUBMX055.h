@@ -23,7 +23,7 @@
 
 
 #ifndef _RTIMUBMX055_H
-#define	_RTIMUBMX055_H
+#define _RTIMUBMX055_H
 
 #include "RTIMU.h"
 

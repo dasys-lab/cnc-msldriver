@@ -35,38 +35,38 @@ using namespace supplementary;
 class ScanLineHelperBall{
 
 
-	public:
-		
-		ScanLineHelperBall();
-		ScanLineHelperBall(int imWidth, int imHeight);
-		~ScanLineHelperBall();
-	
-		short * getLines();
-		int * getLineOffsets();
-		short getNumberLines();
-		short getMaxPoints();
+    public:
+
+        ScanLineHelperBall();
+        ScanLineHelperBall(int imWidth, int imHeight);
+        ~ScanLineHelperBall();
+
+        short * getLines();
+        int * getLineOffsets();
+        short getNumberLines();
+        short getMaxPoints();
 
 
-	protected:
+    protected:
 
-		SystemConfig* sc;
-		
-		void init();
-		int DrawLine(short * line, short ax, short ay, short ex, short ey);
+        SystemConfig* sc;
 
-		
-		short mx;
-		short my;
-		short iRadius;
-		short oRadius;
-		short nLines;
-		short maxPoints;
+        void init();
+        int DrawLine(short * line, short ax, short ay, short ex, short ey);
 
-		short * lines;
-		int * lineOffsets;
 
-		int scWIDTH;
-		int scHEIGHT;
+        short mx;
+        short my;
+        short iRadius;
+        short oRadius;
+        short nLines;
+        short maxPoints;
+
+        short * lines;
+        int * lineOffsets;
+
+        int scWIDTH;
+        int scHEIGHT;
 
 
 

@@ -27,7 +27,7 @@
 #define RTIMUCALDEFS_DEFAULT_MIN        1000                // a large min
 #define RTIMUCALDEFS_DEFAULT_MAX        -1000               // a small max
 
-#define	RTIMUCALDEFS_MAX_MAG_SAMPLES	   20000            // max saved mag records
+#define RTIMUCALDEFS_MAX_MAG_SAMPLES       20000            // max saved mag records
 
 #define RTIMUCALDEFS_OCTANT_MIN_SAMPLES    200              // must have at least this in each octant
 

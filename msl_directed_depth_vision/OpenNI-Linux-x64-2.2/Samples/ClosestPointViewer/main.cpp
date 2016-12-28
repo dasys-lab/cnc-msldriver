@@ -22,20 +22,20 @@
 
 int main(int argc, char** argv)
 {
-	openni::Status rc = openni::STATUS_OK;
+    openni::Status rc = openni::STATUS_OK;
 
-	const char* deviceURI = openni::ANY_DEVICE;
-	if (argc > 1)
-	{
-		deviceURI = argv[1];
-	}
+    const char* deviceURI = openni::ANY_DEVICE;
+    if (argc > 1)
+    {
+        deviceURI = argv[1];
+    }
 
-	SampleViewer sampleViewer("ClosestPoint Viewer", deviceURI);
+    SampleViewer sampleViewer("ClosestPoint Viewer", deviceURI);
 
-	rc = sampleViewer.init(argc, argv);
-	if (rc != openni::STATUS_OK)
-	{
-		return 1;
-	}
-	sampleViewer.run();
+    rc = sampleViewer.init(argc, argv);
+    if (rc != openni::STATUS_OK)
+    {
+        return 1;
+    }
+    sampleViewer.run();
 }

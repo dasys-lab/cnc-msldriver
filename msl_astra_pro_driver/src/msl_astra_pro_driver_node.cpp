@@ -13,18 +13,18 @@ using namespace std;
 using namespace openni;
 
 int main(int argc, char **argv) {
-	ros::init(argc, argv, "astra_pro_driver");
+    ros::init(argc, argv, "astra_pro_driver");
 
-	ros::NodeHandle n;
+    ros::NodeHandle n;
 
-	ros::Rate loop_rate(10);
-	ros::Publisher pub = n.advertise<sensor_msgs::PointCloud>("/astra/depthCloud", 10000);
+    ros::Rate loop_rate(10);
+    ros::Publisher pub = n.advertise<sensor_msgs::PointCloud>("/astra/depthCloud", 10000);
 
 
-	Status rc = OpenNI::initialize();
-	Device device;
-	VideoStream depth;
-	const char* deviceURI = openni::ANY_DEVICE;
+    Status rc = OpenNI::initialize();
+    Device device;
+    VideoStream depth;
+    const char* deviceURI = openni::ANY_DEVICE;
 
     rc = openni::OpenNI::initialize();
 
@@ -42,18 +42,18 @@ int main(int argc, char **argv) {
     {
 
         for(int i = 0;  i < device.getSensorInfo(SENSOR_DEPTH)->getSupportedVideoModes().getSize(); i++) {
-        	VideoMode mode = device.getSensorInfo(SENSOR_DEPTH)->getSupportedVideoModes()[i];
-        	cout << i << ": " << mode.getResolutionX() << " x " << mode.getResolutionY() << " " << mode.getFps() << " " << mode.getPixelFormat() <<  endl;
+            VideoMode mode = device.getSensorInfo(SENSOR_DEPTH)->getSupportedVideoModes()[i];
+            cout << i << ": " << mode.getResolutionX() << " x " << mode.getResolutionY() << " " << mode.getFps() << " " << mode.getPixelFormat() <<  endl;
 
         }
         rc = depth.setVideoMode(device.getSensorInfo(SENSOR_DEPTH)->getSupportedVideoModes()[4]); // 4 -> 1_MM 5 -> 100_UM
         depth.setMirroringEnabled(false);
         rc = depth.start();
-		if (rc != openni::STATUS_OK)
-		{
-				printf("SimpleViewer: Couldn't start depth stream:\n%s\n", openni::OpenNI::getExtendedError());
-				depth.destroy();
-		}
+        if (rc != openni::STATUS_OK)
+        {
+                printf("SimpleViewer: Couldn't start depth stream:\n%s\n", openni::OpenNI::getExtendedError());
+                depth.destroy();
+        }
     }
     else
     {
@@ -72,27 +72,27 @@ int main(int argc, char **argv) {
 
     if (depth.isValid())
    {
-    	cout << "depth stream is valide!" << endl;
-		   depthVideoMode = depth.getVideoMode();
-		   width = depthVideoMode.getResolutionX();
-		   height = depthVideoMode.getResolutionY();
+        cout << "depth stream is valide!" << endl;
+           depthVideoMode = depth.getVideoMode();
+           width = depthVideoMode.getResolutionX();
+           height = depthVideoMode.getResolutionY();
 
-	    	cout << "size: " << width  << " x " << height << endl;
+            cout << "size: " << width  << " x " << height << endl;
    } else {
-	   cout << "error depth stream is not valid!" << endl;
+       cout << "error depth stream is not valid!" << endl;
    }
 
-	while (ros::ok()) {
-		ros::spinOnce();
-		loop_rate.sleep();
+    while (ros::ok()) {
+        ros::spinOnce();
+        loop_rate.sleep();
 
-		depth.readFrame(&depthFrame);
+        depth.readFrame(&depthFrame);
 
         if (depthFrame.isValid())
         {
                 calculateHistogram(pDepthHist, MAX_DEPTH, depthFrame);
         } else {
-        	cout << "error! depthFrame is not valid!!!" << endl;
+            cout << "error! depthFrame is not valid!!!" << endl;
         }
 
         int rowSize = depthFrame.getStrideInBytes() / sizeof(openni::DepthPixel);
@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
 
                 for (int x = 0; x < depthFrame.getWidth(); ++x, ++pDepth)
                 {
-                	float worldX, worldY, worldZ = 0.0;
+                    float worldX, worldY, worldZ = 0.0;
                         if (*pDepth != 0)
                         {
                                 int nHistValue = pDepthHist[*pDepth];
@@ -138,8 +138,8 @@ int main(int argc, char **argv) {
         pcl.header.stamp = ros::Time::now();
 
         pub.publish(pcl);
-	}
+    }
 
-	return 0;
+    return 0;
 }
 

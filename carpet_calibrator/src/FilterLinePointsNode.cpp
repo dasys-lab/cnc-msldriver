@@ -17,35 +17,35 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
-	supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+    supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
 
-	int area = ((*sc)["Vision"])->get<short>("Vision", "ImageArea", NULL);
+    int area = ((*sc)["Vision"])->get<short>("Vision", "ImageArea", NULL);
 
 
-	ScanLineHelper scanLineHelper;
-	FilterLinePointsCalib linePointsfilter(area);
+    ScanLineHelper scanLineHelper;
+    FilterLinePointsCalib linePointsfilter(area);
 
-	int size = area*area*sizeof(unsigned char);
+    int size = area*area*sizeof(unsigned char);
 
-	unsigned char* data = (unsigned char*)malloc(size);
+    unsigned char* data = (unsigned char*)malloc(size);
 
-	string directory;
+    string directory;
 
-	if(argv[1] != NULL) {
-		directory = string(argv[1]);
-	} else {
-		directory = sc->getConfigPath() + sc->getHostname() + "/CarpetCalibImage.raw";
-	}
+    if(argv[1] != NULL) {
+        directory = string(argv[1]);
+    } else {
+        directory = sc->getConfigPath() + sc->getHostname() + "/CarpetCalibImage.raw";
+    }
 
-	cout << "Loading File: " << directory << endl;
+    cout << "Loading File: " << directory << endl;
 
-	FILE * logfile = fopen(directory.c_str(), "r");
-	fread(data, sizeof(char), size, logfile);
-	fclose(logfile);
+    FILE * logfile = fopen(directory.c_str(), "r");
+    fread(data, sizeof(char), size, logfile);
+    fclose(logfile);
 
-	linePointsfilter.process(data, area,area,scanLineHelper);
+    linePointsfilter.process(data, area,area,scanLineHelper);
 
-	return 0;
+    return 0;
 }
 
 

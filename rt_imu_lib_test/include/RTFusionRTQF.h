@@ -23,7 +23,7 @@
 
 
 #ifndef _RTFUSIONRTQF_H
-#define	_RTFUSIONRTQF_H
+#define _RTFUSIONRTQF_H
 
 #include "RTFusion.h"
 
@@ -50,10 +50,10 @@ private:
     void predict();
     void update();
 
-    RTVector3 m_gyro;										// unbiased gyro data
+    RTVector3 m_gyro;                                       // unbiased gyro data
     RTFLOAT m_timeDelta;                                    // time between predictions
 
-    RTQuaternion m_stateQ;									// quaternion state vector
+    RTQuaternion m_stateQ;                                  // quaternion state vector
     RTQuaternion m_stateQError;                             // difference between stateQ and measuredQ
 
     int m_sampleNumber;

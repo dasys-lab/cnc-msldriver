@@ -30,16 +30,16 @@
 class FilterGrayToDarkSeg  : public Filter {
 
 
-	public:
-		FilterGrayToDarkSeg(int width, int height);
-		~FilterGrayToDarkSeg();
-		
-		unsigned char * process(unsigned char * src, unsigned char * src_uv, unsigned int width, unsigned int height, ImageMaskHelper & maskHelper);
+    public:
+        FilterGrayToDarkSeg(int width, int height);
+        ~FilterGrayToDarkSeg();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned char * src_uv, unsigned int width, unsigned int height, ImageMaskHelper & maskHelper);
 
-		void init();
-		void cleanup();
+    protected:
+
+        void init();
+        void cleanup();
 
 
 };

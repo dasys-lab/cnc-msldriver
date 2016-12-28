@@ -5,13 +5,13 @@
 
 
 class KeyHelper {
-	
-public:
-	static void checkKeyPress();
-	static void checkRemoteKey();
-	static bool checkKey(unsigned char k);
 
-	//static unsigned char key;
+public:
+    static void checkKeyPress();
+    static void checkRemoteKey();
+    static bool checkKey(unsigned char k);
+
+    //static unsigned char key;
 
 };
 

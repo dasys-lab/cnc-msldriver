@@ -29,16 +29,16 @@
 class FilterSegToRGB  : public Filter {
 
 
-	public:
-		FilterSegToRGB(int width, int height);
-		~FilterSegToRGB();
-		
-		unsigned char * process(unsigned char * src, unsigned int imagesize);
+    public:
+        FilterSegToRGB(int width, int height);
+        ~FilterSegToRGB();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned int imagesize);
 
-		void init();
-		void cleanup();
+    protected:
+
+        void init();
+        void cleanup();
 
 
 };

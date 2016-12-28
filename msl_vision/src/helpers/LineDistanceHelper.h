@@ -31,18 +31,18 @@
 
 class LineDistanceHelper{
 
-	public:
-		LineDistanceHelper();
-		~LineDistanceHelper();
+    public:
+        LineDistanceHelper();
+        ~LineDistanceHelper();
 
-		unsigned char getLineDistance(double px, double py);
-		unsigned char * getLineLookup();
+        unsigned char getLineDistance(double px, double py);
+        unsigned char * getLineLookup();
 
-	private:
+    private:
 
-		unsigned char * LineLookup;
-		void init();
-		void cleanup();
+        unsigned char * LineLookup;
+        void init();
+        void cleanup();
 
 
 

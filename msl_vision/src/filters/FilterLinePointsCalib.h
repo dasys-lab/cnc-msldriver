@@ -39,36 +39,36 @@ using namespace std;
 class FilterLinePointsCalib : public Filter {
 
 
-	public:
-		FilterLinePointsCalib(int area);
-		FilterLinePointsCalib(int width, int height);
-		~FilterLinePointsCalib();
-		
-		unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelper & helper, double angle);
+    public:
+        FilterLinePointsCalib(int area);
+        FilterLinePointsCalib(int width, int height);
+        ~FilterLinePointsCalib();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelper & helper, double angle);
 
-		SystemConfig* sc;
+    protected:
 
-		void init();
-		void cleanup();
+        SystemConfig* sc;
 
-		int MX;
-		int MY;
+        void init();
+        void cleanup();
 
-		unsigned char LinePointsThreshold;
-		unsigned char LinePointsJump;
-		unsigned char MinLineWidth;
-		unsigned char MaxLineWidth;
-		bool OnlyFirstPoint;
+        int MX;
+        int MY;
 
-		short negRanges[3][2];
-		std::vector<Holder> addHolders;
+        unsigned char LinePointsThreshold;
+        unsigned char LinePointsJump;
+        unsigned char MinLineWidth;
+        unsigned char MaxLineWidth;
+        bool OnlyFirstPoint;
 
-		char * angleValidity;
-		vector<vector<double> > distanceSum;
-		vector<vector<int> > distanceCount;
-		vector<double> angles;
+        short negRanges[3][2];
+        std::vector<Holder> addHolders;
+
+        char * angleValidity;
+        vector<vector<double> > distanceSum;
+        vector<vector<int> > distanceCount;
+        vector<double> angles;
 
 
 };

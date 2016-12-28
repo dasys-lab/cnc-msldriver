@@ -35,44 +35,44 @@ using namespace supplementary;
 class  FilterTemplateMatching : public Filter {
 
 
-	public:
-		FilterTemplateMatching(int width, int height);
-		~FilterTemplateMatching();
-		
-		int ballInKickerTest(unsigned char * src, int kickerNum, int* &ballb, int& ballCount, int bc);
-		unsigned char * process(unsigned char * src, int* &ballb, int& ballCount, unsigned char * mask, int maskThresh, int width, int height, int minRad, int maxRad,int threshold);
+    public:
+        FilterTemplateMatching(int width, int height);
+        ~FilterTemplateMatching();
 
-		unsigned char * process(unsigned char * src, int* &ballb, int& ballCount, unsigned char * mask, std::vector<ROIData> &roiData, int maskThresh, int width, int height, int minRad, int maxRad,int threshold, unsigned char * gray);
+        int ballInKickerTest(unsigned char * src, int kickerNum, int* &ballb, int& ballCount, int bc);
+        unsigned char * process(unsigned char * src, int* &ballb, int& ballCount, unsigned char * mask, int maskThresh, int width, int height, int minRad, int maxRad,int threshold);
 
-	protected:
-		int inline sign2(int s);
-		int inline sign(int s);
-		float inline dir(int gx, int gy, int threshold);
-		int inline abs(int val);
+        unsigned char * process(unsigned char * src, int* &ballb, int& ballCount, unsigned char * mask, std::vector<ROIData> &roiData, int maskThresh, int width, int height, int minRad, int maxRad,int threshold, unsigned char * gray);
 
-		int *balls;
-		int kickersPoints;
-		int extendedPoints;
+    protected:
+        int inline sign2(int s);
+        int inline sign(int s);
+        float inline dir(int gx, int gy, int threshold);
+        int inline abs(int val);
 
-		int width, height; 
+        int *balls;
+        int kickersPoints;
+        int extendedPoints;
 
-		static const int B_SIZE = 4;
-		static const int MAXBALLNUM = 10000;		
-		static const int RADNUM = 50;
-		static const float pi;
-		static const int CIRCPOINTS = 12;
-		static const int COFFSET = 3*CIRCPOINTS;
-		//static const int Bx1 = 202, Bx2 = 232, Bx3 = 262, By1 = 249, By2 = 196, By3 = 248;
-		int Bx1, Bx2, Bx3, By1, By2, By3;
-		int kickerCount;
+        int width, height;
 
-		void init(int width, int height);
-		void cleanup();
+        static const int B_SIZE = 4;
+        static const int MAXBALLNUM = 10000;
+        static const int RADNUM = 50;
+        static const float pi;
+        static const int CIRCPOINTS = 12;
+        static const int COFFSET = 3*CIRCPOINTS;
+        //static const int Bx1 = 202, Bx2 = 232, Bx3 = 262, By1 = 249, By2 = 196, By3 = 248;
+        int Bx1, Bx2, Bx3, By1, By2, By3;
+        int kickerCount;
 
-		SystemConfig* sc;
-		unsigned char * AreaLookup;
-		int templateLookUp[RADNUM*CIRCPOINTS*3];
-		int *ballKickerPos;
+        void init(int width, int height);
+        void cleanup();
+
+        SystemConfig* sc;
+        unsigned char * AreaLookup;
+        int templateLookUp[RADNUM*CIRCPOINTS*3];
+        int *ballKickerPos;
         int duelBlackCountThreshold;
 
 };

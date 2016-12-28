@@ -32,16 +32,16 @@
 
 class ConfigElement{
 
-	public:
-		ConfigElement(std::string name_);
-		~ConfigElement();
-		
-		std::string name;
-		std::map<std::string, std::string> Values;
-		std::map<std::string, ConfigElement*> childrenMap;
-		std::vector<ConfigElement*> children;
+    public:
+        ConfigElement(std::string name_);
+        ~ConfigElement();
 
-		void printContents();
+        std::string name;
+        std::map<std::string, std::string> Values;
+        std::map<std::string, ConfigElement*> childrenMap;
+        std::vector<ConfigElement*> children;
+
+        void printContents();
 
 
 };
@@ -50,26 +50,26 @@ class ConfigElement{
 class ConfigHelper{
 
 
-	public:
-		ConfigHelper(std::string configName);
-		~ConfigHelper();
+    public:
+        ConfigHelper(std::string configName);
+        ~ConfigHelper();
 
-		static bool parseSocketSpec(std::string & socketSpec, std::string & socketType, std::string & addr, int  & port);
-		static std::string getFileName(std::string & path);
+        static bool parseSocketSpec(std::string & socketSpec, std::string & socketType, std::string & addr, int  & port);
+        static std::string getFileName(std::string & path);
 
-		void printConfig();	
+        void printConfig();
 
-		ConfigElement * rootElement;
+        ConfigElement * rootElement;
 
-	protected:
+    protected:
 
 
-		
-		void init(std::ifstream & in);
-		void cleanup();
 
-		std::string trim(std::string str);
-		void handleSection(std::string sectionLine, std::ifstream & in, ConfigElement * parent);
+        void init(std::ifstream & in);
+        void cleanup();
+
+        std::string trim(std::string str);
+        void handleSection(std::string sectionLine, std::ifstream & in, ConfigElement * parent);
 
 
 

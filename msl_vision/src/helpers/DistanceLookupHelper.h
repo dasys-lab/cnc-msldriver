@@ -33,38 +33,38 @@
 class DistanceLookupHelper{
 
 
-	public:
-		DistanceLookupHelper(int area);
-		DistanceLookupHelper(short mx_, short my_);
-		DistanceLookupHelper(char* filename, int area);
-		DistanceLookupHelper(char* filename, int areaWidth, int areaHeight);
-		DistanceLookupHelper(char* filename, short mx_, short my_);
-		~DistanceLookupHelper();
-	
-		double * getLookupTable();
-		int * getLookupTableInt();
+    public:
+        DistanceLookupHelper(int area);
+        DistanceLookupHelper(short mx_, short my_);
+        DistanceLookupHelper(char* filename, int area);
+        DistanceLookupHelper(char* filename, int areaWidth, int areaHeight);
+        DistanceLookupHelper(char* filename, short mx_, short my_);
+        ~DistanceLookupHelper();
 
-		double * getHorizontalLookupTable();
+        double * getLookupTable();
+        int * getLookupTableInt();
 
-		static DistanceLookupHelper * getCreatedInstance();
+        double * getHorizontalLookupTable();
+
+        static DistanceLookupHelper * getCreatedInstance();
 
                 int imWidth;
                 int imHeight;
 
-	protected:
+    protected:
 
-		static DistanceLookupHelper * instance_;
-		
-		void init(char* name);
-		void cleanup();
+        static DistanceLookupHelper * instance_;
 
-		double * LookupTable;
-		int * LookupTableInt;
+        void init(char* name);
+        void cleanup();
 
-		double * HorizontalLookupTable;
+        double * LookupTable;
+        int * LookupTableInt;
 
-		short mx;
-		short my;
+        double * HorizontalLookupTable;
+
+        short mx;
+        short my;
 };
 
 

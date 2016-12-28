@@ -38,33 +38,33 @@ using namespace supplementary;
 class FilterLinePoints  : public Filter {
 
 
-	public:
-		FilterLinePoints(int area);
-		FilterLinePoints(int width, int height);
-		~FilterLinePoints();
-		
-		unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelper & helper);
+    public:
+        FilterLinePoints(int area);
+        FilterLinePoints(int width, int height);
+        ~FilterLinePoints();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelper & helper);
 
-		SystemConfig* sc;
+    protected:
 
-		void init();
-		void cleanup();
+        SystemConfig* sc;
 
-		int MX;
-		int MY;
+        void init();
+        void cleanup();
 
-		unsigned char LinePointsThreshold;
-		unsigned char LinePointsJump;
-		unsigned char MinLineWidth;
-		unsigned char MaxLineWidth;
-		bool OnlyFirstPoint;
+        int MX;
+        int MY;
 
-		short negRanges[3][2];
-		std::vector<Holder> addHolders;
+        unsigned char LinePointsThreshold;
+        unsigned char LinePointsJump;
+        unsigned char MinLineWidth;
+        unsigned char MaxLineWidth;
+        bool OnlyFirstPoint;
 
-		char * angleValidity;
+        short negRanges[3][2];
+        std::vector<Holder> addHolders;
+
+        char * angleValidity;
 
 
 };

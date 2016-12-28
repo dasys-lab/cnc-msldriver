@@ -29,16 +29,16 @@
 class FilterYUVQuickCamToYUV  : public Filter {
 
 
-	public:
-		FilterYUVQuickCamToYUV(int width, int height);
-		~FilterYUVQuickCamToYUV();
-		
-		unsigned char * process(unsigned char * src, unsigned int imagesize);
+    public:
+        FilterYUVQuickCamToYUV(int width, int height);
+        ~FilterYUVQuickCamToYUV();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned int imagesize);
 
-		void init();
-		void cleanup();
+    protected:
+
+        void init();
+        void cleanup();
 
 
 };

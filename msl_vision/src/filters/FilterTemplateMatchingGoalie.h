@@ -33,37 +33,37 @@
 class  FilterTemplateMatchingGoalie : public Filter {
 
 
-	public:
-		FilterTemplateMatchingGoalie(int width, int height);
-		~FilterTemplateMatchingGoalie();
-		
-		bool ballInKickerTest(unsigned char * src, int kickerNum);
-		unsigned char * process(unsigned char * src, int* &ballb, int& ballCount, unsigned char * mask, std::vector<ROIData> &roiData, int maskThresh, int width, int height, int minRad, int maxRad,int threshold, unsigned char * gray);
+    public:
+        FilterTemplateMatchingGoalie(int width, int height);
+        ~FilterTemplateMatchingGoalie();
 
-	protected:
-		int inline sign2(int s);
-		int inline sign(int s);
-		float inline dir(int gx, int gy, int threshold);
-		int inline abs(int val);
+        bool ballInKickerTest(unsigned char * src, int kickerNum);
+        unsigned char * process(unsigned char * src, int* &ballb, int& ballCount, unsigned char * mask, std::vector<ROIData> &roiData, int maskThresh, int width, int height, int minRad, int maxRad,int threshold, unsigned char * gray);
 
-		int *balls;
-		int kickersPoints;
+    protected:
+        int inline sign2(int s);
+        int inline sign(int s);
+        float inline dir(int gx, int gy, int threshold);
+        int inline abs(int val);
 
-		static const int B_SIZE = 4;
-		static const int MAXBALLNUM = 500;		
-		static const int RADNUM = 50;
-		static const float pi;
-		static const int CIRCPOINTS = 12;
-		static const int COFFSET = 3*CIRCPOINTS;
-		static const int Bx1 = 202, Bx2 = 233, Bx3 = 262, By1 = 247, By2 = 198, By3 = 246;
+        int *balls;
+        int kickersPoints;
 
-		void init(int width, int height);
-		void cleanup();
+        static const int B_SIZE = 4;
+        static const int MAXBALLNUM = 500;
+        static const int RADNUM = 50;
+        static const float pi;
+        static const int CIRCPOINTS = 12;
+        static const int COFFSET = 3*CIRCPOINTS;
+        static const int Bx1 = 202, Bx2 = 233, Bx3 = 262, By1 = 247, By2 = 198, By3 = 246;
 
-		unsigned char * AreaLookup;
-		int templateLookUp[RADNUM*CIRCPOINTS*3];
-		int *YtoMinBallLookUp;
-		int ballKickerPos[1000];
+        void init(int width, int height);
+        void cleanup();
+
+        unsigned char * AreaLookup;
+        int templateLookUp[RADNUM*CIRCPOINTS*3];
+        int *YtoMinBallLookUp;
+        int ballKickerPos[1000];
 
 };
 

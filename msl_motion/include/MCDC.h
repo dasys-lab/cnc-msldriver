@@ -32,7 +32,7 @@ extern  controller_settings current_settings;
 
 
 typedef struct {
-	unsigned char nodeid;
+    unsigned char nodeid;
 } MCDCBasicConfig;
 
 
@@ -62,8 +62,8 @@ typedef struct {
 } MCDCStatus;
 
 typedef struct  {
-	MCDCBasicConfig baseConfig;
-	MCDCStatus status;
+    MCDCBasicConfig baseConfig;
+    MCDCStatus status;
 } MCDCController;
 
 #define MCDC_ACTIVE(x) ((x).status.amplifier == amp_on && (x).status.network==net_on && (x).status.opMode==op_faulhaber && (x).status.fault==0)

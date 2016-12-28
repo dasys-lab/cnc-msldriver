@@ -18,7 +18,7 @@ class ExtensionDirectedHelper {
     static int extendUpperExtension();
     static ros::Publisher kcpub;
 
-//	static SpicaDirectedHelper helper;
+//  static SpicaDirectedHelper helper;
 //    static CommunicationPtr comm;
 //    static VisionDirectedPtr visionDirectedCEP;
 };

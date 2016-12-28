@@ -10,7 +10,7 @@
 
 namespace msl
 {
-	typedef signed long long InfoTime;
+    typedef signed long long InfoTime;
 
 /**
  * Information element stores one information and provides required meta

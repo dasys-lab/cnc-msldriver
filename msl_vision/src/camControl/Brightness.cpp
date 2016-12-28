@@ -35,11 +35,11 @@ Brightness *Brightness::theBrightnessInstance = NULL;
 
 Brightness *Brightness::getInstance(int width, int height, camera::ImagingSource *cam){
     if( theBrightnessInstance == NULL ){
-		theBrightnessInstance = new Brightness(width, height,cam);
+        theBrightnessInstance = new Brightness(width, height,cam);
     }else{
         return NULL;
     }
-	return theBrightnessInstance;
+    return theBrightnessInstance;
 }
 
 Brightness *Brightness::getInstance(int width, int height, camera::ImagingSource *cam, string area, int zielHell){
@@ -54,41 +54,41 @@ Brightness *Brightness::getInstance(int width, int height, camera::ImagingSource
 //Test - Konstr
 Brightness::Brightness(int width, int height, camera::ImagingSource *cam, string area, int zielHell):BasisAutoParam(width/2, height, 1, cam){
 
-	ra = new ReferenceArea(width/2, height, CONF_DAT, area.c_str());
-	gc = new GainControl(CONF_DAT, "Gain");
-	sc = new PControl(CONF_DAT, "Shutter");
+    ra = new ReferenceArea(width/2, height, CONF_DAT, area.c_str());
+    gc = new GainControl(CONF_DAT, "Gain");
+    sc = new PControl(CONF_DAT, "Shutter");
 
-	cout<<"CONF_DAT"<<CONF_DAT<<endl;
+    cout<<"CONF_DAT"<<CONF_DAT<<endl;
 
-	SystemConfig* sCon = SystemConfig::getInstance();
-	Configuration *camParam = (*sCon)[CONF_DAT];
+    SystemConfig* sCon = SystemConfig::getInstance();
+    Configuration *camParam = (*sCon)[CONF_DAT];
 
-	gc->setTargetControlValue(zielHell);
-	sc->setTargetControlValue(zielHell);
-	if (nImage!=0){
-		cam->setShutter(camParam->get<int>(CONF_DAT, "Shutter", "startMV", NULL));
-		cam->setGain(camParam->get<int>(CONF_DAT, "Gain", "startMV", NULL));
-	}
+    gc->setTargetControlValue(zielHell);
+    sc->setTargetControlValue(zielHell);
+    if (nImage!=0){
+        cam->setShutter(camParam->get<int>(CONF_DAT, "Shutter", "startMV", NULL));
+        cam->setGain(camParam->get<int>(CONF_DAT, "Gain", "startMV", NULL));
+    }
 }
 
 
 Brightness::Brightness(int width, int height, camera::ImagingSource* cam):BasisAutoParam(width/2, height, 1, cam){
 
     ra = new ReferenceArea(width/2, height, CONF_DAT, CONF_RA_B);
-	gc = new GainControl(CONF_DAT, "Gain");
-	sc = new PControl(CONF_DAT, "Shutter");
+    gc = new GainControl(CONF_DAT, "Gain");
+    sc = new PControl(CONF_DAT, "Shutter");
 
-	cout<<"CONF_DAT"<<CONF_DAT<<endl;
+    cout<<"CONF_DAT"<<CONF_DAT<<endl;
 
-	SystemConfig* sCon = SystemConfig::getInstance();
-	Configuration *camParam = (*sCon)[CONF_DAT];
+    SystemConfig* sCon = SystemConfig::getInstance();
+    Configuration *camParam = (*sCon)[CONF_DAT];
 
-	gc->setTargetControlValue(camParam->get<int>(CONF_DAT, "Bright", NULL));
-	sc->setTargetControlValue(camParam->get<int>(CONF_DAT, "Bright", NULL));
-	if (nImage!=0){
-		cam->setShutter(camParam->get<int>(CONF_DAT, "Shutter", "startMV", NULL));
-		cam->setGain(camParam->get<int>(CONF_DAT, "Gain", "startMV", NULL));
-	}
+    gc->setTargetControlValue(camParam->get<int>(CONF_DAT, "Bright", NULL));
+    sc->setTargetControlValue(camParam->get<int>(CONF_DAT, "Bright", NULL));
+    if (nImage!=0){
+        cam->setShutter(camParam->get<int>(CONF_DAT, "Shutter", "startMV", NULL));
+        cam->setGain(camParam->get<int>(CONF_DAT, "Gain", "startMV", NULL));
+    }
 }
 
 int Brightness::getGain()
@@ -112,61 +112,61 @@ void Brightness::addBrightness(double addVal)
 }
 
 
-Brightness::~Brightness(){ 
+Brightness::~Brightness(){
     delete(ra);
-	delete(sc);
-	delete(gc);
+    delete(sc);
+    delete(gc);
 }
 
 
 void Brightness::testHelligkeit(unsigned char *scr, int gain, int shutter){
-	brightness=ra->createHistoBrightness(scr, 2, true);
-	cout<<"Helligkeit: "<<brightness<<endl;
-	int zeile[3] = { gain, shutter, (int)(brightness+0.5)};
-	saveCSV("MW.csv", 3, zeile, true, 2);
+    brightness=ra->createHistoBrightness(scr, 2, true);
+    cout<<"Helligkeit: "<<brightness<<endl;
+    int zeile[3] = { gain, shutter, (int)(brightness+0.5)};
+    saveCSV("MW.csv", 3, zeile, true, 2);
 }
 
 
 void Brightness::setNewParam(){
-	shutter=newShutter;
-	gain=newGain;
-	cam->setShutter(shutter);
-	cam->setGain(gain);
+    shutter=newShutter;
+    gain=newGain;
+    cam->setShutter(shutter);
+    cam->setGain(gain);
 }
-		
+
 
 void Brightness::process(unsigned char *scr, int counter){
-	if (!isNImage(counter)){return;}
-	int sollShutter=30;
+    if (!isNImage(counter)){return;}
+    int sollShutter=30;
 
-	cout<<endl<<"camGain - Gain: "<<gc->getLManipulateVariable()<<" - Schu: "<<sc->getLManipulateVariable()<<endl;
-	brightness=ra->createHistoBrightness(scr, 2, false);
-	brightness+=ra->createHistoBrightness(scr, 4, false);
-	brightness/=2;
-	cout<<" - Y-Brightness: "<<brightness<<endl;
-	double ngc=gc->isManupilateVariableAllowed(brightness);
-	if (ngc!=0){
-		cam->setShutter(sc->getManipulateVariable(brightness));
-		//cout<<"camParam - Schu gestellt: "<<sc->getLManipulateVariable()<<endl;
-	}else if (sc->getLManipulateVariable()!=sollShutter){
-		cam->setShutter(sc->getManipulateVariable(brightness));
-	}
-	cam->setGain(gc->getManipulateVariable(brightness));
-		
+    cout<<endl<<"camGain - Gain: "<<gc->getLManipulateVariable()<<" - Schu: "<<sc->getLManipulateVariable()<<endl;
+    brightness=ra->createHistoBrightness(scr, 2, false);
+    brightness+=ra->createHistoBrightness(scr, 4, false);
+    brightness/=2;
+    cout<<" - Y-Brightness: "<<brightness<<endl;
+    double ngc=gc->isManupilateVariableAllowed(brightness);
+    if (ngc!=0){
+        cam->setShutter(sc->getManipulateVariable(brightness));
+        //cout<<"camParam - Schu gestellt: "<<sc->getLManipulateVariable()<<endl;
+    }else if (sc->getLManipulateVariable()!=sollShutter){
+        cam->setShutter(sc->getManipulateVariable(brightness));
+    }
+    cam->setGain(gc->getManipulateVariable(brightness));
+
 }
 
 void Brightness::showRefFlaeche(unsigned char *scr){
-	memcpy(showImage, scr, imageSize*4*sizeof(unsigned char));
-	ra->createHistoBrightness(showImage, 2, true);	
-	showRGBScr(showImage);
+    memcpy(showImage, scr, imageSize*4*sizeof(unsigned char));
+    ra->createHistoBrightness(showImage, 2, true);
+    showRGBScr(showImage);
 }
 
 void Brightness::showRefFlaecheGray(unsigned char * scr, int counter){
-	if (!isNImage(counter)){return;}
-	memcpy(showImage, scr, imageSize*2*sizeof(unsigned char));
-	ra->createHistoBrightness(showImage, 1, true);	
-	showGrayScr(showImage);
+    if (!isNImage(counter)){return;}
+    memcpy(showImage, scr, imageSize*2*sizeof(unsigned char));
+    ra->createHistoBrightness(showImage, 1, true);
+    showGrayScr(showImage);
 }
 
-	
+
 

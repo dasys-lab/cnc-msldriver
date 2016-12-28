@@ -30,23 +30,23 @@
 
 class BallZTracker {
 
-	public:
+    public:
 
-		BallZTracker();
-		~BallZTracker();
+        BallZTracker();
+        ~BallZTracker();
 
-		static BallZTracker * getInstance();
+        static BallZTracker * getInstance();
 
-		ZEstimate trackObject(ObservedPoint * points, int length, int startIndex, int lastIndex);
+        ZEstimate trackObject(ObservedPoint * points, int length, int startIndex, int lastIndex);
 
-	private:
+    private:
 
-		static BallZTracker * instance_;
+        static BallZTracker * instance_;
 
-		void init();
-		void cleanup();
+        void init();
+        void cleanup();
 
-		RawOdometryHelper * rawHelper;
+        RawOdometryHelper * rawHelper;
 
 };
 

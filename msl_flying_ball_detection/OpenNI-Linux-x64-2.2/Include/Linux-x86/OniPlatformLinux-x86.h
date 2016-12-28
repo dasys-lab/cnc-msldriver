@@ -52,7 +52,7 @@
 //---------------------------------------------------------------------------
 // Memory
 //---------------------------------------------------------------------------
-/** The default memory alignment. */ 
+/** The default memory alignment. */
 #define ONI_DEFAULT_MEM_ALIGN 16
 
 /** The thread static declarator (using TLS). */
@@ -61,17 +61,17 @@
 //---------------------------------------------------------------------------
 // Files
 //---------------------------------------------------------------------------
-/** The maximum allowed file path size (in bytes). */ 
+/** The maximum allowed file path size (in bytes). */
 #define ONI_FILE_MAX_PATH 256
 
 //---------------------------------------------------------------------------
 // Call back
 //---------------------------------------------------------------------------
-/** The std call type. */ 
+/** The std call type. */
 #define ONI_STDCALL __stdcall
 
-/** The call back calling convention. */ 
-#define ONI_CALLBACK_TYPE 
+/** The call back calling convention. */
+#define ONI_CALLBACK_TYPE
 
 /** The C and C++ calling convension. */
 #define ONI_C_DECL
@@ -79,21 +79,21 @@
 //---------------------------------------------------------------------------
 // Macros
 //---------------------------------------------------------------------------
-/** Returns the date and time at compile time. */ 
+/** Returns the date and time at compile time. */
 #define ONI_TIMESTAMP __DATE__ " " __TIME__
 
-/** Converts n into a pre-processor string.  */ 
+/** Converts n into a pre-processor string.  */
 #define ONI_STRINGIFY(n) ONI_STRINGIFY_HELPER(n)
 #define ONI_STRINGIFY_HELPER(n) #n
 
 //---------------------------------------------------------------------------
 // API Export/Import Macros
 //---------------------------------------------------------------------------
-/** Indicates an exported shared library function. */ 
+/** Indicates an exported shared library function. */
 #define ONI_API_EXPORT __attribute__ ((visibility("default")))
 
-/** Indicates an imported shared library function. */ 
-#define ONI_API_IMPORT 
+/** Indicates an imported shared library function. */
+#define ONI_API_IMPORT
 
 /** Indicates a deprecated function */
 #define ONI_API_DEPRECATED(msg) __attribute__((warning("This function is deprecated: " msg)))

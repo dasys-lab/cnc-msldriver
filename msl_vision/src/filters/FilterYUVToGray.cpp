@@ -26,7 +26,7 @@
 
 FilterYUVToGray::FilterYUVToGray(int width, int height):Filter(OF_GRAY, width, height){
 
-	init();
+    init();
 
 }
 
@@ -34,21 +34,21 @@ FilterYUVToGray::FilterYUVToGray(int width, int height):Filter(OF_GRAY, width, h
 
 FilterYUVToGray::~FilterYUVToGray(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned char * FilterYUVToGray::process(unsigned char * src, unsigned int imagesize){
 
-	unsigned char * tgt = outputBuffer;	
+    unsigned char * tgt = outputBuffer;
 
-	for(unsigned int i = 0; i < imagesize / 2; i++){
-		src++;
-		*tgt++ = *src++;
-	}
+    for(unsigned int i = 0; i < imagesize / 2; i++){
+        src++;
+        *tgt++ = *src++;
+    }
 
-	return outputBuffer;
+    return outputBuffer;
 
 }
 

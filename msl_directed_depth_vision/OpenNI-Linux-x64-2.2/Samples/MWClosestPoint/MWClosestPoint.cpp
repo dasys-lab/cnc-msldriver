@@ -30,184 +30,184 @@ class StreamListener;
 
 struct ClosestPointInternal
 {
-	ClosestPointInternal(ClosestPoint* pClosestPoint) :
-		m_pDevice(NULL), m_pDepthStream(NULL), m_pListener(NULL), m_pStreamListener(NULL), m_pClosesPoint(pClosestPoint)
-		{}
+    ClosestPointInternal(ClosestPoint* pClosestPoint) :
+        m_pDevice(NULL), m_pDepthStream(NULL), m_pListener(NULL), m_pStreamListener(NULL), m_pClosesPoint(pClosestPoint)
+        {}
 
-	void Raise()
-	{
-		if (m_pListener != NULL)
-			m_pListener->readyForNextData(m_pClosesPoint);
-	}
-	bool m_oniOwner;
-	Device* m_pDevice;
-	VideoStream* m_pDepthStream;
+    void Raise()
+    {
+        if (m_pListener != NULL)
+            m_pListener->readyForNextData(m_pClosesPoint);
+    }
+    bool m_oniOwner;
+    Device* m_pDevice;
+    VideoStream* m_pDepthStream;
 
-	ClosestPoint::Listener* m_pListener;
+    ClosestPoint::Listener* m_pListener;
 
-	StreamListener* m_pStreamListener;
+    StreamListener* m_pStreamListener;
 
-	ClosestPoint* m_pClosesPoint;
+    ClosestPoint* m_pClosesPoint;
 };
 
 class StreamListener : public VideoStream::NewFrameListener
 {
 public:
-	StreamListener(ClosestPointInternal* pClosestPoint) : m_pClosestPoint(pClosestPoint)
-	{}
-	virtual void onNewFrame(VideoStream& stream)
-	{
-		m_pClosestPoint->Raise();
-	}
+    StreamListener(ClosestPointInternal* pClosestPoint) : m_pClosestPoint(pClosestPoint)
+    {}
+    virtual void onNewFrame(VideoStream& stream)
+    {
+        m_pClosestPoint->Raise();
+    }
 private:
-	ClosestPointInternal* m_pClosestPoint;
+    ClosestPointInternal* m_pClosestPoint;
 };
 
 ClosestPoint::ClosestPoint(const char* uri)
 {
-	m_pInternal = new ClosestPointInternal(this);
+    m_pInternal = new ClosestPointInternal(this);
 
-	m_pInternal->m_pDevice = new Device;
-	m_pInternal->m_oniOwner = true;
+    m_pInternal->m_pDevice = new Device;
+    m_pInternal->m_oniOwner = true;
 
-	OpenNI::initialize();
-	Status rc = m_pInternal->m_pDevice->open(uri);
-	if (rc != STATUS_OK)
-	{
-		printf("Open device failed:\n%s\n", OpenNI::getExtendedError());
-		return;
-	}
-	initialize();
+    OpenNI::initialize();
+    Status rc = m_pInternal->m_pDevice->open(uri);
+    if (rc != STATUS_OK)
+    {
+        printf("Open device failed:\n%s\n", OpenNI::getExtendedError());
+        return;
+    }
+    initialize();
 }
 
 ClosestPoint::ClosestPoint(openni::Device* pDevice)
 {
-	m_pInternal = new ClosestPointInternal(this);
+    m_pInternal = new ClosestPointInternal(this);
 
-	m_pInternal->m_pDevice = pDevice;
-	m_pInternal->m_oniOwner = false;
+    m_pInternal->m_pDevice = pDevice;
+    m_pInternal->m_oniOwner = false;
 
-	OpenNI::initialize();
+    OpenNI::initialize();
 
-	if (pDevice != NULL)
-	{
-		initialize();
-	}
+    if (pDevice != NULL)
+    {
+        initialize();
+    }
 }
 
 void ClosestPoint::initialize()
 {
-	m_pInternal->m_pStreamListener = NULL;
-	m_pInternal->m_pListener = NULL;
+    m_pInternal->m_pStreamListener = NULL;
+    m_pInternal->m_pListener = NULL;
 
-	m_pInternal->m_pDepthStream = new VideoStream;
-	Status rc = m_pInternal->m_pDepthStream->create(*m_pInternal->m_pDevice, SENSOR_DEPTH);
-	if (rc != STATUS_OK)
-	{
-		printf("Created failed\n%s\n", OpenNI::getExtendedError());
-		return;
-	}
+    m_pInternal->m_pDepthStream = new VideoStream;
+    Status rc = m_pInternal->m_pDepthStream->create(*m_pInternal->m_pDevice, SENSOR_DEPTH);
+    if (rc != STATUS_OK)
+    {
+        printf("Created failed\n%s\n", OpenNI::getExtendedError());
+        return;
+    }
 
-	m_pInternal->m_pStreamListener = new StreamListener(m_pInternal);
+    m_pInternal->m_pStreamListener = new StreamListener(m_pInternal);
 
-	rc = m_pInternal->m_pDepthStream->start();
-	if (rc != STATUS_OK)
-	{
-		printf("Start failed:\n%s\n", OpenNI::getExtendedError());
-	}
+    rc = m_pInternal->m_pDepthStream->start();
+    if (rc != STATUS_OK)
+    {
+        printf("Start failed:\n%s\n", OpenNI::getExtendedError());
+    }
 
-	m_pInternal->m_pDepthStream->addNewFrameListener(m_pInternal->m_pStreamListener);
+    m_pInternal->m_pDepthStream->addNewFrameListener(m_pInternal->m_pStreamListener);
 }
 
 ClosestPoint::~ClosestPoint()
 {
-	if (m_pInternal->m_pDepthStream != NULL)
-	{
-		m_pInternal->m_pDepthStream->removeNewFrameListener(m_pInternal->m_pStreamListener);
+    if (m_pInternal->m_pDepthStream != NULL)
+    {
+        m_pInternal->m_pDepthStream->removeNewFrameListener(m_pInternal->m_pStreamListener);
 
-		m_pInternal->m_pDepthStream->stop();
-		m_pInternal->m_pDepthStream->destroy();
+        m_pInternal->m_pDepthStream->stop();
+        m_pInternal->m_pDepthStream->destroy();
 
-		delete m_pInternal->m_pDepthStream;
-	}
+        delete m_pInternal->m_pDepthStream;
+    }
 
-	if (m_pInternal->m_pStreamListener != NULL)
-	{
-		delete m_pInternal->m_pStreamListener;
-	}
+    if (m_pInternal->m_pStreamListener != NULL)
+    {
+        delete m_pInternal->m_pStreamListener;
+    }
 
-	if (m_pInternal->m_oniOwner)
-	{
-		if (m_pInternal->m_pDevice != NULL)
-		{
-			m_pInternal->m_pDevice->close();
+    if (m_pInternal->m_oniOwner)
+    {
+        if (m_pInternal->m_pDevice != NULL)
+        {
+            m_pInternal->m_pDevice->close();
 
-			delete m_pInternal->m_pDevice;
-		}
-	}
+            delete m_pInternal->m_pDevice;
+        }
+    }
 
-	OpenNI::shutdown();
+    OpenNI::shutdown();
 
 
-	delete m_pInternal;
+    delete m_pInternal;
 }
 
 bool ClosestPoint::isValid() const
 {
-	if (m_pInternal == NULL)
-		return false;
-	if (m_pInternal->m_pDevice == NULL)
-		return false;
-	if (m_pInternal->m_pDepthStream == NULL)
-		return false;
-	if (!m_pInternal->m_pDepthStream->isValid())
-		return false;
+    if (m_pInternal == NULL)
+        return false;
+    if (m_pInternal->m_pDevice == NULL)
+        return false;
+    if (m_pInternal->m_pDepthStream == NULL)
+        return false;
+    if (!m_pInternal->m_pDepthStream->isValid())
+        return false;
 
-	return true;
+    return true;
 }
 
 Status ClosestPoint::setListener(Listener& listener)
 {
-	m_pInternal->m_pListener = &listener;
-	return STATUS_OK;
+    m_pInternal->m_pListener = &listener;
+    return STATUS_OK;
 }
 void ClosestPoint::resetListener()
 {
-	m_pInternal->m_pListener = NULL;
+    m_pInternal->m_pListener = NULL;
 }
 
 Status ClosestPoint::getNextData(IntPoint3D& closestPoint, VideoFrameRef& rawFrame)
 {
-	Status rc = m_pInternal->m_pDepthStream->readFrame(&rawFrame);
-	if (rc != STATUS_OK)
-	{
-		printf("readFrame failed\n%s\n", OpenNI::getExtendedError());
-	}
+    Status rc = m_pInternal->m_pDepthStream->readFrame(&rawFrame);
+    if (rc != STATUS_OK)
+    {
+        printf("readFrame failed\n%s\n", OpenNI::getExtendedError());
+    }
 
-	DepthPixel* pDepth = (DepthPixel*)rawFrame.getData();
-	bool found = false;
-	closestPoint.Z = 0xffff;
-	int width = rawFrame.getWidth();
-	int height = rawFrame.getHeight();
+    DepthPixel* pDepth = (DepthPixel*)rawFrame.getData();
+    bool found = false;
+    closestPoint.Z = 0xffff;
+    int width = rawFrame.getWidth();
+    int height = rawFrame.getHeight();
 
-	for (int y = 0; y < height; ++y)
-		for (int x = 0; x < width; ++x, ++pDepth)
-		{
-			if (*pDepth < closestPoint.Z && *pDepth != 0)
-			{
-				closestPoint.X = x;
-				closestPoint.Y = y;
-				closestPoint.Z = *pDepth;
-				found = true;
-			}
-		}
+    for (int y = 0; y < height; ++y)
+        for (int x = 0; x < width; ++x, ++pDepth)
+        {
+            if (*pDepth < closestPoint.Z && *pDepth != 0)
+            {
+                closestPoint.X = x;
+                closestPoint.Y = y;
+                closestPoint.Z = *pDepth;
+                found = true;
+            }
+        }
 
-	if (!found)
-	{
-		return STATUS_ERROR;
-	}
+    if (!found)
+    {
+        return STATUS_ERROR;
+    }
 
-	return STATUS_OK;
+    return STATUS_OK;
 }
 
 }

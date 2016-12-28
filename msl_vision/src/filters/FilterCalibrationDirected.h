@@ -29,19 +29,19 @@
 class FilterCalibrationDirected  : public Filter {
 
 
-	public:
-		FilterCalibrationDirected(int width, int height);
-		~FilterCalibrationDirected();
-		
-		unsigned char * process(unsigned char * src, int width, int height);
+    public:
+        FilterCalibrationDirected(int width, int height);
+        ~FilterCalibrationDirected();
 
-	protected:
+        unsigned char * process(unsigned char * src, int width, int height);
 
-		void init();
-		void cleanup();
+    protected:
 
-		int imWidth;
-		int imHeight;
+        void init();
+        void cleanup();
+
+        int imWidth;
+        int imHeight;
 
 
 };

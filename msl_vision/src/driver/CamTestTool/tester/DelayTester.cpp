@@ -94,7 +94,7 @@ namespace cameratest
 
         //long timediff = tv_after.tv_usec - tv_before.tv_usec;
         //if(timediff < 0)
-        //	timediff += 1000000;
+        //  timediff += 1000000;
 
         //150000000 by 1000*1000*3
         //if(i< area*area*30) {

@@ -10,41 +10,41 @@
 namespace msl_vision
 {
 
-	Cluster::Cluster()
-	{
-		sc = supplementary::SystemConfig::getInstance();
-		depthVision = (*sc)["DirectedDepthVision"];
+    Cluster::Cluster()
+    {
+        sc = supplementary::SystemConfig::getInstance();
+        depthVision = (*sc)["DirectedDepthVision"];
 
-		maxDistBetwCentroid = depthVision->get<double>("DepthVision", "Cluster", "maxDistBetwCentroid", NULL);
-	}
+        maxDistBetwCentroid = depthVision->get<double>("DepthVision", "Cluster", "maxDistBetwCentroid", NULL);
+    }
 
-	Cluster::~Cluster()
-	{
-	}
+    Cluster::~Cluster()
+    {
+    }
 
-	void Cluster::setCluster(pcl::PointIndicesPtr cluster) {
-		this->iCluster = cluster;
-	}
-	void Cluster::setCluster(__gnu_cxx::__alloc_traits<std::allocator<pcl::PointIndices> >::value_type& cluster) {
-		this->cluster = cluster;
-	}
-	void Cluster::setCentroid(pcl::PointXYZRGB centroid) {
-		this->centroid = centroid;
-	}
-	pcl::PointXYZRGB* Cluster::getCentroid() {
-		return &this->centroid;
-	}
+    void Cluster::setCluster(pcl::PointIndicesPtr cluster) {
+        this->iCluster = cluster;
+    }
+    void Cluster::setCluster(__gnu_cxx::__alloc_traits<std::allocator<pcl::PointIndices> >::value_type& cluster) {
+        this->cluster = cluster;
+    }
+    void Cluster::setCentroid(pcl::PointXYZRGB centroid) {
+        this->centroid = centroid;
+    }
+    pcl::PointXYZRGB* Cluster::getCentroid() {
+        return &this->centroid;
+    }
 
-	double Cluster::dist(pcl::PointXYZRGB a, pcl::PointXYZRGB b) {
-			return abs(sqrt((a.x - b.x) *  (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z)));
-	}
+    double Cluster::dist(pcl::PointXYZRGB a, pcl::PointXYZRGB b) {
+            return abs(sqrt((a.x - b.x) *  (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z)));
+    }
 
-	bool Cluster::operator == (msl_vision::Cluster& c1) {
-		if(dist(*c1.getCentroid(), *this->getCentroid()) < maxDistBetwCentroid) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    bool Cluster::operator == (msl_vision::Cluster& c1) {
+        if(dist(*c1.getCentroid(), *this->getCentroid()) < maxDistBetwCentroid) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 } /* namespace msl_vision */

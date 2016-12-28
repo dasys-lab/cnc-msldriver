@@ -43,44 +43,44 @@
 
 
 class SpicaHelper {
-	public:
-		static void initialize();
-		static msl_sensor_msgs::WorldModelData* wm;
-		static msl_sensor_msgs::VisionDebug* vdd;
-		static msl_sensor_msgs::VisionImage* vi;
-		static msl_sensor_msgs::BallHypothesisList* ballList;
-		static bool reloc;
+    public:
+        static void initialize();
+        static msl_sensor_msgs::WorldModelData* wm;
+        static msl_sensor_msgs::VisionDebug* vdd;
+        static msl_sensor_msgs::VisionImage* vi;
+        static msl_sensor_msgs::BallHypothesisList* ballList;
+        static bool reloc;
 
-		static ros::Publisher womopub;
-		static ros::Publisher ballPub;
+        static ros::Publisher womopub;
+        static ros::Publisher ballPub;
         static ros::Publisher statepub;
-		static ros::Publisher debugPub;
-		static ros::Publisher Imagepub;
-		static ros::Publisher linePointsPub;
+        static ros::Publisher debugPub;
+        static ros::Publisher Imagepub;
+        static ros::Publisher linePointsPub;
 
-		static ros::Subscriber VCsub;
-		// subscriber for relocation button
-		static ros::Subscriber RelocSub;
-		static char key;
+        static ros::Subscriber VCsub;
+        // subscriber for relocation button
+        static ros::Subscriber RelocSub;
+        static char key;
         static char haveBall;
         static char duel;
 
 
-		static void handleVisionControl(const msl_sensor_msgs::VisionControl::ConstPtr& msg);
-		static void handleVisionRelocTrigger(const msl_actuator_msgs::VisionRelocTrigger::ConstPtr& msg);
-		
-		static ros::NodeHandle* visionNode;
-		static void send();
-		static void sendBallHypothesis();
-		static void sendDebugMsg();
-		static void sendLinePoints(std::vector<LinePoint> linePoints, unsigned long long timestamp);
+        static void handleVisionControl(const msl_sensor_msgs::VisionControl::ConstPtr& msg);
+        static void handleVisionRelocTrigger(const msl_actuator_msgs::VisionRelocTrigger::ConstPtr& msg);
+
+        static ros::NodeHandle* visionNode;
+        static void send();
+        static void sendBallHypothesis();
+        static void sendDebugMsg();
+        static void sendLinePoints(std::vector<LinePoint> linePoints, unsigned long long timestamp);
         static void sendGameState();
-		static void streamGreyMJPEG(unsigned char* img, int width, int height);
+        static void streamGreyMJPEG(unsigned char* img, int width, int height);
 
 
-		static struct sockaddr_in si_other;
-		static int s, slen;
-		static unsigned char* buf;
+        static struct sockaddr_in si_other;
+        static int s, slen;
+        static unsigned char* buf;
 };
 
 #endif

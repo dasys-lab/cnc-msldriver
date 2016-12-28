@@ -33,39 +33,39 @@
 
 class Whitepoint : public BasisAutoParam {
 
-	public:
-		static Whitepoint* getInstance(int width, int height, camera::ImagingSource* _cam);
+    public:
+        static Whitepoint* getInstance(int width, int height, camera::ImagingSource* _cam);
 
-		void process(unsigned char *scr, int counter=-1);
-		void testWhitepoint(unsigned char *scr, camera::ImagingSource::white_balance_t wp, int hell);
-		void setNewParam();
+        void process(unsigned char *scr, int counter=-1);
+        void testWhitepoint(unsigned char *scr, camera::ImagingSource::white_balance_t wp, int hell);
+        void setNewParam();
 
-		double getLastUBrightness(){return ra->getArithmHistoBrightness(1);};
-		double getLastVBrightness(){return ra->getArithmHistoBrightness(3);};
-		camera::ImagingSource::white_balance_t getLastWP(){return wp;};
+        double getLastUBrightness(){return ra->getArithmHistoBrightness(1);};
+        double getLastVBrightness(){return ra->getArithmHistoBrightness(3);};
+        camera::ImagingSource::white_balance_t getLastWP(){return wp;};
         camera::ImagingSource::white_balance_t getLastNewWP(){return newWp;};
 
         void showRefFlaeche(unsigned char* currImage);
 
     private:
-		//Singelton
+        //Singelton
         static Whitepoint* theWhitepointInstance;
         Whitepoint(int width, int height, camera::ImagingSource* _cam);
         Whitepoint(int width, int height, camera::ImagingSource* cam, string area);
         ~Whitepoint();
-		Whitepoint():BasisAutoParam(0, 0, 0, NULL){}
-		Whitepoint(const Whitepoint&):BasisAutoParam(0, 0, 0, NULL){}
+        Whitepoint():BasisAutoParam(0, 0, 0, NULL){}
+        Whitepoint(const Whitepoint&):BasisAutoParam(0, 0, 0, NULL){}
         Whitepoint & operator = (const Whitepoint&);
 
-		ReferenceArea *ra;
-		PControl *pcU;
-		PControl *pcV;
-		double UBrightness;
-		double VBrightness;
+        ReferenceArea *ra;
+        PControl *pcU;
+        PControl *pcV;
+        double UBrightness;
+        double VBrightness;
 
-		camera::ImagingSource::white_balance_t wp, newWp;
+        camera::ImagingSource::white_balance_t wp, newWp;
 
-		XVDisplay *xvDisplayRGB;
+        XVDisplay *xvDisplayRGB;
 };
 
 

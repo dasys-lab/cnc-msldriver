@@ -120,7 +120,7 @@ namespace camera
             void enableTriggerDelay(bool value);
             bool isTriggerDelay();
 
-	void setFramerate(unsigned short value);
+    void setFramerate(unsigned short value);
 
             void enableMirror(bool value);
             bool isMirror();
@@ -166,7 +166,7 @@ namespace camera
 
             bool getFrameInternal(Frame &frame);
 
-	void DummyTestMethod();
+    void DummyTestMethod();
 
         protected:
             /**

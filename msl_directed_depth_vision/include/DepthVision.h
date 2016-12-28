@@ -34,10 +34,10 @@
 
 class DepthVision {
 public:
-	DepthVision();
-	virtual ~DepthVision();
+    DepthVision();
+    virtual ~DepthVision();
 
-	void pointCloudCallback(sensor_msgs::PointCloud& pcl);
+    void pointCloudCallback(sensor_msgs::PointCloud& pcl);
 };
 
 #endif /* CNC_MSLDRIVER_MSL_DIRECTED_DEPTH_VISION_SRC_DEPTHVISION_H_ */

@@ -34,45 +34,45 @@
 
 FilterDistanceProfile::FilterDistanceProfile(int width, int height, bool _calibMode):Filter(OF_ZERO, width, height), sc() {
 
-	this->sc = SystemConfig::getInstance();
+    this->sc = SystemConfig::getInstance();
 
-	profile = NULL;
-	tmpProfile = NULL;
+    profile = NULL;
+    tmpProfile = NULL;
 
-	calibProfile = NULL;
-	calibMode = _calibMode;
-	calibCounter = 0;
+    calibProfile = NULL;
+    calibMode = _calibMode;
+    calibCounter = 0;
 
-	//std::string config_file = "EndPoints.conf";
-	//ConfigHelper configHelper(config_file);
+    //std::string config_file = "EndPoints.conf";
+    //ConfigHelper configHelper(config_file);
 
-	//ConfigElement * modules = configHelper.rootElement->childrenMap["EndPoints"];
-	//ConfigElement * worldModel = modules->childrenMap["WorldModel"];
+    //ConfigElement * modules = configHelper.rootElement->childrenMap["EndPoints"];
+    //ConfigElement * worldModel = modules->childrenMap["WorldModel"];
 
-	//std::string socketSpec = worldModel->Values["Listen"];
+    //std::string socketSpec = worldModel->Values["Listen"];
 
-	//ConfigHelper::parseSocketSpec(socketSpec, socketType, destAddress, destPort);
-	//printf("destPort from DistanceProfile: %d\n", destPort);
+    //ConfigHelper::parseSocketSpec(socketSpec, socketType, destAddress, destPort);
+    //printf("destPort from DistanceProfile: %d\n", destPort);
 
-	//if(socketType == "udp")
-	//	socket = new Anja::DatagramSocket();
-	//else {
-	//	socket = new Anja::UnixSocket();
-	//	((Anja::UnixSocket*) socket)->connect(destAddress);
-	//}
+    //if(socketType == "udp")
+    //  socket = new Anja::DatagramSocket();
+    //else {
+    //  socket = new Anja::UnixSocket();
+    //  ((Anja::UnixSocket*) socket)->connect(destAddress);
+    //}
 
-	Configuration *vision = (*this->sc)["Vision"];
+    Configuration *vision = (*this->sc)["Vision"];
 
-	negRanges[0][0] = vision->get<short>("Vision", "Holder", "NegRange_0_0", NULL);
-	negRanges[0][1] = vision->get<short>("Vision", "Holder", "NegRange_0_1", NULL);
-	negRanges[1][0] = vision->get<short>("Vision", "Holder", "NegRange_1_0", NULL);
-	negRanges[1][1] = vision->get<short>("Vision", "Holder", "NegRange_1_1", NULL);
-	negRanges[2][0] = vision->get<short>("Vision", "Holder", "NegRange_2_0", NULL);
-	negRanges[2][1] = vision->get<short>("Vision", "Holder", "NegRange_2_1", NULL);
+    negRanges[0][0] = vision->get<short>("Vision", "Holder", "NegRange_0_0", NULL);
+    negRanges[0][1] = vision->get<short>("Vision", "Holder", "NegRange_0_1", NULL);
+    negRanges[1][0] = vision->get<short>("Vision", "Holder", "NegRange_1_0", NULL);
+    negRanges[1][1] = vision->get<short>("Vision", "Holder", "NegRange_1_1", NULL);
+    negRanges[2][0] = vision->get<short>("Vision", "Holder", "NegRange_2_0", NULL);
+    negRanges[2][1] = vision->get<short>("Vision", "Holder", "NegRange_2_1", NULL);
 
-	numberOfLines = -1;
+    numberOfLines = -1;
 
-	init();
+    init();
 
 }
 
@@ -80,270 +80,270 @@ FilterDistanceProfile::FilterDistanceProfile(int width, int height, bool _calibM
 
 FilterDistanceProfile::~FilterDistanceProfile(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned char * FilterDistanceProfile::process(unsigned char * src, unsigned int width, unsigned int height, unsigned char color, ScanLineHelper & helper, DistanceLookupHelper & distanceHelper, bool printOutput){
 
-	unsigned char * tgt = src;
+    unsigned char * tgt = src;
 
-	numberOfLines = helper.getNumberLines();
+    numberOfLines = helper.getNumberLines();
 
-	double * LookupTable = distanceHelper.getLookupTable();
+    double * LookupTable = distanceHelper.getLookupTable();
 
-	if(profile == NULL){
-		profile = (double *) malloc(NSECTORS*sizeof(double));
+    if(profile == NULL){
+        profile = (double *) malloc(NSECTORS*sizeof(double));
 
-	}
-	if(tmpProfile == NULL){
-		tmpProfile = (double *) malloc(helper.getNumberLines()*sizeof(double));
+    }
+    if(tmpProfile == NULL){
+        tmpProfile = (double *) malloc(helper.getNumberLines()*sizeof(double));
 
-	}
+    }
 
-	if(calibMode && calibProfile == NULL){
-		
-		calibProfile = (int *) malloc(helper.getNumberLines()*sizeof(int));
-		bzero(calibProfile, helper.getNumberLines()*sizeof(int));
+    if(calibMode && calibProfile == NULL){
 
-	}
+        calibProfile = (int *) malloc(helper.getNumberLines()*sizeof(int));
+        bzero(calibProfile, helper.getNumberLines()*sizeof(int));
 
-	for(int i = 0; i < NSECTORS; i++){
+    }
 
-		tmpProfile[i] = HORIZON;
-	}
+    for(int i = 0; i < NSECTORS; i++){
 
-	short * firstInner = helper.getInnerLines();
-	short * nInner = helper.getInnerLinesN();
+        tmpProfile[i] = HORIZON;
+    }
 
-	short * firstOuter = helper.getOuterLines();
-	short * nOuter = helper.getOuterLinesN();
+    short * firstInner = helper.getInnerLines();
+    short * nInner = helper.getInnerLinesN();
 
-	//printf("Number of ScanLines: %d\n", helper.getNumberLines());
+    short * firstOuter = helper.getOuterLines();
+    short * nOuter = helper.getOuterLinesN();
 
-	short maxPoints = helper.getMaxPoints();
+    //printf("Number of ScanLines: %d\n", helper.getNumberLines());
 
-	short x;
-	short y;
-	short jumpx;
-	short jumpy;
+    short maxPoints = helper.getMaxPoints();
 
-	for(short i = 0; i < helper.getNumberLines(); i++){
+    short x;
+    short y;
+    short jumpx;
+    short jumpy;
 
-		bool found = false;
-		short counter = 0;
-		short indX = 0;
-		short indY = 0;
+    for(short i = 0; i < helper.getNumberLines(); i++){
 
-//		short redAreaBegin = -1;
-//		short redAreaEnd = -1;
+        bool found = false;
+        short counter = 0;
+        short indX = 0;
+        short indY = 0;
 
-		if(i % 2 == 0){
+//      short redAreaBegin = -1;
+//      short redAreaEnd = -1;
 
-			short * line = firstInner;
+        if(i % 2 == 0){
 
-			for(short j = 0; j < (*nInner); j++){
+            short * line = firstInner;
 
-				short jump = (short) rint(30.0 - j/5.0);
-				if(jump < 3)
-					jump = 3;
-				if(j > 150)
-					jump = 0;
+            for(short j = 0; j < (*nInner); j++){
 
-				jumpx = line[jump*2];
-				jumpy = line[jump*2 + 1];
+                short jump = (short) rint(30.0 - j/5.0);
+                if(jump < 3)
+                    jump = 3;
+                if(j > 150)
+                    jump = 0;
 
-				x = *line++;
-				y = *line++;
+                jumpx = line[jump*2];
+                jumpy = line[jump*2 + 1];
 
-				if(src[x*width + y] == color && src[jumpx*width + jumpy] != COLOR_RED){
-					counter++;
+                x = *line++;
+                y = *line++;
 
-					if(counter == 1){
-						indX = x;
-						indY = y;
-					}
-					if(counter >= RANGE){
-						found = true;
-						break;
-					}
-				}
-				else{
-					counter = 0;
-				}
-			}
+                if(src[x*width + y] == color && src[jumpx*width + jumpy] != COLOR_RED){
+                    counter++;
 
-			firstInner = firstInner + maxPoints*2;
-			nInner++;
-	
-		}
-		else {
+                    if(counter == 1){
+                        indX = x;
+                        indY = y;
+                    }
+                    if(counter >= RANGE){
+                        found = true;
+                        break;
+                    }
+                }
+                else{
+                    counter = 0;
+                }
+            }
 
-			short * line = firstOuter;
+            firstInner = firstInner + maxPoints*2;
+            nInner++;
 
-			for(short j = 0; j < (*nOuter); j++){
+        }
+        else {
 
-				short jump = (short) rint(15.0 - j/5.0);
-				if(jump < 3)
-					jump = 3;
-				if(j > 150)
-					jump = 0;
+            short * line = firstOuter;
 
-				jumpx = line[jump*2];
-				jumpy = line[jump*2 + 1];
+            for(short j = 0; j < (*nOuter); j++){
 
-				x = *line++;
-				y = *line++;
+                short jump = (short) rint(15.0 - j/5.0);
+                if(jump < 3)
+                    jump = 3;
+                if(j > 150)
+                    jump = 0;
+
+                jumpx = line[jump*2];
+                jumpy = line[jump*2 + 1];
+
+                x = *line++;
+                y = *line++;
 
 
-				if(src[x*width + y] == color && src[jumpx*width + jumpy] != COLOR_RED){
-					counter++;
+                if(src[x*width + y] == color && src[jumpx*width + jumpy] != COLOR_RED){
+                    counter++;
 
-					if(counter == 1){
-						indX = x;
-						indY = y;
-					}
+                    if(counter == 1){
+                        indX = x;
+                        indY = y;
+                    }
 
-					if(counter >= RANGE){
-						found = true;
-						break;
-					}
-				}
-				else{
-					counter = 0;
+                    if(counter >= RANGE){
+                        found = true;
+                        break;
+                    }
+                }
+                else{
+                    counter = 0;
 
-				}
-			}
+                }
+            }
 
-			firstOuter = firstOuter + maxPoints;
-			nOuter++;
+            firstOuter = firstOuter + maxPoints;
+            nOuter++;
 
-		}
+        }
 
-		if(found){
-			double calcDistance = LookupTable[indX*width + indY];
-			if(calcDistance < 0.0)
-				tmpProfile[i] = HORIZON;
-			else{
-				tmpProfile[i] = calcDistance;
-			}
+        if(found){
+            double calcDistance = LookupTable[indX*width + indY];
+            if(calcDistance < 0.0)
+                tmpProfile[i] = HORIZON;
+            else{
+                tmpProfile[i] = calcDistance;
+            }
 
-			if(calibProfile != NULL && calibCounter >= 10 && calibCounter <= CALIB_MAX && tmpProfile[i] < 4000.0){
-				calibProfile[i]++;
-			}
+            if(calibProfile != NULL && calibCounter >= 10 && calibCounter <= CALIB_MAX && tmpProfile[i] < 4000.0){
+                calibProfile[i]++;
+            }
 
-			if(negRanges[0][0] > helper.getNumberLines()/2 && negRanges[0][1] < helper.getNumberLines()/2){
+            if(negRanges[0][0] > helper.getNumberLines()/2 && negRanges[0][1] < helper.getNumberLines()/2){
 
-				if( (i >= negRanges[0][0]) || (i <= negRanges[0][1]) || 
-					(i >= negRanges[1][0] && i <= negRanges[1][1]) ||
-					(i >= negRanges[2][0] && i <= negRanges[2][1]))
-					tmpProfile[i] = HORIZON;
+                if( (i >= negRanges[0][0]) || (i <= negRanges[0][1]) ||
+                    (i >= negRanges[1][0] && i <= negRanges[1][1]) ||
+                    (i >= negRanges[2][0] && i <= negRanges[2][1]))
+                    tmpProfile[i] = HORIZON;
 
-			}
-			else {
+            }
+            else {
 
-				if( (i >= negRanges[0][0] && i <= negRanges[0][1]) || 
-					(i >= negRanges[1][0] && i <= negRanges[1][1]) ||
-					(i >= negRanges[2][0] && i <= negRanges[2][1]))
-					tmpProfile[i] = HORIZON;
+                if( (i >= negRanges[0][0] && i <= negRanges[0][1]) ||
+                    (i >= negRanges[1][0] && i <= negRanges[1][1]) ||
+                    (i >= negRanges[2][0] && i <= negRanges[2][1]))
+                    tmpProfile[i] = HORIZON;
 
-			}
+            }
 
-		}
-		else{
-			tmpProfile[i] = HORIZON;
+        }
+        else{
+            tmpProfile[i] = HORIZON;
 
-		}
+        }
 
-	}
+    }
 
 /*
-	if(tmpProfile[negRanges[0][0] - 2] < HORIZON || tmpProfile[negRanges[0][1] + 2] < HORIZON){
-		double minDist = tmpProfile[negRanges[0][0] - 2];
-		if(minDist < tmpProfile[negRanges[0][1] + 2])
-			minDist = tmpProfile[negRanges[0][1] + 2];
+    if(tmpProfile[negRanges[0][0] - 2] < HORIZON || tmpProfile[negRanges[0][1] + 2] < HORIZON){
+        double minDist = tmpProfile[negRanges[0][0] - 2];
+        if(minDist < tmpProfile[negRanges[0][1] + 2])
+            minDist = tmpProfile[negRanges[0][1] + 2];
 
-		for(short i = negRanges[0][0] - 1; i < helper.getNumberLines(); i++){
-			tmpProfile[i] = minDist;
-		}
+        for(short i = negRanges[0][0] - 1; i < helper.getNumberLines(); i++){
+            tmpProfile[i] = minDist;
+        }
 
-		for(short i = 0; i <= negRanges[0][1] + 1; i++){
-			tmpProfile[i] = minDist;
-		}
-
-
-	}
-
-	if(tmpProfile[negRanges[1][0] - 1] < HORIZON || tmpProfile[negRanges[1][1] + 1] < HORIZON){
-		double minDist = tmpProfile[negRanges[1][0] - 1];
-		if(minDist < tmpProfile[negRanges[1][1] + 1])
-			minDist = tmpProfile[negRanges[1][1] + 1];
-
-		for(short i = negRanges[1][0]; i <= negRanges[1][1]; i++){
-			tmpProfile[i] = minDist;
-		}
-
-	}
-
-	if(tmpProfile[negRanges[2][0] - 1] < HORIZON || tmpProfile[negRanges[2][1] + 1] < HORIZON){
-		double minDist = tmpProfile[negRanges[2][0] - 1];
-		if(minDist < tmpProfile[negRanges[2][1] + 1])
-			minDist = tmpProfile[negRanges[2][1] + 1];
-
-		for(short i = negRanges[2][0]; i <= negRanges[2][1]; i++){
-			tmpProfile[i] = minDist;
-		}
-
-	}*/
-
-	double currentMin = tmpProfile[0];
-	short index = helper.getNumberLines() - 1;
-	short sector = 0;
-	short nLines = helper.getNumberLines()/NSECTORS;
-	short counter = 1;
+        for(short i = 0; i <= negRanges[0][1] + 1; i++){
+            tmpProfile[i] = minDist;
+        }
 
 
-	while(index >= 0){
-		
-		if(counter == nLines){
-			if(currentMin > tmpProfile[index])
-				currentMin = tmpProfile[index];
-			profile[sector] = currentMin;
-			sector++;
-			currentMin = tmpProfile[index];
-			counter = 1;
-		}
-		else{
-			if(currentMin > tmpProfile[index])
-				currentMin = tmpProfile[index];
-			counter++;	
-		}
-		index--;
-	}
+    }
+
+    if(tmpProfile[negRanges[1][0] - 1] < HORIZON || tmpProfile[negRanges[1][1] + 1] < HORIZON){
+        double minDist = tmpProfile[negRanges[1][0] - 1];
+        if(minDist < tmpProfile[negRanges[1][1] + 1])
+            minDist = tmpProfile[negRanges[1][1] + 1];
+
+        for(short i = negRanges[1][0]; i <= negRanges[1][1]; i++){
+            tmpProfile[i] = minDist;
+        }
+
+    }
+
+    if(tmpProfile[negRanges[2][0] - 1] < HORIZON || tmpProfile[negRanges[2][1] + 1] < HORIZON){
+        double minDist = tmpProfile[negRanges[2][0] - 1];
+        if(minDist < tmpProfile[negRanges[2][1] + 1])
+            minDist = tmpProfile[negRanges[2][1] + 1];
+
+        for(short i = negRanges[2][0]; i <= negRanges[2][1]; i++){
+            tmpProfile[i] = minDist;
+        }
+
+    }*/
+
+    double currentMin = tmpProfile[0];
+    short index = helper.getNumberLines() - 1;
+    short sector = 0;
+    short nLines = helper.getNumberLines()/NSECTORS;
+    short counter = 1;
 
 
-	if(false && printOutput){
-		for(int i = 0; i < helper.getNumberLines(); i++){
+    while(index >= 0){
 
-			if(tmpProfile[i] > 6000.0)
-				printf("DP: %d %f\n", i, 0.0);
-			else
-				printf("DP: %d %f\n", i, tmpProfile[i]);
+        if(counter == nLines){
+            if(currentMin > tmpProfile[index])
+                currentMin = tmpProfile[index];
+            profile[sector] = currentMin;
+            sector++;
+            currentMin = tmpProfile[index];
+            counter = 1;
+        }
+        else{
+            if(currentMin > tmpProfile[index])
+                currentMin = tmpProfile[index];
+            counter++;
+        }
+        index--;
+    }
 
-		}
 
-	}
+    if(false && printOutput){
+        for(int i = 0; i < helper.getNumberLines(); i++){
 
-	SpicaHelper::wm->distanceScan.sectors.clear();
-	for (int i = 0; i < NSECTORS; i++) {
-		SpicaHelper::wm->distanceScan.sectors.push_back(profile[i]);
-	}
+            if(tmpProfile[i] > 6000.0)
+                printf("DP: %d %f\n", i, 0.0);
+            else
+                printf("DP: %d %f\n", i, tmpProfile[i]);
+
+        }
+
+    }
+
+    SpicaHelper::wm->distanceScan.sectors.clear();
+    for (int i = 0; i < NSECTORS; i++) {
+        SpicaHelper::wm->distanceScan.sectors.push_back(profile[i]);
+    }
 
 
-	calibCounter++;
+    calibCounter++;
 
-	return tgt;
+    return tgt;
 
 }
 
@@ -357,91 +357,91 @@ void FilterDistanceProfile::init(){
 
 void FilterDistanceProfile::cleanup(){
 
-	if(profile != NULL){
-		free(profile);
-	}
-	if(tmpProfile != NULL){
-		free(tmpProfile);
-	}
-	if(calibProfile != NULL){
-		free(calibProfile);
-	}
-//	delete socket;
+    if(profile != NULL){
+        free(profile);
+    }
+    if(tmpProfile != NULL){
+        free(tmpProfile);
+    }
+    if(calibProfile != NULL){
+        free(calibProfile);
+    }
+//  delete socket;
 
 }
 
 double * FilterDistanceProfile::getProfile(){
 
-	return profile;
+    return profile;
 
 }
 
 short * FilterDistanceProfile::calculateNewNegRanges(){
 
-	if(calibMode && calibCounter > CALIB_MAX){		
+    if(calibMode && calibCounter > CALIB_MAX){
 
-		int ind1 = 170;
-		int ind2 = numberOfLines/3 - 10;
-		int ind3 = 2*numberOfLines/3 - 10;
+        int ind1 = 170;
+        int ind2 = numberOfLines/3 - 10;
+        int ind3 = 2*numberOfLines/3 - 10;
 
 
-		bool found1 = false;
-		bool found2 = false;
-		bool found3 = false;
+        bool found1 = false;
+        bool found2 = false;
+        bool found3 = false;
 
-		negRanges[0][0] = -1;
-		negRanges[0][1] = -1;
-		negRanges[1][0] = -1;
-		negRanges[1][1] = -1;
-		negRanges[2][0] = -1;
-		negRanges[2][1] = -1;
+        negRanges[0][0] = -1;
+        negRanges[0][1] = -1;
+        negRanges[1][0] = -1;
+        negRanges[1][1] = -1;
+        negRanges[2][0] = -1;
+        negRanges[2][1] = -1;
 
-	
-		for(int i = 0; i < 20; i++){
 
-			ind1 = ind1 % numberOfLines;
-			if(calibProfile[ind1] > 3){
-				if(found1)
-					negRanges[0][1] = ind1;
-				else {
-					negRanges[0][0] = ind1;
-					negRanges[0][1] = ind1;
-					found1 = true;
-				}
-			}	
+        for(int i = 0; i < 20; i++){
 
-			ind2 = ind2 % numberOfLines;
-			if(calibProfile[ind2] > 3){
-				if(found2)
-					negRanges[1][1] = ind2;
-				else {
-					negRanges[1][0] = ind2;
-					negRanges[1][1] = ind2;
-					found2 = true;
-				}
-			}	
+            ind1 = ind1 % numberOfLines;
+            if(calibProfile[ind1] > 3){
+                if(found1)
+                    negRanges[0][1] = ind1;
+                else {
+                    negRanges[0][0] = ind1;
+                    negRanges[0][1] = ind1;
+                    found1 = true;
+                }
+            }
 
-			ind3 = ind3 % numberOfLines;
-			if(calibProfile[ind3] > 3){
-				if(found3)
-					negRanges[2][1] = ind3;
-				else {
-					negRanges[2][0] = ind3;
-					negRanges[2][1] = ind3;
-					found3 = true;
-				}
-			}
+            ind2 = ind2 % numberOfLines;
+            if(calibProfile[ind2] > 3){
+                if(found2)
+                    negRanges[1][1] = ind2;
+                else {
+                    negRanges[1][0] = ind2;
+                    negRanges[1][1] = ind2;
+                    found2 = true;
+                }
+            }
 
-			ind1++;
-			ind2++;
-			ind3++;	
+            ind3 = ind3 % numberOfLines;
+            if(calibProfile[ind3] > 3){
+                if(found3)
+                    negRanges[2][1] = ind3;
+                else {
+                    negRanges[2][0] = ind3;
+                    negRanges[2][1] = ind3;
+                    found3 = true;
+                }
+            }
 
-			
-		} 
+            ind1++;
+            ind2++;
+            ind3++;
 
-	}
 
-	return ((short*) negRanges);
+        }
+
+    }
+
+    return ((short*) negRanges);
 
 }
 

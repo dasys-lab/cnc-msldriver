@@ -26,10 +26,10 @@
 ros::NodeHandle* SpicaDirectedHelper::visionDirectedNode;
 
 SpicaDirectedHelper::SpicaDirectedHelper() {
-	initialize();
+    initialize();
 }
 
 void SpicaDirectedHelper::initialize() {
-	visionDirectedNode = new ros::NodeHandle();
+    visionDirectedNode = new ros::NodeHandle();
 }
 

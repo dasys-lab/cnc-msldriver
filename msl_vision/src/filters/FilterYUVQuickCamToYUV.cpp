@@ -27,7 +27,7 @@
 
 FilterYUVQuickCamToYUV::FilterYUVQuickCamToYUV(int width, int height):Filter(OF_YUV422, width, height){
 
-	init();
+    init();
 
 }
 
@@ -35,35 +35,35 @@ FilterYUVQuickCamToYUV::FilterYUVQuickCamToYUV(int width, int height):Filter(OF_
 
 FilterYUVQuickCamToYUV::~FilterYUVQuickCamToYUV(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned char * FilterYUVQuickCamToYUV::process(unsigned char * src, unsigned int imagesize){
 
-	unsigned char * tgt = outputBuffer;
+    unsigned char * tgt = outputBuffer;
 
-	unsigned char y1 = 0;
-	unsigned char y2 = 0;
-	unsigned char u = 0;
-	unsigned char v = 0;
+    unsigned char y1 = 0;
+    unsigned char y2 = 0;
+    unsigned char u = 0;
+    unsigned char v = 0;
 
-	for(unsigned int i = 0; i < imagesize/4; i++){
-		
-		y1 = *src++;
-		u = *src++;
-		y2 = *src++;
-		v = *src++;
+    for(unsigned int i = 0; i < imagesize/4; i++){
 
-		*tgt++ = u;
-		*tgt++ = y1;
-		*tgt++ = v;
-		*tgt++ = y2;
+        y1 = *src++;
+        u = *src++;
+        y2 = *src++;
+        v = *src++;
 
-	}
+        *tgt++ = u;
+        *tgt++ = y1;
+        *tgt++ = v;
+        *tgt++ = y2;
 
-	return outputBuffer;
+    }
+
+    return outputBuffer;
 }
 
 

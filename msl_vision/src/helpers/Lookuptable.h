@@ -13,13 +13,13 @@
 
 
 typedef struct LuminanceLimit{
-	unsigned char low;
-	unsigned char high;
+    unsigned char low;
+    unsigned char high;
 } LuminanceLimit;
 
 typedef struct Lookuptable{
-	unsigned char table[LOOKUPTABLE_SIZE][LOOKUPTABLE_SIZE];				
-	LuminanceLimit limits[COLOR_COUNT];	
+    unsigned char table[LOOKUPTABLE_SIZE][LOOKUPTABLE_SIZE];
+    LuminanceLimit limits[COLOR_COUNT];
 } Lookuptable;
 
 

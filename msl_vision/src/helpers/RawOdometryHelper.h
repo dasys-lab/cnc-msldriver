@@ -36,67 +36,67 @@
 class RawOdometryHelper{
 
 
-	public:
-		RawOdometryHelper();
-		~RawOdometryHelper();
+    public:
+        RawOdometryHelper();
+        ~RawOdometryHelper();
 
-		void integrateData(Position pos, unsigned long long timestamp);
-		Position getUpdateVectorAndReset();
-		Position getUpdateVectorAndReset2();
-		Position getPositionData();
-		Position getPositionData(unsigned long long time);
+        void integrateData(Position pos, unsigned long long timestamp);
+        Position getUpdateVectorAndReset();
+        Position getUpdateVectorAndReset2();
+        Position getPositionData();
+        Position getPositionData(unsigned long long time);
 
-		Position getVisionPos();
-		Position getOdoPos();
+        Position getVisionPos();
+        Position getOdoPos();
 
-		Position updatePositionWithOdoData(Position pos);
+        Position updatePositionWithOdoData(Position pos);
 
-		ros::Subscriber sub;
-		static RawOdometryHelper * getInstance();
+        ros::Subscriber sub;
+        static RawOdometryHelper * getInstance();
 
-		Point ego2AlloOnVision(Point p);
-		Point allo2EgoOnVision(Point p);
+        Point ego2AlloOnVision(Point p);
+        Point allo2EgoOnVision(Point p);
 
-		Point ego2AlloOnOdo(Point p);
-		Point allo2EgoOnOdo(Point p);
+        Point ego2AlloOnOdo(Point p);
+        Point allo2EgoOnOdo(Point p);
 
-		Point ego2Allo(Point p, Position pos);
-		Point allo2Ego(Point p, Position pos);
+        Point ego2Allo(Point p, Position pos);
+        Point allo2Ego(Point p, Position pos);
 
-		Velocity ego2Allo(Velocity vel, Position pos);
-		Velocity allo2Ego(Velocity vel, Position pos);
+        Velocity ego2Allo(Velocity vel, Position pos);
+        Velocity allo2Ego(Velocity vel, Position pos);
 
-		int getVisionIndex();
-		int getOdoIndex();
+        int getVisionIndex();
+        int getOdoIndex();
 
-		Position * getPositionBuffer();
-		unsigned long long * getTimestampBuffer();
+        Position * getPositionBuffer();
+        unsigned long long * getTimestampBuffer();
 
-	protected:
+    protected:
 
-		static RawOdometryHelper * instance_;
-		
-		void init();
-		void cleanup();
+        static RawOdometryHelper * instance_;
 
-		
-		Position getPosDiffVector(Position posNew, Position posOld);
-		Position updatePositionWithVector(Position pos, double deltaX, double deltaY, double deltaH, Position relPos);
+        void init();
+        void cleanup();
 
-		void handleRawOdometryInfo(const msl_actuator_msgs::RawOdometryInfo::ConstPtr& message);
 
-		bool initialized;
+        Position getPosDiffVector(Position posNew, Position posOld);
+        Position updatePositionWithVector(Position pos, double deltaX, double deltaY, double deltaH, Position relPos);
 
-		Position oldPosition;
-		Position oldPosition2;
-		Position newPosition;
+        void handleRawOdometryInfo(const msl_actuator_msgs::RawOdometryInfo::ConstPtr& message);
 
-		Position positionBuffer[RAWODOBUFSIZE];
-		unsigned long long timestampBuffer[RAWODOBUFSIZE];
-		//int visionIndex;
-		int odoIndex;
+        bool initialized;
 
-		boost::mutex mutex;
+        Position oldPosition;
+        Position oldPosition2;
+        Position newPosition;
+
+        Position positionBuffer[RAWODOBUFSIZE];
+        unsigned long long timestampBuffer[RAWODOBUFSIZE];
+        //int visionIndex;
+        int odoIndex;
+
+        boost::mutex mutex;
 };
 
 

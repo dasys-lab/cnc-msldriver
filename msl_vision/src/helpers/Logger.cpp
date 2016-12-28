@@ -35,9 +35,9 @@ Logger * Logger::instance_ = NULL;
 
 Logger * Logger::getInstance(){
 
-	if(instance_ == NULL)
-		instance_ = new Logger();
-	return instance_;
+    if(instance_ == NULL)
+        instance_ = new Logger();
+    return instance_;
 
 
 }
@@ -45,29 +45,29 @@ Logger * Logger::getInstance(){
 
 Logger::Logger() : mutex() {
 
-	Environment * environment = Environment::getInstance();
+    Environment * environment = Environment::getInstance();
 
-	logfile = NULL;
-	writeCounter = 1;
+    logfile = NULL;
+    writeCounter = 1;
 
-	//if(environment->getLoggingMode()){
-	printf("Found logger file created\n");
-	logfile = fopen(environment->getLogFileName().c_str(), "w");
+    //if(environment->getLoggingMode()){
+    printf("Found logger file created\n");
+    logfile = fopen(environment->getLogFileName().c_str(), "w");
 
-	//}
+    //}
 
 
 
-	init();
+    init();
 }
 
 
 Logger::~Logger(){
 
-	if(logfile != NULL)
-		fclose(logfile);
+    if(logfile != NULL)
+        fclose(logfile);
 
-	cleanup();
+    cleanup();
 
 }
 
@@ -87,60 +87,60 @@ void Logger::cleanup(){
 
 void Logger::logRawOdometry(Position pos, unsigned long long timestamp){
 
-	boost::mutex::scoped_lock lock(this->mutex);
+    boost::mutex::scoped_lock lock(this->mutex);
 
-	if(!Environment::getInstance()->getLoggingMode())
-		return;
+    if(!Environment::getInstance()->getLoggingMode())
+        return;
 
 
-	Position posTmp = pos;
-	unsigned long long timeTmp = timestamp;
-	unsigned char type = LOGTYPE_RAWODOMETRY;
+    Position posTmp = pos;
+    unsigned long long timeTmp = timestamp;
+    unsigned char type = LOGTYPE_RAWODOMETRY;
 
-	fwrite(&type, sizeof(unsigned char), 1, logfile);
-	fwrite(&writeCounter, sizeof(int), 1, logfile);
-	fwrite(&posTmp, sizeof(Position), 1, logfile);
-	fwrite(&timeTmp, sizeof(unsigned long long), 1, logfile);
+    fwrite(&type, sizeof(unsigned char), 1, logfile);
+    fwrite(&writeCounter, sizeof(int), 1, logfile);
+    fwrite(&posTmp, sizeof(Position), 1, logfile);
+    fwrite(&timeTmp, sizeof(unsigned long long), 1, logfile);
 
 
 }
 
 void Logger::logCompassValue(int value, unsigned long long timestamp){
 
-	boost::mutex::scoped_lock lock(this->mutex);
+    boost::mutex::scoped_lock lock(this->mutex);
 
-	if(!Environment::getInstance()->getLoggingMode())
-		return;
+    if(!Environment::getInstance()->getLoggingMode())
+        return;
 
 
-	int valueTmp = value;
-	unsigned long long timeTmp = timestamp;
-	unsigned char type = LOGTYPE_COMPASS;
+    int valueTmp = value;
+    unsigned long long timeTmp = timestamp;
+    unsigned char type = LOGTYPE_COMPASS;
 
-	fwrite(&type, sizeof(unsigned char), 1, logfile);
-	fwrite(&writeCounter, sizeof(int), 1, logfile);
-	fwrite(&valueTmp, sizeof(int), 1, logfile);
-	fwrite(&timeTmp, sizeof(unsigned long long), 1, logfile);
+    fwrite(&type, sizeof(unsigned char), 1, logfile);
+    fwrite(&writeCounter, sizeof(int), 1, logfile);
+    fwrite(&valueTmp, sizeof(int), 1, logfile);
+    fwrite(&timeTmp, sizeof(unsigned long long), 1, logfile);
 
 
 }
 
 void Logger::logImageInfo(int imageNumber, unsigned long long timestamp){
 
-	boost::mutex::scoped_lock lock(this->mutex);
+    boost::mutex::scoped_lock lock(this->mutex);
 
-	if(!Environment::getInstance()->getLoggingMode())
-		return;
+    if(!Environment::getInstance()->getLoggingMode())
+        return;
 
 
-	int imageNumberTmp = imageNumber;
-	unsigned long long timeTmp = timestamp;
-	unsigned char type = LOGTYPE_IMAGE;
+    int imageNumberTmp = imageNumber;
+    unsigned long long timeTmp = timestamp;
+    unsigned char type = LOGTYPE_IMAGE;
 
-	fwrite(&type, sizeof(unsigned char), 1, logfile);
-	fwrite(&writeCounter, sizeof(int), 1, logfile);
-	fwrite(&imageNumberTmp, sizeof(int), 1, logfile);
-	fwrite(&timeTmp, sizeof(unsigned long long), 1, logfile);
+    fwrite(&type, sizeof(unsigned char), 1, logfile);
+    fwrite(&writeCounter, sizeof(int), 1, logfile);
+    fwrite(&imageNumberTmp, sizeof(int), 1, logfile);
+    fwrite(&timeTmp, sizeof(unsigned long long), 1, logfile);
 
 
 }
@@ -148,7 +148,7 @@ void Logger::logImageInfo(int imageNumber, unsigned long long timestamp){
 
 void Logger::setWriteCounter(int writeCounter_){
 
-	boost::mutex::scoped_lock lock(this->mutex);
-	writeCounter = writeCounter_;
+    boost::mutex::scoped_lock lock(this->mutex);
+    writeCounter = writeCounter_;
 
 }

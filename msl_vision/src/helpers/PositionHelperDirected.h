@@ -32,70 +32,70 @@ using namespace supplementary;
 
 class PositionHelperDirected{
 
-	private:
-		double abs_double(double d);
+    private:
+        double abs_double(double d);
 
-		double MX; //images size
-		double MY;
+        double MX; //images size
+        double MY;
 
-		double fieldLength; //mm
-		double fieldWidth; //mm
+        double fieldLength; //mm
+        double fieldWidth; //mm
 
-		double camProjDistX; //px
-		double camProjDistY; //px
-		double camZ; //mm
-		double camX; //mm
+        double camProjDistX; //px
+        double camProjDistY; //px
+        double camZ; //mm
+        double camX; //mm
 
-		double dist2center; //px
+        double dist2center; //px
 
-		double ball_r; //mm
+        double ball_r; //mm
 
-		double camAngle;
+        double camAngle;
 
-		//Sony
+        //Sony
 
-		double LensBigAngle;
-		double LensSmallAngle;
-		double LensK1;
+        double LensBigAngle;
+        double LensSmallAngle;
+        double LensK1;
 
-		double CenterDistance;
-		double CenterHeight;
-		double CameraHeight;
-		double CameraMountedRotation;
+        double CenterDistance;
+        double CenterHeight;
+        double CameraHeight;
+        double CameraMountedRotation;
 
-		double MaxPixelXFromCenter;
-		double MaxPixelYFromCenter;
-	
-		double DistanceToPixelPlane;
+        double MaxPixelXFromCenter;
+        double MaxPixelYFromCenter;
 
-
-
-	public:
-		static PositionHelperDirected * getInstance();
-		static PositionHelperDirected * instance;
-		PositionHelperDirected();
-		Point3D getPointCam2Point3D(double x, double y, double r, double ball_r);
-		Point3D getPointCam2Point3D(double x, double y, double r);
-
-		Point3D getPointCam2Point3DSony(double x, double y, double r, double ball_r);
-		Point3D getPointCam2Point3DSony(double x, double y, double r);
-		Point getPoint3D2CamSony(double x, double y, double z);
-		Point getPointCam2FieldSony(double x, double y);
-		double getPoint3D2RadiusSony(double x, double y, double z);
-
-		double LensCorrection(double v, double x, double y);
-		Point3D NormalizePoint3D(Point3D p);
-		Point3D CorrectAngle(Point3D p);
-		Point3D CorrectAngleInv(Point3D p);
+        double DistanceToPixelPlane;
 
 
-		Point getPointCam2Field(double x, double y);
-		Point getPointCam2Angle(double x, double y);
-		Point getPointField2Cam(double x, double y);
-		Point getAngle2Cam(double x, double y);
-		Point getPoint3D2Cam(double x, double y, double z);
-		double getPoint3D2Radius(double x, double y, double z);
-		double getPointCam2Dist(double x, double y);
+
+    public:
+        static PositionHelperDirected * getInstance();
+        static PositionHelperDirected * instance;
+        PositionHelperDirected();
+        Point3D getPointCam2Point3D(double x, double y, double r, double ball_r);
+        Point3D getPointCam2Point3D(double x, double y, double r);
+
+        Point3D getPointCam2Point3DSony(double x, double y, double r, double ball_r);
+        Point3D getPointCam2Point3DSony(double x, double y, double r);
+        Point getPoint3D2CamSony(double x, double y, double z);
+        Point getPointCam2FieldSony(double x, double y);
+        double getPoint3D2RadiusSony(double x, double y, double z);
+
+        double LensCorrection(double v, double x, double y);
+        Point3D NormalizePoint3D(Point3D p);
+        Point3D CorrectAngle(Point3D p);
+        Point3D CorrectAngleInv(Point3D p);
+
+
+        Point getPointCam2Field(double x, double y);
+        Point getPointCam2Angle(double x, double y);
+        Point getPointField2Cam(double x, double y);
+        Point getAngle2Cam(double x, double y);
+        Point getPoint3D2Cam(double x, double y, double z);
+        double getPoint3D2Radius(double x, double y, double z);
+        double getPointCam2Dist(double x, double y);
 };
 
 

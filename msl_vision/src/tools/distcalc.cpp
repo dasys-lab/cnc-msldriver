@@ -126,9 +126,9 @@ void DistCalculator::solveNonLinear(double ux, double uy, double * a, double * b
 double DistCalculator::distance(double b, double vx, double vy){
 
    double erg = 0.0;
-   
+
    if (fabs(vx) > 1.0E-8)
-	erg = kx(b) - (ky(b) + CAMERAHOEHE)*(vx/vy);
+    erg = kx(b) - (ky(b) + CAMERAHOEHE)*(vx/vy);
 
    return erg;
 
@@ -172,7 +172,7 @@ double DistCalculator::calcDistance(double ux, double uy, double *sx, double *sy
    spiegleVektor(*sx, ux, uy, &vx, &vy);
 
    //printf("%f %f\n", *sx, *sy);
-   
+
    double d = distance(*sx, vx, vy);
    //printf("%f\n", d);
 
@@ -185,7 +185,7 @@ double DistCalculator::calcDistance(double ux, double uy, double *sx, double *sy
 void DistCalculator::setHeightOfCam(int height){
 
 
-	CAMERAHOEHE = height;
+    CAMERAHOEHE = height;
 
 
 };

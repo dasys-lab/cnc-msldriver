@@ -26,7 +26,7 @@
 
 FilterYUVToRGB::FilterYUVToRGB(int width, int height):Filter(OF_RGB, width, height) {
 
-	init();
+    init();
 
 }
 
@@ -34,13 +34,13 @@ FilterYUVToRGB::FilterYUVToRGB(int width, int height):Filter(OF_RGB, width, heig
 
 FilterYUVToRGB::~FilterYUVToRGB(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned char * FilterYUVToRGB::process(unsigned char * src, unsigned int imagesize){
-    
+
     unsigned char * tgt = outputBuffer;
 
     for (unsigned int i = 0; i < imagesize; i += 4) {

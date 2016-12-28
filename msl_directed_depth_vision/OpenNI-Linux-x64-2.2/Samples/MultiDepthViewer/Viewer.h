@@ -27,55 +27,55 @@
 
 enum DisplayModes
 {
-	DISPLAY_MODE_OVERLAY,
-	DISPLAY_MODE_DEPTH1,
-	DISPLAY_MODE_DEPTH2
+    DISPLAY_MODE_OVERLAY,
+    DISPLAY_MODE_DEPTH1,
+    DISPLAY_MODE_DEPTH2
 };
 
 class SampleViewer
 {
 public:
-	SampleViewer(const char* strSampleName, openni::VideoStream& depth1, openni::VideoStream& depth2);
-	virtual ~SampleViewer();
+    SampleViewer(const char* strSampleName, openni::VideoStream& depth1, openni::VideoStream& depth2);
+    virtual ~SampleViewer();
 
-	virtual openni::Status init(int argc, char **argv);
-	virtual openni::Status run();	//Does not return
+    virtual openni::Status init(int argc, char **argv);
+    virtual openni::Status run();   //Does not return
 
 protected:
-	virtual void display();
-	virtual void displayPostDraw(){};	// Overload to draw over the screen image
+    virtual void display();
+    virtual void displayPostDraw(){};   // Overload to draw over the screen image
 
-	virtual void onKey(unsigned char key, int x, int y);
+    virtual void onKey(unsigned char key, int x, int y);
 
-	virtual openni::Status initOpenGL(int argc, char **argv);
-	void initOpenGLHooks();
+    virtual openni::Status initOpenGL(int argc, char **argv);
+    void initOpenGLHooks();
 private:
-	SampleViewer(const SampleViewer&);
-	SampleViewer& operator=(SampleViewer&);
+    SampleViewer(const SampleViewer&);
+    SampleViewer& operator=(SampleViewer&);
 
-	void displayFrame(const openni::VideoFrameRef& frame);
-	void displayBothFrames();
+    void displayFrame(const openni::VideoFrameRef& frame);
+    void displayBothFrames();
 
-	static SampleViewer* ms_self;
-	static void glutIdle();
-	static void glutDisplay();
-	static void glutKeyboard(unsigned char key, int x, int y);
+    static SampleViewer* ms_self;
+    static void glutIdle();
+    static void glutDisplay();
+    static void glutKeyboard(unsigned char key, int x, int y);
 
-	float			m_pDepthHist[MAX_DEPTH];
-	char			m_strSampleName[ONI_MAX_STR];
-	openni::RGB888Pixel*		m_pTexMap;
-	unsigned int		m_nTexMapX;
-	unsigned int		m_nTexMapY;
-	DisplayModes		m_eViewState;
-	int					m_width;
-	int					m_height;
+    float           m_pDepthHist[MAX_DEPTH];
+    char            m_strSampleName[ONI_MAX_STR];
+    openni::RGB888Pixel*        m_pTexMap;
+    unsigned int        m_nTexMapX;
+    unsigned int        m_nTexMapY;
+    DisplayModes        m_eViewState;
+    int                 m_width;
+    int                 m_height;
 
-	openni::VideoStream&		m_depth1;
-	openni::VideoStream&		m_depth2;
-	openni::VideoStream**	m_streams;
+    openni::VideoStream&        m_depth1;
+    openni::VideoStream&        m_depth2;
+    openni::VideoStream**   m_streams;
 
-	openni::VideoFrameRef	m_depth1Frame;
-	openni::VideoFrameRef	m_depth2Frame;
+    openni::VideoFrameRef   m_depth1Frame;
+    openni::VideoFrameRef   m_depth2Frame;
 };
 
 

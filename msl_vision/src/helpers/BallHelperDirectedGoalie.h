@@ -41,44 +41,44 @@
 class BallHelperDirectedGoalie{
 
 
-	public:
-		BallHelperDirectedGoalie();
-		~BallHelperDirectedGoalie();
-	
-		Point getBallFromBlobs(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData, std::vector<BlobBounds> & potBallBlobs);
-		void visualizeBall(unsigned char * src, int width, Point ball, int radius);
-		Point getBallPosition();
+    public:
+        BallHelperDirectedGoalie();
+        ~BallHelperDirectedGoalie();
 
-	protected:
-		
-		void init();
-		void cleanup();
+        Point getBallFromBlobs(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData, std::vector<BlobBounds> & potBallBlobs);
+        void visualizeBall(unsigned char * src, int width, Point ball, int radius);
+        Point getBallPosition();
 
-		ObservedPoint getBallFromBlobsAdaptiveROI(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData, std::vector<BlobBounds> & potBallBlobs);
+    protected:
 
-		double LocalizationSuccess;
-		double * ballProbs;
+        void init();
+        void cleanup();
 
-		Point currBallPos;
+        ObservedPoint getBallFromBlobsAdaptiveROI(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData, std::vector<BlobBounds> & potBallBlobs);
 
-		ObjectContainer ballBuf;
+        double LocalizationSuccess;
+        double * ballProbs;
 
-		MovingObject mv;
+        Point currBallPos;
 
-		SystemConfig* sc;
+        ObjectContainer ballBuf;
 
-		ObservedPoint * observations;
+        MovingObject mv;
 
-		BlobBounds currBlob;
-		BlobBounds trackBlob;
-		BlobBounds velBlob;
-		int velIterations;
+        SystemConfig* sc;
 
-		double blobVelX;
-		double blobVelY;
+        ObservedPoint * observations;
 
-		double trackBlobConfidence;
-		int trackCounter;
+        BlobBounds currBlob;
+        BlobBounds trackBlob;
+        BlobBounds velBlob;
+        int velIterations;
+
+        double blobVelX;
+        double blobVelY;
+
+        double trackBlobConfidence;
+        int trackCounter;
 
 
 };

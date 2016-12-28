@@ -28,26 +28,26 @@
 
 typedef struct
 {
-	int dataSize;
-	void* data;
+    int dataSize;
+    void* data;
 } OniGeneralBuffer;
 
 /////// DriverServices
 struct OniDriverServices
 {
-	void* driverServices;
-	void (ONI_CALLBACK_TYPE* errorLoggerAppend)(void* driverServices, const char* format, va_list args);
-	void (ONI_CALLBACK_TYPE* errorLoggerClear)(void* driverServices);
-	void (ONI_CALLBACK_TYPE* log)(void* driverServices, int severity, const char* file, int line, const char* mask, const char* message);
+    void* driverServices;
+    void (ONI_CALLBACK_TYPE* errorLoggerAppend)(void* driverServices, const char* format, va_list args);
+    void (ONI_CALLBACK_TYPE* errorLoggerClear)(void* driverServices);
+    void (ONI_CALLBACK_TYPE* log)(void* driverServices, int severity, const char* file, int line, const char* mask, const char* message);
 };
 
 struct OniStreamServices
 {
-	void* streamServices;
-	int (ONI_CALLBACK_TYPE* getDefaultRequiredFrameSize)(void* streamServices);
-	OniFrame* (ONI_CALLBACK_TYPE* acquireFrame)(void* streamServices); // returns a frame with size corresponding to getRequiredFrameSize()
-	void (ONI_CALLBACK_TYPE* addFrameRef)(void* streamServices, OniFrame* pframe);
-	void (ONI_CALLBACK_TYPE* releaseFrame)(void* streamServices, OniFrame* pframe);
+    void* streamServices;
+    int (ONI_CALLBACK_TYPE* getDefaultRequiredFrameSize)(void* streamServices);
+    OniFrame* (ONI_CALLBACK_TYPE* acquireFrame)(void* streamServices); // returns a frame with size corresponding to getRequiredFrameSize()
+    void (ONI_CALLBACK_TYPE* addFrameRef)(void* streamServices, OniFrame* pframe);
+    void (ONI_CALLBACK_TYPE* releaseFrame)(void* streamServices, OniFrame* pframe);
 };
 
 

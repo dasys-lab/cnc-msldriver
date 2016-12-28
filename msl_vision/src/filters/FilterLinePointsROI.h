@@ -38,33 +38,33 @@ using namespace supplementary;
 class FilterLinePointsROI  : public Filter {
 
 
-	public:
-		FilterLinePointsROI(int area);
-		FilterLinePointsROI(int width, int height);
-		~FilterLinePointsROI();
-		
-		//unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperBall & helper);
+    public:
+        FilterLinePointsROI(int area);
+        FilterLinePointsROI(int width, int height);
+        ~FilterLinePointsROI();
 
-		std::vector<ROIData> process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperBall & helper);
+        //unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperBall & helper);
 
-		void visualizeROIs(unsigned char * src, std::vector<ROIData>& ROIrects, int width, int height);
-	protected:
+        std::vector<ROIData> process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperBall & helper);
 
-		SystemConfig* sc;
+        void visualizeROIs(unsigned char * src, std::vector<ROIData>& ROIrects, int width, int height);
+    protected:
 
-		void init();
-		void cleanup();
+        SystemConfig* sc;
 
-		int MX;
-		int MY;
-	
-		ROIData kicker1, kicker2, kicker3;
-		int kickerCount;
+        void init();
+        void cleanup();
 
-		unsigned char LinePointsThreshold;
-		unsigned char LinePointsJump;
-		unsigned char MinLineWidth;
-		unsigned char MaxLineWidth;
+        int MX;
+        int MY;
+
+        ROIData kicker1, kicker2, kicker3;
+        int kickerCount;
+
+        unsigned char LinePointsThreshold;
+        unsigned char LinePointsJump;
+        unsigned char MinLineWidth;
+        unsigned char MaxLineWidth;
 
 
 

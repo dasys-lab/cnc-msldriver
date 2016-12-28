@@ -331,7 +331,7 @@ namespace camera
 //by me
     void Pike::setFramerate(unsigned short value)
     {
-	// not possible with FORMAT7 ... have to be done with packet size
+    // not possible with FORMAT7 ... have to be done with packet size
         setFeatureValue(DC1394_FEATURE_FRAME_RATE, value);
     }
 
@@ -568,11 +568,11 @@ namespace camera
             DC1394_ERR_THROW(err, "unable to query max reachable resolution");
 
             //this->roi.w = max_width;
-	//this->roi.w = 640; 1024, 768
-	this->roi.w = 1000;
+    //this->roi.w = 640; 1024, 768
+    this->roi.w = 1000;
             //this->roi.h = max_height;
-	//this->roi.h = 480;
-	this->roi.h = 1000;
+    //this->roi.h = 480;
+    this->roi.h = 1000;
 
             std::cout << "Setting ROI to (0, 0, " << roi.w << ", " << roi.h << ")" << std::endl;
         }
@@ -586,10 +586,10 @@ namespace camera
                                      this->roi.w, this->roi.h);
         DC1394_ERR_THROW(err, "unable to initialise roi");
 
-	//err = dc1394_format7_set_packet_size(this->dc_camera, DC1394_VIDEO_MODE_FORMAT7_0, 2468);
+    //err = dc1394_format7_set_packet_size(this->dc_camera, DC1394_VIDEO_MODE_FORMAT7_0, 2468);
         //DC1394_ERR_THROW(err, "unable set packet size");
 
-	 err = dc1394_capture_setup(this->dc_camera, 1, DC1394_CAPTURE_FLAGS_DEFAULT);
+     err = dc1394_capture_setup(this->dc_camera, 1, DC1394_CAPTURE_FLAGS_DEFAULT);
         DC1394_ERR_THROW(err, "unable to setup capturing");
         err = dc1394_video_set_transmission(this->dc_camera, DC1394_ON);
         DC1394_ERR_THROW(err, "unable to start transmission");
@@ -639,18 +639,18 @@ namespace camera
         return true;
     }
 
-	void Pike::DummyTestMethod(){
+    void Pike::DummyTestMethod(){
 
-	//
-//	float value;
-//	dc1394_format7_get_frame_interval(this->dc_camera, DC1394_VIDEO_MODE_FORMAT7_0, &value);
+    //
+//  float value;
+//  dc1394_format7_get_frame_interval(this->dc_camera, DC1394_VIDEO_MODE_FORMAT7_0, &value);
 //printf(": %f\n",value);
 
-	//uint32_t value;
-	//dc1394_format7_get_packet_size(this->dc_camera,DC1394_VIDEO_MODE_FORMAT7_0, &value);
-	//std::cout << "p size: " << value << std::endl;
-	std::cout << "hdr: " << isHDR() << std::endl;
-	//dc1394_video_set_framerate(this->dc_camera, DC1394_FRAMERATE_60);
-	}
+    //uint32_t value;
+    //dc1394_format7_get_packet_size(this->dc_camera,DC1394_VIDEO_MODE_FORMAT7_0, &value);
+    //std::cout << "p size: " << value << std::endl;
+    std::cout << "hdr: " << isHDR() << std::endl;
+    //dc1394_video_set_framerate(this->dc_camera, DC1394_FRAMERATE_60);
+    }
 }
 

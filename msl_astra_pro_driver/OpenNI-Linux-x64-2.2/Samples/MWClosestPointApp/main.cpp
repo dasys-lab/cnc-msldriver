@@ -82,45 +82,45 @@ void Sleep(int ms)
 class MyMwListener : public closest_point::ClosestPoint::Listener
 {
 public:
-	void readyForNextData(closest_point::ClosestPoint* pClosestPoint)
-	{
-		openni::VideoFrameRef frame;
-		closest_point::IntPoint3D closest;
-		openni::Status rc = pClosestPoint->getNextData(closest, frame);
+    void readyForNextData(closest_point::ClosestPoint* pClosestPoint)
+    {
+        openni::VideoFrameRef frame;
+        closest_point::IntPoint3D closest;
+        openni::Status rc = pClosestPoint->getNextData(closest, frame);
 
-		if (rc == openni::STATUS_OK)
-		{
-			printf("%d, %d, %d\n", closest.X, closest.Y, closest.Z);
-		}
-		else
-		{
-			printf("Update failed\n");
-		}
-	}
+        if (rc == openni::STATUS_OK)
+        {
+            printf("%d, %d, %d\n", closest.X, closest.Y, closest.Z);
+        }
+        else
+        {
+            printf("Update failed\n");
+        }
+    }
 };
 
 
 int main()
 {
 
-	closest_point::ClosestPoint closestPoint;
+    closest_point::ClosestPoint closestPoint;
 
-	if (!closestPoint.isValid())
-	{
-		printf("ClosestPoint: error in initialization\n");
-		return 1;
-	}
+    if (!closestPoint.isValid())
+    {
+        printf("ClosestPoint: error in initialization\n");
+        return 1;
+    }
 
-	MyMwListener myListener;
+    MyMwListener myListener;
 
-	closestPoint.setListener(myListener);
+    closestPoint.setListener(myListener);
 
-	while (!wasKeyboardHit())
-	{
-		Sleep(1000);
-	}
+    while (!wasKeyboardHit())
+    {
+        Sleep(1000);
+    }
 
-	closestPoint.resetListener();
+    closestPoint.resetListener();
 
-	return 0;
+    return 0;
 }

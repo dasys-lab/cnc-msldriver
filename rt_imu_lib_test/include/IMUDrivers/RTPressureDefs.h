@@ -22,7 +22,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef _RTPRESSUREDEFS_H
-#define	_RTPRESSUREDEFS_H
+#define _RTPRESSUREDEFS_H
 
 //  Pressure sensor type codes
 
@@ -43,7 +43,7 @@
 #define BMP180_REG_ID               0xd0
 #define BMP180_ID                   0x55
 
-//	Register map
+//  Register map
 
 #define BMP180_REG_AC1              0xaa
 #define BMP180_REG_SCO              0xf4
@@ -61,7 +61,7 @@
 #define LPS25H_REG_ID               0x0f
 #define LPS25H_ID                   0xbd
 
-//	Register map
+//  Register map
 
 #define LPS25H_REF_P_XL             0x08
 #define LPS25H_REF_P_XH             0x09
@@ -94,7 +94,7 @@
 #define MS5611_ADDRESS0             0x76
 #define MS5611_ADDRESS1             0x77
 
-//	commands
+//  commands
 
 #define MS5611_CMD_RESET            0x1e
 #define MS5611_CMD_CONV_D1          0x48

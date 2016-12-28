@@ -57,33 +57,33 @@ using namespace supplementary;
 class BasisAutoParam{
 
 
-	public:
-		BasisAutoParam(int width, int height, int dim, camera::ImagingSource* _cam);
-		~BasisAutoParam();
+    public:
+        BasisAutoParam(int width, int height, int dim, camera::ImagingSource* _cam);
+        ~BasisAutoParam();
 
-		camera::ImagingSource* cam;
-	//protected:
-		//unsigned char* copyImage(unsigned char* image, int dim, int _width=-1, int _height=-1);
-		void showRGB(unsigned char *RGBImage, int _width=-1, int _height=-1, XVDisplay **display=NULL);
-		void showRGBScr(unsigned char *scr, int _width=-1, int _height=-1);
-		void showGrayScr(unsigned char *scr, int _width=-1, int _height=-1);
+        camera::ImagingSource* cam;
+    //protected:
+        //unsigned char* copyImage(unsigned char* image, int dim, int _width=-1, int _height=-1);
+        void showRGB(unsigned char *RGBImage, int _width=-1, int _height=-1, XVDisplay **display=NULL);
+        void showRGBScr(unsigned char *scr, int _width=-1, int _height=-1);
+        void showGrayScr(unsigned char *scr, int _width=-1, int _height=-1);
 
-		void saveCSV(string pfad, int args, int *argv, bool print, int delByFirstZeros=-1);
-		bool isNImage(int counter);
+        void saveCSV(string pfad, int args, int *argv, bool print, int delByFirstZeros=-1);
+        bool isNImage(int counter);
 
-		int width, height, imageSize, usedDim;
-		map <int, int>nextPrioPixel;
-		map <int, int>pixelPrio;
-		int falseEdgePixel;
-		int *histogr;
-		unsigned char *showImage; 
-		int nImage;
+        int width, height, imageSize, usedDim;
+        map <int, int>nextPrioPixel;
+        map <int, int>pixelPrio;
+        int falseEdgePixel;
+        int *histogr;
+        unsigned char *showImage;
+        int nImage;
 
 
-	private:
-		XVDisplay *xvDisplayGray;
-		XVDisplay *xvDisplayRGB;
-		XVDisplay *xvDisplayScr;
+    private:
+        XVDisplay *xvDisplayGray;
+        XVDisplay *xvDisplayRGB;
+        XVDisplay *xvDisplayScr;
 };
 
 

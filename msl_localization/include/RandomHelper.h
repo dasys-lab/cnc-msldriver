@@ -28,27 +28,27 @@
 
 class RandomGaussHelper {
 
-	public:
-		RandomGaussHelper();
-		~RandomGaussHelper();
+    public:
+        RandomGaussHelper();
+        ~RandomGaussHelper();
 
-		double getRandomGauss();
+        double getRandomGauss();
 
 
-	private:
-		double * LookupTable;
+    private:
+        double * LookupTable;
 
-		void init();
-		void initRandom();
-		void cleanup();
+        void init();
+        void initRandom();
+        void cleanup();
 };
 
 
 class RandomHelper {
 
-	public:
-		static void initRandom();
-		static double rand01();
+    public:
+        static void initRandom();
+        static double rand01();
 
 };
 

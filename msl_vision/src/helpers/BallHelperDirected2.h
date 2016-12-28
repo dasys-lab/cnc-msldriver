@@ -41,33 +41,33 @@
 class BallHelperDirected2{
 
 
-	public:
-		BallHelperDirected2();
-		~BallHelperDirected2();
-	
-		Point getBallFromBlobs(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData);
-		void visualizeBall(unsigned char * src, int width, Point ball, int radius);
-		Point getBallPosition();
+    public:
+        BallHelperDirected2();
+        ~BallHelperDirected2();
 
-	protected:
-		
-		void init();
-		void cleanup();
+        Point getBallFromBlobs(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData);
+        void visualizeBall(unsigned char * src, int width, Point ball, int radius);
+        Point getBallPosition();
 
-		int width, height;
+    protected:
 
-		double LocalizationSuccess;
-		double * ballProbs;
+        void init();
+        void cleanup();
 
-		Point currBallPos;
+        int width, height;
 
-		ObjectContainer ballBuf;
+        double LocalizationSuccess;
+        double * ballProbs;
 
-		MovingObject mv;
+        Point currBallPos;
 
-		SystemConfig* sc;
+        ObjectContainer ballBuf;
 
-		ObservedPoint * observations;
+        MovingObject mv;
+
+        SystemConfig* sc;
+
+        ObservedPoint * observations;
 
 
 };

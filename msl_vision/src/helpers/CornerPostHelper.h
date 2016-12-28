@@ -35,9 +35,9 @@
 
 struct CornerPost {
 
-	double angle;
-	double distance;
-	bool yellow;
+    double angle;
+    double distance;
+    bool yellow;
 };
 
 using namespace supplementary;
@@ -46,21 +46,21 @@ using namespace supplementary;
 class CornerPostHelper{
 
 
-	public:
-		CornerPostHelper();
-		~CornerPostHelper();
-	
-		void findPosts(std::vector<BlobBounds> & yellowBlobs, std::vector<BlobBounds> & blueBlobs, std::vector<CornerPost> & cornerPosts);
+    public:
+        CornerPostHelper();
+        ~CornerPostHelper();
 
-	protected:
+        void findPosts(std::vector<BlobBounds> & yellowBlobs, std::vector<BlobBounds> & blueBlobs, std::vector<CornerPost> & cornerPosts);
 
-		SystemConfig* sc;
-		
-		void init();
-		void cleanup();
+    protected:
 
-		int MX;
-		int MY;
+        SystemConfig* sc;
+
+        void init();
+        void cleanup();
+
+        int MX;
+        int MY;
 
 
 };

@@ -31,19 +31,19 @@
 class FilterAdjustGainDirected : public Filter {
 
 
-	public:
-		FilterAdjustGainDirected(int _width, int _height, int g_gain, int g_exposure);
-		~FilterAdjustGainDirected();
-		
-		int process(CameraQuickCam *camera, unsigned char * src, int avgInt, int iwidth, int iheight);
-		//int process(Camera1394 *camera, unsigned char * src, int avgInt, int iwidth, int iheight);
+    public:
+        FilterAdjustGainDirected(int _width, int _height, int g_gain, int g_exposure);
+        ~FilterAdjustGainDirected();
+
+        int process(CameraQuickCam *camera, unsigned char * src, int avgInt, int iwidth, int iheight);
+        //int process(Camera1394 *camera, unsigned char * src, int avgInt, int iwidth, int iheight);
 
 
-	protected:
-		int gain;
-		int exposure; 
-		void init();
-		void cleanup();
+    protected:
+        int gain;
+        int exposure;
+        void init();
+        void cleanup();
 
 };
 

@@ -30,23 +30,23 @@
 
 class EgoMotionEstimator {
 
-	public:
+    public:
 
-		EgoMotionEstimator();
-		~EgoMotionEstimator();
+        EgoMotionEstimator();
+        ~EgoMotionEstimator();
 
-		static EgoMotionEstimator * getInstance();
+        static EgoMotionEstimator * getInstance();
 
-		MovingRobot trackObject(Position * posBuffer, unsigned long long * timestampBuf, int length, int lastIndex, double timeBack);
+        MovingRobot trackObject(Position * posBuffer, unsigned long long * timestampBuf, int length, int lastIndex, double timeBack);
 
-	private:
+    private:
 
-		static EgoMotionEstimator * instance_;
+        static EgoMotionEstimator * instance_;
 
-		void init();
-		void cleanup();
+        void init();
+        void cleanup();
 
-		//RawOdometryHelper * rawHelper;
+        //RawOdometryHelper * rawHelper;
 
 };
 

@@ -39,20 +39,20 @@ namespace camera
             DC1394_ERR_THROW(DC1394_FAILURE, "camera not found, index too high");
         }
     for(unsigned int i=0; i<list->num; i++) {
-		this->dc_camera = dc1394_camera_new(this->dc_device, list->ids[i].guid);
-		if(this->dc_camera==NULL) {
-			std::cout << "Vendor = NULL: " << i << std::endl;
-			continue;
-		}
-		std::cout << "Vendor Found: " << this->dc_camera->vendor << std::endl;
-		if(strstr(this->dc_camera->vendor, vendor )!=NULL) {
-			std::cout << "Vendor accepted found" << std::endl;
-			break;
-		} else {
-			dc1394_camera_free(this->dc_camera);
-			this->dc_camera = NULL;
-		}
-	}
+        this->dc_camera = dc1394_camera_new(this->dc_device, list->ids[i].guid);
+        if(this->dc_camera==NULL) {
+            std::cout << "Vendor = NULL: " << i << std::endl;
+            continue;
+        }
+        std::cout << "Vendor Found: " << this->dc_camera->vendor << std::endl;
+        if(strstr(this->dc_camera->vendor, vendor )!=NULL) {
+            std::cout << "Vendor accepted found" << std::endl;
+            break;
+        } else {
+            dc1394_camera_free(this->dc_camera);
+            this->dc_camera = NULL;
+        }
+    }
         // initialize new camera structure
         //this->dc_camera = dc1394_camera_new(this->dc_device, list->ids[index].guid);
         if (!this->dc_camera)
@@ -104,7 +104,7 @@ namespace camera
 
     unsigned short ImagingSource::getImageWidth()
     {
-    	return (ImagingSource::usImageWidth);
+        return (ImagingSource::usImageWidth);
     }
 
     unsigned short ImagingSource::getImageWidth(std::string camera_model)
@@ -117,13 +117,13 @@ namespace camera
 
     unsigned short ImagingSource::getImageHeight()
     {
-    	return (ImagingSource::usImageHeight);
+        return (ImagingSource::usImageHeight);
     }
 
     unsigned short ImagingSource::getImageHeight(std::string camera_model)
     {
-    	supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
-    	supplementary::Configuration *vision3D = (*sc)["Vision3D"];
+        supplementary::SystemConfig* sc = supplementary::SystemConfig::getInstance();
+        supplementary::Configuration *vision3D = (*sc)["Vision3D"];
         unsigned short height = vision3D->get<unsigned short>("Parameter", camera_model.c_str(), "image_height", NULL);
         return height;
     }
@@ -139,23 +139,23 @@ namespace camera
                        DC1394_FEATURE_MODE_ONE_PUSH_AUTO);
     }
 
-	void ImagingSource::disableAutoWhiteBalance()
+    void ImagingSource::disableAutoWhiteBalance()
     {
         setFeatureMode(DC1394_FEATURE_WHITE_BALANCE,
-                       DC1394_FEATURE_MODE_MANUAL); 
+                       DC1394_FEATURE_MODE_MANUAL);
     }
 
     void ImagingSource::setManualSettingModesGoalie() {
-	enableFeature(DC1394_FEATURE_HUE, true);
-	setFeatureMode(DC1394_FEATURE_HUE,
+    enableFeature(DC1394_FEATURE_HUE, true);
+    setFeatureMode(DC1394_FEATURE_HUE,
                        DC1394_FEATURE_MODE_MANUAL);
-	enableFeature(DC1394_FEATURE_SHUTTER, true);
-	setFeatureMode(DC1394_FEATURE_SHUTTER,
-                       DC1394_FEATURE_MODE_MANUAL); 
-	enableFeature(DC1394_FEATURE_GAMMA, true);
+    enableFeature(DC1394_FEATURE_SHUTTER, true);
+    setFeatureMode(DC1394_FEATURE_SHUTTER,
+                       DC1394_FEATURE_MODE_MANUAL);
+    enableFeature(DC1394_FEATURE_GAMMA, true);
         setFeatureMode(DC1394_FEATURE_GAMMA,
                        DC1394_FEATURE_MODE_MANUAL);
-	enableFeature(DC1394_FEATURE_EXPOSURE, true);
+    enableFeature(DC1394_FEATURE_EXPOSURE, true);
         setFeatureMode(DC1394_FEATURE_EXPOSURE,
                        DC1394_FEATURE_MODE_MANUAL);
     }
@@ -164,7 +164,7 @@ namespace camera
         enableFeature(DC1394_FEATURE_SATURATION, true);
         setFeatureMode(DC1394_FEATURE_SATURATION,
                        DC1394_FEATURE_MODE_MANUAL);
-	enableFeature(DC1394_FEATURE_HUE, true);
+    enableFeature(DC1394_FEATURE_HUE, true);
         setFeatureMode(DC1394_FEATURE_HUE,
                        DC1394_FEATURE_MODE_MANUAL);
         enableFeature(DC1394_FEATURE_SHUTTER, true);
@@ -176,10 +176,10 @@ namespace camera
         enableFeature(DC1394_FEATURE_EXPOSURE, true);
         setFeatureMode(DC1394_FEATURE_EXPOSURE,
                        DC1394_FEATURE_MODE_MANUAL);
- 	enableFeature(DC1394_FEATURE_GAIN, true);
+    enableFeature(DC1394_FEATURE_GAIN, true);
         setFeatureMode(DC1394_FEATURE_GAIN,
                        DC1394_FEATURE_MODE_MANUAL);
- 	enableFeature(DC1394_FEATURE_BRIGHTNESS, true);
+    enableFeature(DC1394_FEATURE_BRIGHTNESS, true);
         setFeatureMode(DC1394_FEATURE_BRIGHTNESS,
                        DC1394_FEATURE_MODE_MANUAL);
 
@@ -389,12 +389,12 @@ namespace camera
 //by me
     void ImagingSource::setFramerate(unsigned short value)
     {
-	// not possible with FORMAT7 ... have to be done with packet size
+    // not possible with FORMAT7 ... have to be done with packet size
         //setFeatureValue(DC1394_FEATURE_FRAME_RATE, (dc1394framerate_t)value);
-	dc1394error_t err;
-	err = dc1394_video_set_framerate(this->dc_camera,(dc1394framerate_t)value);
+    dc1394error_t err;
+    err = dc1394_video_set_framerate(this->dc_camera,(dc1394framerate_t)value);
 
-	DC1394_ERR_THROW(err, "unable to set framerate");
+    DC1394_ERR_THROW(err, "unable to set framerate");
 
     }
 
@@ -409,30 +409,30 @@ namespace camera
         dc1394error_t err;
 
         // reset camera (in case it is being busy)
-	//TODO: DOMINIK reset does not work
-	std::cout << ">" << this->cvendor << "<" << std::endl;
-	if(strcmp (this->cvendor, "Imaging Source"))
-	{
+    //TODO: DOMINIK reset does not work
+    std::cout << ">" << this->cvendor << "<" << std::endl;
+    if(strcmp (this->cvendor, "Imaging Source"))
+    {
         err = dc1394_camera_reset(this->dc_camera);
         DC1394_ERR_OUT(err, "camera reset failed");
 
         // set the isochronous transmission speed
-	// comment the next line for the old robots
+    // comment the next line for the old robots
  //       if(strcmp (this->cvendor, "Imaging Source")) {
         if(strcmp (this->cvendor, "Imaging Source")) {
-	    err = dc1394_video_set_operation_mode(this->dc_camera, DC1394_OPERATION_MODE_1394B);
+        err = dc1394_video_set_operation_mode(this->dc_camera, DC1394_OPERATION_MODE_1394B);
             DC1394_ERR_THROW(err, "set operation mode speed failed");
     std::cout << "Not Using Imaging Source" << std::endl;
             err = dc1394_video_set_iso_speed(this->dc_camera, DC1394_ISO_SPEED_800);
             DC1394_ERR_THROW(err, "set iso speed failed");
         } else {
-	    err = dc1394_video_set_operation_mode(this->dc_camera, DC1394_OPERATION_MODE_LEGACY);
+        err = dc1394_video_set_operation_mode(this->dc_camera, DC1394_OPERATION_MODE_LEGACY);
             DC1394_ERR_THROW(err, "set operation mode speed failed");
-	}
+    }
 
         dc1394video_modes_t modes;
 
-	// comment the next line for the old robots
+    // comment the next line for the old robots
         if(strcmp (this->cvendor, "Imaging Source")) {
             err = dc1394_video_get_supported_modes(this->dc_camera, &modes);
             DC1394_ERR_THROW(err, "unable to query supported modes");
@@ -461,11 +461,11 @@ namespace camera
        // dc1394_video_set_mode(this->dc_camera, this->video_mode); // currently supported: DC1394_VIDEO_MODE_FORMAT7_0
 ///////
         dc1394_video_set_mode(this->dc_camera, this->video_mode); // currently supported: DC1394_VIDEO_MODE_FORMAT7_0
-	}	
-	//get supported framrates
-	//dc1394error_t err;
-	dc1394framerates_t framerates;
-	err = dc1394_video_get_supported_framerates( this->dc_camera, DC1394_VIDEO_MODE_640x480_YUV422, &framerates);
+    }
+    //get supported framrates
+    //dc1394error_t err;
+    dc1394framerates_t framerates;
+    err = dc1394_video_get_supported_framerates( this->dc_camera, DC1394_VIDEO_MODE_640x480_YUV422, &framerates);
         std::cout << "Supported framerate modes:" << std::endl;
         //for (unsigned int i = 0; i < framerates.num; i++)
         {
@@ -475,12 +475,12 @@ namespace camera
                 supported = true;
             }*/
         }
-	
-	dc1394video_mode_t mode;
-	//video modes
-	err = dc1394_video_get_mode(this->dc_camera, &mode);
+
+    dc1394video_mode_t mode;
+    //video modes
+    err = dc1394_video_get_mode(this->dc_camera, &mode);
         std::cout << "video mode:"<< mode << std::endl;
-    
+
     }
 
     void ImagingSource::startCaptureInternal()
@@ -516,7 +516,7 @@ namespace camera
 
         dc1394error_t err;
         dc1394video_frame_t *camFrame=NULL;
-	dc1394video_frame_t *newCamFrame=NULL;
+    dc1394video_frame_t *newCamFrame=NULL;
 
         // receive a frame
         // wait indefitnitly long:  DC1394_CAPTURE_POLICY_WAIT
@@ -529,21 +529,21 @@ namespace camera
 //        err = dc1394_capture_dequeue(this->dc_camera, DC1394_CAPTURE_POLICY_POLL, &camFrame);
 //        DC1394_ERR_THROW(err, "failed to receive frame");
 
-	while(!camFrame) {
-		err = dc1394_capture_dequeue(this->dc_camera, DC1394_CAPTURE_POLICY_WAIT, &camFrame);
-        	DC1394_ERR_THROW(err, "failed to receive frame");
-	}
+    while(!camFrame) {
+        err = dc1394_capture_dequeue(this->dc_camera, DC1394_CAPTURE_POLICY_WAIT, &camFrame);
+            DC1394_ERR_THROW(err, "failed to receive frame");
+    }
 
-	/*while(1) {
-		err = dc1394_capture_dequeue(this->dc_camera, DC1394_CAPTURE_POLICY_POLL, &newCamFrame)
+    /*while(1) {
+        err = dc1394_capture_dequeue(this->dc_camera, DC1394_CAPTURE_POLICY_POLL, &newCamFrame)
 ;
                 DC1394_ERR_THROW(err, "failed to receive frame");
-		if(newCamFrame) {
-			err = dc1394_capture_enqueue(this->dc_camera, camFrame);
-			camFrame = newCamFrame;
-		}
-		else break;
-	}*/
+        if(newCamFrame) {
+            err = dc1394_capture_enqueue(this->dc_camera, camFrame);
+            camFrame = newCamFrame;
+        }
+        else break;
+    }*/
 
 
         // frame has been captured?
@@ -561,9 +561,9 @@ namespace camera
 
         // release frame structure
         err = dc1394_capture_enqueue(this->dc_camera, camFrame);
-	DC1394_ERR_THROW(err, "failed to enqueue frame");
+    DC1394_ERR_THROW(err, "failed to enqueue frame");
 
-//	std::cout << "enqueued" << std::endl;
+//  std::cout << "enqueued" << std::endl;
         return true;
     }
 

@@ -28,19 +28,19 @@
 
 class LocalizeDebug{
 
-	public:
-		LocalizeDebug();
-		~LocalizeDebug();
+    public:
+        LocalizeDebug();
+        ~LocalizeDebug();
 
-		void drawFieldForParticle(Particle particle, int number = 0);
-		void drawParticlesOnField(ParticleFilter & particleFilter);
+        void drawFieldForParticle(Particle particle, int number = 0);
+        void drawParticlesOnField(ParticleFilter & particleFilter);
 
-	private:
-	
-		double Lines[17][2][2];
+    private:
 
-		void init();
-		void cleanup();
+        double Lines[17][2][2];
+
+        void init();
+        void cleanup();
 
 
 

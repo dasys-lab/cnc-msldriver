@@ -32,16 +32,16 @@
 class FilterAddBallBlobsToSeg  : public Filter {
 
 
-	public:
-		FilterAddBallBlobsToSeg(int width, int height);
-		~FilterAddBallBlobsToSeg();
-		
-		unsigned char * process(unsigned char * src, unsigned char * tgt, std::vector<BlobBounds> & blobs, unsigned int width, unsigned int height, unsigned char addColor);
+    public:
+        FilterAddBallBlobsToSeg(int width, int height);
+        ~FilterAddBallBlobsToSeg();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned char * tgt, std::vector<BlobBounds> & blobs, unsigned int width, unsigned int height, unsigned char addColor);
 
-		void init();
-		void cleanup();
+    protected:
+
+        void init();
+        void cleanup();
 
 };
 

@@ -39,32 +39,32 @@ using namespace supplementary;
 class FilterLinePointsROIDirected  : public Filter {
 
 
-	public:
-		FilterLinePointsROIDirected(int area);
-		FilterLinePointsROIDirected(int width, int height);
-		~FilterLinePointsROIDirected();
-		
-		//unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperBall & helper);
+    public:
+        FilterLinePointsROIDirected(int area);
+        FilterLinePointsROIDirected(int width, int height);
+        ~FilterLinePointsROIDirected();
 
-		std::vector<ROIData> process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperDirected & helper);
+        //unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperBall & helper);
+
+        std::vector<ROIData> process(unsigned char * src, unsigned int width, unsigned int height, std::vector<LinePoint> & LinePoints, DistanceLookupHelper & distanceHelper, ScanLineHelperDirected & helper);
 
 
-		void visualizeROIs(unsigned char * src, std::vector<ROIData>& ROIrects, int width, int height);
+        void visualizeROIs(unsigned char * src, std::vector<ROIData>& ROIrects, int width, int height);
 
-	protected:
+    protected:
 
-		SystemConfig* sc;
+        SystemConfig* sc;
 
-		void init();
-		void cleanup();
+        void init();
+        void cleanup();
 
-		int MX;
-		int MY;
+        int MX;
+        int MY;
 
-		unsigned char LinePointsThreshold;
-		unsigned char LinePointsJump;
-		unsigned char MinLineWidth;
-		unsigned char MaxLineWidth;
+        unsigned char LinePointsThreshold;
+        unsigned char LinePointsJump;
+        unsigned char MinLineWidth;
+        unsigned char MaxLineWidth;
 
 
 

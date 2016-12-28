@@ -32,9 +32,9 @@
 class CovarianceHelper{
 
 
-	public:
-		static void TransformCovMatrixPolar2Ego(double * mean1, double * cov1, double * meanRes, double * covRes, int dim);
-		static void calculateNMatrixSquareRoot(double * cov, double * covRes, int dim);
+    public:
+        static void TransformCovMatrixPolar2Ego(double * mean1, double * cov1, double * meanRes, double * covRes, int dim);
+        static void calculateNMatrixSquareRoot(double * cov, double * covRes, int dim);
 
 };
 

@@ -25,44 +25,44 @@
 #include <stdlib.h>
 
 
-GainControl::GainControl(string file, string confName):BasisControl(file, confName){	
-	SystemConfig* sCon = SystemConfig::getInstance();
-	Configuration *camParam = (*sCon)[file.c_str()];
+GainControl::GainControl(string file, string confName):BasisControl(file, confName){
+    SystemConfig* sCon = SystemConfig::getInstance();
+    Configuration *camParam = (*sCon)[file.c_str()];
 
-	LUTAdd=camParam->get<double>(file.c_str(), "GainLUT", "LUTGainAdd", NULL);
-	for (int i=0; i<256; i++){
-		stringstream hgi;
-		hgi<<"HGLUT"<<i;
-		hellGainLUT[i]=camParam->get<double>(file.c_str(), "GainLUT", hgi.str().c_str(), NULL);
-		if (hellGainLUT[i]==0){hellGainLUT[i]=1.0/LUTAdd;}
-	}
+    LUTAdd=camParam->get<double>(file.c_str(), "GainLUT", "LUTGainAdd", NULL);
+    for (int i=0; i<256; i++){
+        stringstream hgi;
+        hgi<<"HGLUT"<<i;
+        hellGainLUT[i]=camParam->get<double>(file.c_str(), "GainLUT", hgi.str().c_str(), NULL);
+        if (hellGainLUT[i]==0){hellGainLUT[i]=1.0/LUTAdd;}
+    }
 }
 
 
 double GainControl::computeManipulateVariable(double mV){
-	int addGain=0;
-	if (mV<tCV){
-		while (mV+hellGainLUT[(int)(mV+0.5)]<tCV){
-			mV+=hellGainLUT[(int)(mV+0.5)];
-			addGain+=LUTAdd;
-		}
-		double rest=(tCV-mV)/hellGainLUT[(int)(mV+0.5)]*LUTAdd;
-		addGain+=rest;
-		return addGain;
-	}
-	//Case two
-	while (mV-hellGainLUT[(int)(mV+0.5)]>tCV){
-		mV-=hellGainLUT[(int)(mV+0.5)];
-		addGain-=LUTAdd;
-	}
-	double rest=(tCV-mV)/hellGainLUT[(int)(mV+0.5)]*LUTAdd;
-	addGain+=rest;
-	
-	return addGain;
+    int addGain=0;
+    if (mV<tCV){
+        while (mV+hellGainLUT[(int)(mV+0.5)]<tCV){
+            mV+=hellGainLUT[(int)(mV+0.5)];
+            addGain+=LUTAdd;
+        }
+        double rest=(tCV-mV)/hellGainLUT[(int)(mV+0.5)]*LUTAdd;
+        addGain+=rest;
+        return addGain;
+    }
+    //Case two
+    while (mV-hellGainLUT[(int)(mV+0.5)]>tCV){
+        mV-=hellGainLUT[(int)(mV+0.5)];
+        addGain-=LUTAdd;
+    }
+    double rest=(tCV-mV)/hellGainLUT[(int)(mV+0.5)]*LUTAdd;
+    addGain+=rest;
+
+    return addGain;
 }
 
 void GainControl::addBright(double addVal){
-	addtCV(addVal, "Gain (in VisControl.conf)", 255, 5);
+    addtCV(addVal, "Gain (in VisControl.conf)", 255, 5);
 }
 
 

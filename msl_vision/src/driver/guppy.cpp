@@ -15,10 +15,10 @@ namespace camera
     void Guppy::guppyInitInternal(uint32_t index)
     {
         this->dc_device = dc1394_new();
-    
+
         dc1394camera_list_t *list;
         dc1394error_t err;
-    
+
         // get list of available cameras
         err = dc1394_camera_enumerate (this->dc_device, &list);
         DC1394_ERR_THROW(err, "Failed to enumerate cameras");
@@ -27,7 +27,7 @@ namespace camera
         {
             DC1394_ERR_THROW(DC1394_FAILURE, "no cameras found");
         }
-    
+
         if (list->num < index)
         {
             DC1394_ERR_THROW(DC1394_FAILURE, "camera not found, index too high");
@@ -64,7 +64,7 @@ namespace camera
 #define REG_CAMERA_AVT_HDR_CONTROL 0x280U
 #define REG_CAMERA_AVT_KNEEPOINT_1 0x284U
 #define REG_CAMERA_AVT_KNEEPOINT_2 0x288U
-      
+
         // Retrieve current hdr parameters */
         err = dc1394_get_adv_control_register(this->dc_camera,
                                               REG_CAMERA_AVT_HDR_CONTROL, &reg);
@@ -86,7 +86,7 @@ namespace camera
 
         // HDR on or off (bit 6)
         reg = (reg & 0xFDFFFFFFUL) | (enable << 25);
-        
+
         // Define two knee points (bits 28..31)
         reg = ((reg & 0xFFFFFFF0UL) | (0x02UL));
 
@@ -143,7 +143,7 @@ namespace camera
 
         return version;
     }
-    
+
     void Guppy::opAutoWhiteBalance()
     {
         setFeatureMode(DC1394_FEATURE_WHITE_BALANCE,
@@ -330,7 +330,7 @@ namespace camera
 //by me
     void Guppy::setFramerate(unsigned short value)
     {
-	// not possible with FORMAT7 ... have to be done with packet size
+    // not possible with FORMAT7 ... have to be done with packet size
         setFeatureValue(DC1394_FEATURE_FRAME_RATE, value);
     }
 
@@ -556,9 +556,9 @@ namespace camera
             DC1394_ERR_THROW(err, "unable to query max reachable resolution");
 
             //this->roi.w = max_width;
-	this->roi.w = 640;
+    this->roi.w = 640;
             //this->roi.h = max_height;
-	this->roi.h = 480;
+    this->roi.h = 480;
 
             std::cout << "Setting ROI to (0, 0, " << max_width << ", " << max_height << ")" << std::endl;
         }
@@ -572,10 +572,10 @@ namespace camera
                                      this->roi.w, this->roi.h);
         DC1394_ERR_THROW(err, "unable to initialise roi");
 
-	//err = dc1394_format7_set_packet_size(this->dc_camera, DC1394_VIDEO_MODE_FORMAT7_0, 2468);
+    //err = dc1394_format7_set_packet_size(this->dc_camera, DC1394_VIDEO_MODE_FORMAT7_0, 2468);
         //DC1394_ERR_THROW(err, "unable set packet size");
 
-	 err = dc1394_capture_setup(this->dc_camera, 1, DC1394_CAPTURE_FLAGS_DEFAULT);
+     err = dc1394_capture_setup(this->dc_camera, 1, DC1394_CAPTURE_FLAGS_DEFAULT);
         DC1394_ERR_THROW(err, "unable to setup capturing");
         err = dc1394_video_set_transmission(this->dc_camera, DC1394_ON);
         DC1394_ERR_THROW(err, "unable to start transmission");
@@ -598,14 +598,14 @@ namespace camera
         {
             DC1394_ERR_THROW(DC1394_CAMERA_NOT_INITIALIZED, "camera not initialised");
         }
-    
+
         dc1394error_t err;
         dc1394video_frame_t *camFrame;
-    
+
         // receive a frame
         err = dc1394_capture_dequeue(this->dc_camera, DC1394_CAPTURE_POLICY_WAIT, &camFrame);
         DC1394_ERR_THROW(err, "failed to receive frame");
-                
+
         // frame has been captured?
         if (!camFrame)
         {
@@ -613,30 +613,30 @@ namespace camera
         }
 
         frame.init(camFrame->size[0], camFrame->size[1], this->data_depth, camera::MODE_RAW);
-        
+
         /// checking the framerate
         frame.stamp = camFrame->timestamp;
         frame.setImage((const char *)camFrame->image,
                        camFrame->size[0] * camFrame->size[1]);
-       
+
         // release frame structure
         dc1394_capture_enqueue(this->dc_camera, camFrame);
-    
+
         return true;
     }
 
-	void Guppy::DummyTestMethod(){
-	
-	//
-//	float value;
-//	dc1394_format7_get_frame_interval(this->dc_camera, DC1394_VIDEO_MODE_FORMAT7_0, &value);
+    void Guppy::DummyTestMethod(){
+
+    //
+//  float value;
+//  dc1394_format7_get_frame_interval(this->dc_camera, DC1394_VIDEO_MODE_FORMAT7_0, &value);
 //printf(": %f\n",value);
 
-	//uint32_t value;
-	//dc1394_format7_get_packet_size(this->dc_camera,DC1394_VIDEO_MODE_FORMAT7_0, &value);
-	//std::cout << "p size: " << value << std::endl;
-	std::cout << "hdr: " << isHDR() << std::endl;
-	//dc1394_video_set_framerate(this->dc_camera, DC1394_FRAMERATE_60);
-	}
+    //uint32_t value;
+    //dc1394_format7_get_packet_size(this->dc_camera,DC1394_VIDEO_MODE_FORMAT7_0, &value);
+    //std::cout << "p size: " << value << std::endl;
+    std::cout << "hdr: " << isHDR() << std::endl;
+    //dc1394_video_set_framerate(this->dc_camera, DC1394_FRAMERATE_60);
+    }
 }
 

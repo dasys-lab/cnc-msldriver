@@ -45,49 +45,49 @@ using namespace msl_helper_msgs;
 
 class BallHelper {
 
-	public:
-		BallHelper(int area);
-		~BallHelper();
-	
-		void sendBallHypotesis(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData);
-		Point getBallFromBlobs(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData, Particle * maxParticle);
-		void visualizeBall(unsigned char * src, int width, Point ball, int radius);
-		Point getBallPosition();
-		void handlePassMessageInfo(const PassMsg::ConstPtr& message);
+    public:
+        BallHelper(int area);
+        ~BallHelper();
 
-	protected:
-			
-		void init();
-		void cleanup();
+        void sendBallHypotesis(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData);
+        Point getBallFromBlobs(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData, Particle * maxParticle);
+        void visualizeBall(unsigned char * src, int width, Point ball, int radius);
+        Point getBallPosition();
+        void handlePassMessageInfo(const PassMsg::ConstPtr& message);
 
-		ObservedPoint getBallFromBlobsAdaptiveROI(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData, std::vector<BlobBounds> & potBallBlobs, Particle * maxParticle);
+    protected:
+
+        void init();
+        void cleanup();
+
+        ObservedPoint getBallFromBlobsAdaptiveROI(ballCluster * cluster, int clusterCount, std::vector<ROIData>& roiData, std::vector<BlobBounds> & potBallBlobs, Particle * maxParticle);
 
 
-		ros::Subscriber sub;
+        ros::Subscriber sub;
 
-		bool newOptics;
-		double LocalizationSuccess;
-		double * ballProbs;
+        bool newOptics;
+        double LocalizationSuccess;
+        double * ballProbs;
 
-		Point currBallPos;
+        Point currBallPos;
 
-		bool isGoalie;
+        bool isGoalie;
 
-		msl_msgs::Point2dInfo origin;
-		msl_msgs::Point2dInfo destination;
-		struct timeval passMsgTime;
-		bool passMsgAvailable;
+        msl_msgs::Point2dInfo origin;
+        msl_msgs::Point2dInfo destination;
+        struct timeval passMsgTime;
+        bool passMsgAvailable;
 
-		ObjectContainer ballBuf;
+        ObjectContainer ballBuf;
 
-		MovingObject mv;
+        MovingObject mv;
 
-		SystemConfig* sc;
+        SystemConfig* sc;
 
-		int MX;
-		int MY;
+        int MX;
+        int MY;
 
-		BlobBounds oldBlob;
+        BlobBounds oldBlob;
 
 
 };

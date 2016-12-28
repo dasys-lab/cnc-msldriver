@@ -29,29 +29,29 @@
 
 class ObjectContainer {
 
-	public:
-		ObjectContainer(int size_);
-		~ObjectContainer();
-		int getSize();
-		int getStartIndex();
-		int getLastIndex();
-		int getNumberValidPoints();
-		int getLastValidIndex();
-		void integratePoint(ObservedPoint p);
-		void invalidate(int ms);
-		void reset();
-		ObservedPoint * getPoints();
+    public:
+        ObjectContainer(int size_);
+        ~ObjectContainer();
+        int getSize();
+        int getStartIndex();
+        int getLastIndex();
+        int getNumberValidPoints();
+        int getLastValidIndex();
+        void integratePoint(ObservedPoint p);
+        void invalidate(int ms);
+        void reset();
+        ObservedPoint * getPoints();
 
-	private:
-		void init();
-		void cleanup();
+    private:
+        void init();
+        void cleanup();
 
-		int size;
-		ObservedPoint * points;
-		int startIndex;
-		int lastIndex;
-		int lastValidIndex;
-		int validCounter;
+        int size;
+        ObservedPoint * points;
+        int startIndex;
+        int lastIndex;
+        int lastValidIndex;
+        int validCounter;
 };
 
 #endif

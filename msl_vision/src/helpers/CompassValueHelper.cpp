@@ -38,9 +38,9 @@ CompassValueHelper * CompassValueHelper::instance_ = NULL;
 
 CompassValueHelper * CompassValueHelper::getInstance(){
 
-	if(instance_ == NULL)
-		instance_ = new CompassValueHelper();
-	return instance_;
+    if(instance_ == NULL)
+        instance_ = new CompassValueHelper();
+    return instance_;
 
 }
 
@@ -48,33 +48,33 @@ CompassValueHelper * CompassValueHelper::getInstance(){
 void CompassValueHelper::handleCompassInfo(const CompassInfo::ConstPtr& message) {
 
 
-	printf("GOT COMPASS VALUE %ld\n", message->value);
+    printf("GOT COMPASS VALUE %ld\n", message->value);
 
-	integrateData(message->value);
+    integrateData(message->value);
 
-	Logger::getInstance()->logCompassValue(message->value, supplementary::DateTime::getUtcNowC());
+    Logger::getInstance()->logCompassValue(message->value, supplementary::DateTime::getUtcNowC());
 
 }
 
 
 CompassValueHelper::CompassValueHelper() : mutex() {
 
-	compassValue = 0;
-	updateCycles = 30;
+    compassValue = 0;
+    updateCycles = 30;
 
-	sub = SpicaHelper::visionNode->subscribe<CompassInfo, CompassValueHelper>("CompassInfo", 1, &CompassValueHelper::handleCompassInfo, (this), ros::TransportHints().udp());
+    sub = SpicaHelper::visionNode->subscribe<CompassInfo, CompassValueHelper>("CompassInfo", 1, &CompassValueHelper::handleCompassInfo, (this), ros::TransportHints().udp());
 
-	workWithoutCompass = false;
-	char * envVariable = getenv("VISION_FORCE");
-	if(envVariable != NULL)
-		workWithoutCompass = true;
+    workWithoutCompass = false;
+    char * envVariable = getenv("VISION_FORCE");
+    if(envVariable != NULL)
+        workWithoutCompass = true;
 
-	spinner = new ros::AsyncSpinner(1);
-	spinner->start();
+    spinner = new ros::AsyncSpinner(1);
+    spinner->start();
 
 
 
-	init();
+    init();
 
 
 }
@@ -82,7 +82,7 @@ CompassValueHelper::CompassValueHelper() : mutex() {
 
 CompassValueHelper::~CompassValueHelper(){
 
-	cleanup();
+    cleanup();
 
 }
 
@@ -102,11 +102,11 @@ void CompassValueHelper::cleanup(){
 
 void CompassValueHelper::integrateData(int value) {
 
-	boost::mutex::scoped_lock(this->mutex);
+    boost::mutex::scoped_lock(this->mutex);
 
-	printf("CompassValueCAN: %d\n", value);
-	updateCycles = 0;
-	compassValue = value;
+    printf("CompassValueCAN: %d\n", value);
+    updateCycles = 0;
+    compassValue = value;
 
 }
 
@@ -114,43 +114,43 @@ void CompassValueHelper::integrateData(int value) {
 
 int CompassValueHelper::getCompassData(){
 
-	boost::mutex::scoped_lock(this->mutex);
+    boost::mutex::scoped_lock(this->mutex);
 
-	updateCycles++;
+    updateCycles++;
 
-	if(updateCycles >= 150){
-		printf("Without Compass Data I cannot work!\n");
-		//if(!workWithoutCompass)
-		//	exit(1);
-		return -1;
-	}
+    if(updateCycles >= 150){
+        printf("Without Compass Data I cannot work!\n");
+        //if(!workWithoutCompass)
+        //  exit(1);
+        return -1;
+    }
 
-	if(updateCycles >= 30){
-		printf("Tried to get Compass Data, but without success!\n");
-		return -1;
-	}
+    if(updateCycles >= 30){
+        printf("Tried to get Compass Data, but without success!\n");
+        return -1;
+    }
 
-	return compassValue;
+    return compassValue;
 
 }
 
 int CompassValueHelper::getCompassData2(){
 
-	boost::mutex::scoped_lock(this->mutex);
+    boost::mutex::scoped_lock(this->mutex);
 
-	if(updateCycles >= 150){
-		printf("Without Compass Data I cannot work!\n");
-		//if(!workWithoutCompass)
-		//	exit(1);
-		return -1;
-	}
+    if(updateCycles >= 150){
+        printf("Without Compass Data I cannot work!\n");
+        //if(!workWithoutCompass)
+        //  exit(1);
+        return -1;
+    }
 
-	if(updateCycles >= 30){
-		printf("Tried to get Compass Data, but without success!\n");
-		return -1;
-	}
+    if(updateCycles >= 30){
+        printf("Tried to get Compass Data, but without success!\n");
+        return -1;
+    }
 
-	return compassValue;
+    return compassValue;
 
 }
 

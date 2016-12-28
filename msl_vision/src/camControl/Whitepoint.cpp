@@ -36,85 +36,85 @@ using namespace std;
 Whitepoint* Whitepoint::theWhitepointInstance = NULL;
 
 Whitepoint* Whitepoint::getInstance(int width, int height, camera::ImagingSource* cam){
-	if(theWhitepointInstance == NULL){
-		theWhitepointInstance = new Whitepoint(width, height,cam);
-	}else{
-		return NULL;
-	}
-	return theWhitepointInstance;
-} 
+    if(theWhitepointInstance == NULL){
+        theWhitepointInstance = new Whitepoint(width, height,cam);
+    }else{
+        return NULL;
+    }
+    return theWhitepointInstance;
+}
 
 Whitepoint::Whitepoint(int width, int height, camera::ImagingSource* cam, string area):BasisAutoParam(width/2, height, 4, cam){
-	pcU = new PControl(CONF_DAT, "U");
-	pcV = new PControl(CONF_DAT, "V");
-	ra = new ReferenceArea(width/2, height, CONF_DAT, area.c_str());
+    pcU = new PControl(CONF_DAT, "U");
+    pcV = new PControl(CONF_DAT, "V");
+    ra = new ReferenceArea(width/2, height, CONF_DAT, area.c_str());
 
-	SystemConfig* sCon = SystemConfig::getInstance();
-	Configuration *camParam = (*sCon)[CONF_DAT];
-	pcU->setTargetControlValue(camParam->get<int>(CONF_DAT, "U", NULL));
-	pcV->setTargetControlValue(camParam->get<int>(CONF_DAT, "V", NULL));
-	camera::ImagingSource::white_balance_t iniWp;
-	iniWp.bu=camParam->get<int>(CONF_DAT, "U", "startMV", NULL);
-	iniWp.rv=camParam->get<int>(CONF_DAT, "V", "startMV", NULL);
-	cout<<iniWp.bu<<iniWp.rv<<endl;
-	if (nImage!=0){cam->setWhiteBalance(iniWp);}
+    SystemConfig* sCon = SystemConfig::getInstance();
+    Configuration *camParam = (*sCon)[CONF_DAT];
+    pcU->setTargetControlValue(camParam->get<int>(CONF_DAT, "U", NULL));
+    pcV->setTargetControlValue(camParam->get<int>(CONF_DAT, "V", NULL));
+    camera::ImagingSource::white_balance_t iniWp;
+    iniWp.bu=camParam->get<int>(CONF_DAT, "U", "startMV", NULL);
+    iniWp.rv=camParam->get<int>(CONF_DAT, "V", "startMV", NULL);
+    cout<<iniWp.bu<<iniWp.rv<<endl;
+    if (nImage!=0){cam->setWhiteBalance(iniWp);}
 
 }
 
 Whitepoint::Whitepoint(int width, int height, camera::ImagingSource* cam):BasisAutoParam(width/2, height, 4, cam){
-	pcU = new PControl(CONF_DAT, "U");
-	pcV = new PControl(CONF_DAT, "V");
+    pcU = new PControl(CONF_DAT, "U");
+    pcV = new PControl(CONF_DAT, "V");
     ra = new ReferenceArea(width/2, height, CONF_DAT, CONF_RA_W);
 
-	SystemConfig* sCon = SystemConfig::getInstance();
-	Configuration *camParam = (*sCon)[CONF_DAT];
-	pcU->setTargetControlValue(camParam->get<int>(CONF_DAT, "U", NULL));
-	pcV->setTargetControlValue(camParam->get<int>(CONF_DAT, "V", NULL));
-	camera::ImagingSource::white_balance_t iniWp;
-	iniWp.bu=camParam->get<int>(CONF_DAT, "U", NULL);
-	iniWp.rv=camParam->get<int>(CONF_DAT, "V", NULL);
-	if (nImage!=0){cam->setWhiteBalance(iniWp);}
+    SystemConfig* sCon = SystemConfig::getInstance();
+    Configuration *camParam = (*sCon)[CONF_DAT];
+    pcU->setTargetControlValue(camParam->get<int>(CONF_DAT, "U", NULL));
+    pcV->setTargetControlValue(camParam->get<int>(CONF_DAT, "V", NULL));
+    camera::ImagingSource::white_balance_t iniWp;
+    iniWp.bu=camParam->get<int>(CONF_DAT, "U", NULL);
+    iniWp.rv=camParam->get<int>(CONF_DAT, "V", NULL);
+    if (nImage!=0){cam->setWhiteBalance(iniWp);}
 
 }
 
 
 Whitepoint::~Whitepoint(){
-	delete(ra);
-	delete(pcU);
-	delete(pcV);
+    delete(ra);
+    delete(pcU);
+    delete(pcV);
 }
 
 
 void Whitepoint::process(unsigned char * scr, int counter) {
-	if (!isNImage(counter)){return;}
-	//U
-	UBrightness=ra->createHistoBrightness(scr, 1, false);
-	newWp.bu=(short)pcU->getManipulateVariable(UBrightness);
-	cout<<"camParam - nBu: "<<newWp.bu<<" - UBrightness"<<UBrightness<<endl; 
-	//V
-	VBrightness=ra->createHistoBrightness(scr, 3, false);
-	newWp.rv=(short)pcV->getManipulateVariable(VBrightness);
-	cout<<"camParam - nRv: "<<newWp.rv<<" - VBrightness"<<VBrightness<<endl;
-	cam->setWhiteBalance(newWp);
+    if (!isNImage(counter)){return;}
+    //U
+    UBrightness=ra->createHistoBrightness(scr, 1, false);
+    newWp.bu=(short)pcU->getManipulateVariable(UBrightness);
+    cout<<"camParam - nBu: "<<newWp.bu<<" - UBrightness"<<UBrightness<<endl;
+    //V
+    VBrightness=ra->createHistoBrightness(scr, 3, false);
+    newWp.rv=(short)pcV->getManipulateVariable(VBrightness);
+    cout<<"camParam - nRv: "<<newWp.rv<<" - VBrightness"<<VBrightness<<endl;
+    cam->setWhiteBalance(newWp);
 }
 
 void Whitepoint::setNewParam(){
-	cam->setWhiteBalance(newWp);
+    cam->setWhiteBalance(newWp);
 }
-	
+
 void Whitepoint::showRefFlaeche(unsigned char * scr){
-	memcpy(showImage, scr, imageSize*4*sizeof(unsigned char));
-	ra->createHistoBrightness(showImage, 1, true);
-	ra->createHistoBrightness(showImage, 3, true);	
-	showRGBScr(showImage);
+    memcpy(showImage, scr, imageSize*4*sizeof(unsigned char));
+    ra->createHistoBrightness(showImage, 1, true);
+    ra->createHistoBrightness(showImage, 3, true);
+    showRGBScr(showImage);
 }
 
 void Whitepoint::testWhitepoint(unsigned char *scr, camera::ImagingSource::white_balance_t wp, int hell){
-	//U
-	UBrightness=ra->createHistoBrightness(scr, 1, true);
-	//V
-	VBrightness=ra->createHistoBrightness(scr, 3, true);
+    //U
+    UBrightness=ra->createHistoBrightness(scr, 1, true);
+    //V
+    VBrightness=ra->createHistoBrightness(scr, 3, true);
 
-	int zeile[5] = { (int)wp.bu, (int)wp.rv, hell, (int)min((int)(UBrightness+0.5), 255), (int)min((int)(VBrightness+0.5), 255)};
-	saveCSV("wp.csv", 5, zeile, true, 2);
+    int zeile[5] = { (int)wp.bu, (int)wp.rv, hell, (int)min((int)(UBrightness+0.5), 255), (int)min((int)(VBrightness+0.5), 255)};
+    saveCSV("wp.csv", 5, zeile, true, 2);
 }

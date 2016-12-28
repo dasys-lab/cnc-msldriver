@@ -138,8 +138,8 @@ ONI_C_API void oniFrameRelease(OniFrame* pFrame);
 
 /**
  * Creates a recorder that records to a file.
- * @param	[in]	fileName	The name of the file that will contain the recording.
- * @param	[out]	pRecorder	Points to the handle to the newly created recorder.
+ * @param   [in]    fileName    The name of the file that will contain the recording.
+ * @param   [out]   pRecorder   Points to the handle to the newly created recorder.
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.
  */
@@ -149,15 +149,15 @@ ONI_C_API OniStatus oniCreateRecorder(const char* fileName, OniRecorderHandle* p
  * Attaches a stream to a recorder. The amount of attached streams is virtually
  * infinite. You cannot attach a stream after you have started a recording, if
  * you do: an error will be returned by oniRecorderAttachStream.
- * @param	[in]	recorder				The handle to the recorder.
- * @param	[in]	stream					The handle to the stream.
- * @param	[in]	allowLossyCompression	Allows/denies lossy compression
+ * @param   [in]    recorder                The handle to the recorder.
+ * @param   [in]    stream                  The handle to the stream.
+ * @param   [in]    allowLossyCompression   Allows/denies lossy compression
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.
  */
 ONI_C_API OniStatus oniRecorderAttachStream(
-        OniRecorderHandle   recorder, 
-        OniStreamHandle     stream, 
+        OniRecorderHandle   recorder,
+        OniStreamHandle     stream,
         OniBool             allowLossyCompression);
 
 /**
@@ -179,8 +179,8 @@ ONI_C_API void oniRecorderStop(OniRecorderHandle recorder);
 
 /**
  * Stops recording if needed, and destroys a recorder.
- * @param	[in,out]	recorder	The handle to the recorder, the handle will be
- *									invalidated (nullified) when the function returns.
+ * @param   [in,out]    recorder    The handle to the recorder, the handle will be
+ *                                  invalidated (nullified) when the function returns.
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.
  */
@@ -194,51 +194,51 @@ ONI_C_API OniStatus oniCoordinateConverterDepthToColor(OniStreamHandle depthStre
 
 /******************************************** Log APIs */
 
-/** 
+/**
  * Change the log output folder
 
- * @param const char * strOutputFolder	[in]	path to the desirebale folder
+ * @param const char * strOutputFolder  [in]    path to the desirebale folder
  *
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.
  */
 ONI_C_API OniStatus oniSetLogOutputFolder(const char* strOutputFolder);
 
-/** 
+/**
  * Get the current log file name
 
- * @param	char * strFileName	[out]	hold the returned file name
- * @param	int nBufferSize	[in]	size of strFileName
+ * @param   char * strFileName  [out]   hold the returned file name
+ * @param   int nBufferSize [in]    size of strFileName
  *
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.
  */
 ONI_C_API OniStatus oniGetLogFileName(char* strFileName, int nBufferSize);
 
-/** 
- * Set the Minimum severity for log produce 
+/**
+ * Set the Minimum severity for log produce
 
- * @param	const char * strMask	[in]	Name of the logger
+ * @param   const char * strMask    [in]    Name of the logger
  *
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.
  */
 ONI_C_API OniStatus oniSetLogMinSeverity(int nMinSeverity);
 
-/** 
+/**
  * Configures if log entries will be printed to console.
 
- * @param	OniBool bConsoleOutput	[in]	TRUE to print log entries to console, FALSE otherwise.
+ * @param   OniBool bConsoleOutput  [in]    TRUE to print log entries to console, FALSE otherwise.
  *
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.
  */
 ONI_C_API OniStatus oniSetLogConsoleOutput(OniBool bConsoleOutput);
 
-/** 
+/**
  * Configures if log entries will be printed to a log file.
 
- * @param	OniBool bFileOutput	[in]	TRUE to print log entries to the file, FALSE otherwise.
+ * @param   OniBool bFileOutput [in]    TRUE to print log entries to the file, FALSE otherwise.
  *
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.
@@ -246,10 +246,10 @@ ONI_C_API OniStatus oniSetLogConsoleOutput(OniBool bConsoleOutput);
 ONI_C_API OniStatus oniSetLogFileOutput(OniBool bFileOutput);
 
 #if ONI_PLATFORM == ONI_PLATFORM_ANDROID_ARM
-/** 
+/**
  * Configures if log entries will be printed to the Android log.
 
- * @param	OniBool bAndroidOutput	[in]	TRUE to print log entries to the Android log, FALSE otherwise.
+ * @param   OniBool bAndroidOutput  [in]    TRUE to print log entries to the Android log, FALSE otherwise.
  *
  * @retval ONI_STATUS_OK Upon successful completion.
  * @retval ONI_STATUS_ERROR Upon any kind of failure.

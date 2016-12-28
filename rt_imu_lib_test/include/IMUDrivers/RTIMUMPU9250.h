@@ -26,7 +26,7 @@
 
 
 #ifndef _RTIMUMPU9250_H
-#define	_RTIMUMPU9250_H
+#define _RTIMUMPU9250_H
 
 #include "RTIMU.h"
 

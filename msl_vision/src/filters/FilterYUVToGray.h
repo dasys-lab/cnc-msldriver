@@ -29,16 +29,16 @@
 class FilterYUVToGray  : public Filter {
 
 
-	public:
-		FilterYUVToGray(int width, int height);
-		~FilterYUVToGray();
-		
-		unsigned char * process(unsigned char * src, unsigned int imagesize);
+    public:
+        FilterYUVToGray(int width, int height);
+        ~FilterYUVToGray();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned int imagesize);
 
-		void init();
-		void cleanup();
+    protected:
+
+        void init();
+        void cleanup();
 
 
 };

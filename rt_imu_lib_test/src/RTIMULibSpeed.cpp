@@ -81,15 +81,15 @@ int main()
 
             if ((now - displayTimer) > 100000) {
 
-            	int vx = 0;
-				int vy = 0;
+                int vx = 0;
+                int vy = 0;
 
-				RTFLOAT dx = newData.fusionPose.x() - oldData.fusionPose.x();
-				RTFLOAT dy = newData.fusionPose.y() - oldData.fusionPose.y();
-				RTFLOAT dt = (now - (RTFLOAT) displayTimer) / 1000000;		// Zeitdifferenz in Sekunden?
+                RTFLOAT dx = newData.fusionPose.x() - oldData.fusionPose.x();
+                RTFLOAT dy = newData.fusionPose.y() - oldData.fusionPose.y();
+                RTFLOAT dt = (now - (RTFLOAT) displayTimer) / 1000000;      // Zeitdifferenz in Sekunden?
 
-				vx = dx / dt;
-				vy = dy / dt;
+                vx = dx / dt;
+                vy = dy / dt;
 
                 printf("Sample rate %d; Speed x: %d; Speed y: %d\r", sampleRate, vx, vy);
                 fflush(stdout);

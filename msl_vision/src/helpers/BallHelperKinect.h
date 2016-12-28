@@ -42,74 +42,74 @@
 #define BALL_NSWE 1335
 
 class BallHelperKinect {
-	public:
-		BallHelperKinect();
-		~BallHelperKinect();
+    public:
+        BallHelperKinect();
+        ~BallHelperKinect();
 
-		void assignCluster(uint16_t*);
-		Point getBallCluster();
-		Point getSimpleBallCluster();
+        void assignCluster(uint16_t*);
+        Point getBallCluster();
+        Point getSimpleBallCluster();
 
-		void doubleRes();
+        void doubleRes();
 
-		void visualizeBall(unsigned char * src, int width, Point ball,
-				int radius);
+        void visualizeBall(unsigned char * src, int width, Point ball,
+                int radius);
 
-		inline std::vector<int>* getMatrix() {
-			return &m_cluster;
-		}
+        inline std::vector<int>* getMatrix() {
+            return &m_cluster;
+        }
 
-		inline std::vector<KinectCluster*>* getClustering() {
-			return &clustering;
-		}
+        inline std::vector<KinectCluster*>* getClustering() {
+            return &clustering;
+        }
 
-	protected:
-		double LocalizationSuccess;
+    protected:
+        double LocalizationSuccess;
 
-		ObjectContainer ballBuf;
-		MovingObject mv;
-		supplementary::SystemConfig* sc;
-		ObservedPoint * observations;
+        ObjectContainer ballBuf;
+        MovingObject mv;
+        supplementary::SystemConfig* sc;
+        ObservedPoint * observations;
 
-	private:
-		int centerX;
-		int centerY;
-		int camX;
-		int camY;
-		int camZ;
-		int threshold;
-		unsigned minClusterSize;
-		double widthHeightRatio;
-		double invertedWidthHeightRatio;
-		int ballSize;
-		int ballRadius;
-		int maxBallSizeDiff;
-		int maxEdgeDistDiff;
-		int lowerBound;
-		int upperBound;
-		int virtualScreenDistance;
-		double distPerPixel;
+    private:
+        int centerX;
+        int centerY;
+        int camX;
+        int camY;
+        int camZ;
+        int threshold;
+        unsigned minClusterSize;
+        double widthHeightRatio;
+        double invertedWidthHeightRatio;
+        int ballSize;
+        int ballRadius;
+        int maxBallSizeDiff;
+        int maxEdgeDistDiff;
+        int lowerBound;
+        int upperBound;
+        int virtualScreenDistance;
+        double distPerPixel;
 
-		std::vector<KinectCluster*> clustering;
-		std::vector<int> m_cluster;
-		uint16_t* depth;
-		std::queue<int> queue;
+        std::vector<KinectCluster*> clustering;
+        std::vector<int> m_cluster;
+        uint16_t* depth;
+        std::queue<int> queue;
 
-		double depth2Distance(int);
-		int distance2Depth(double);
-		int calcThreshold(int);
+        double depth2Distance(int);
+        int distance2Depth(double);
+        int calcThreshold(int);
 
-		int col(int);
-		int row(int);
+        int col(int);
+        int row(int);
 
-		void calcSize(KinectCluster*);
-		double calcRatio(double, double);
-		void calculateRelations(KinectCluster*, int, int, int, int);
-		void setCamToPoint3D(KinectCluster*);
-		Point point3DToCam(int, int, int);
-		Point integrate(bool, ObservedPoint*, int);
+        void calcSize(KinectCluster*);
+        double calcRatio(double, double);
+        void calculateRelations(KinectCluster*, int, int, int, int);
+        void setCamToPoint3D(KinectCluster*);
+        Point point3DToCam(int, int, int);
+        Point integrate(bool, ObservedPoint*, int);
 
-		void paint(int, int);
+        void paint(int, int);
 };
 
 #endif

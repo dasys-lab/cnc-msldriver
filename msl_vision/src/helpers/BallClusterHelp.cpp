@@ -33,142 +33,142 @@
 #define B_ENTRYS 4
 
 using namespace std;
-        
+
 int BallClusterHelp::clusterBalls(int * balls, int ballCount, ballCluster * cluster, int maxClusterCount) {
-	int clusterCount = 0;
-	bool clusterFound;
-	
-	for(int i=0; i < ballCount; i++) {
-		int index = i * B_ENTRYS;
-		clusterFound = false;
+    int clusterCount = 0;
+    bool clusterFound;
 
-		for(int c=0; c<clusterCount; c++) {
-			int cnum = c;
-			int xdiff = (cluster[cnum].x - balls[index]);
-			int ydiff = (cluster[cnum].y - balls[index+1]);
+    for(int i=0; i < ballCount; i++) {
+        int index = i * B_ENTRYS;
+        clusterFound = false;
 
-			if(xdiff*xdiff + ydiff*ydiff <= 16) {
-				clusterFound = true;
-				if(cluster[cnum].maxRadius < balls[index+2]) 
-					cluster[cnum].maxRadius = balls[index+2];
+        for(int c=0; c<clusterCount; c++) {
+            int cnum = c;
+            int xdiff = (cluster[cnum].x - balls[index]);
+            int ydiff = (cluster[cnum].y - balls[index+1]);
 
-				else if(cluster[cnum].minRadius > balls[index+2]) 
-					cluster[cnum].minRadius = balls[index+2];
+            if(xdiff*xdiff + ydiff*ydiff <= 16) {
+                clusterFound = true;
+                if(cluster[cnum].maxRadius < balls[index+2])
+                    cluster[cnum].maxRadius = balls[index+2];
 
-				cluster[cnum].xballsum += balls[index];
-				cluster[cnum].yballsum += balls[index+1];
+                else if(cluster[cnum].minRadius > balls[index+2])
+                    cluster[cnum].minRadius = balls[index+2];
 
-				cluster[cnum].balls++;
-				cluster[cnum].err += balls[index+3];
-				cluster[cnum].x = cluster[cnum].xballsum / cluster[cnum].balls;
-				cluster[cnum].y = cluster[cnum].yballsum / cluster[cnum].balls;
+                cluster[cnum].xballsum += balls[index];
+                cluster[cnum].yballsum += balls[index+1];
 
-				cluster[cnum].sizeSum += balls[index + 2];
+                cluster[cnum].balls++;
+                cluster[cnum].err += balls[index+3];
+                cluster[cnum].x = cluster[cnum].xballsum / cluster[cnum].balls;
+                cluster[cnum].y = cluster[cnum].yballsum / cluster[cnum].balls;
 
-				break;
-			}
-		}
+                cluster[cnum].sizeSum += balls[index + 2];
 
-		if(!clusterFound) {
-			if(clusterCount >= maxClusterCount) break;
-			//X
-			cluster[clusterCount].x = balls[index];
-			//Y
-			cluster[clusterCount].y = balls[index + 1];
-			//minsize
-			cluster[clusterCount].minRadius = balls[index + 2];
-			//maxsize
-			cluster[clusterCount].maxRadius = balls[index + 2];
-			//ballerr Points
-			cluster[clusterCount].err = balls[index+3];
-			//ballcount
-			cluster[clusterCount].balls = 1;
-			//xsum
-			cluster[clusterCount].xballsum = balls[index];
-			//ysum
-			cluster[clusterCount].yballsum = balls[index + 1];
-			//sum of sizes
-			cluster[clusterCount].sizeSum = balls[index + 2];
-			clusterCount++;
-		}
-	}
-	//std::cout << ballCount << std::endl;
-	return clusterCount;
+                break;
+            }
+        }
+
+        if(!clusterFound) {
+            if(clusterCount >= maxClusterCount) break;
+            //X
+            cluster[clusterCount].x = balls[index];
+            //Y
+            cluster[clusterCount].y = balls[index + 1];
+            //minsize
+            cluster[clusterCount].minRadius = balls[index + 2];
+            //maxsize
+            cluster[clusterCount].maxRadius = balls[index + 2];
+            //ballerr Points
+            cluster[clusterCount].err = balls[index+3];
+            //ballcount
+            cluster[clusterCount].balls = 1;
+            //xsum
+            cluster[clusterCount].xballsum = balls[index];
+            //ysum
+            cluster[clusterCount].yballsum = balls[index + 1];
+            //sum of sizes
+            cluster[clusterCount].sizeSum = balls[index + 2];
+            clusterCount++;
+        }
+    }
+    //std::cout << ballCount << std::endl;
+    return clusterCount;
 }
 
 
 void BallClusterHelp::clusterStdOut(ballCluster * cluster, int clusterCount, int xmid, int ymid, bool dist) {
-	for(int i=0; i<clusterCount; i++) {
-		int pos = i;
-		if(!dist) {
-			cout << "endyball " << "x: " << cluster[pos].x << "\ty: " << cluster[pos].y << "\tminBallSize: " << cluster[pos].minRadius << "\tmaxBallSize: " << cluster[pos].maxRadius << endl;
-		}
-		else {
-			int xdiff = fabs(cluster[pos].x-xmid);
-			int ydiff = fabs(cluster[pos].y-ymid);
+    for(int i=0; i<clusterCount; i++) {
+        int pos = i;
+        if(!dist) {
+            cout << "endyball " << "x: " << cluster[pos].x << "\ty: " << cluster[pos].y << "\tminBallSize: " << cluster[pos].minRadius << "\tmaxBallSize: " << cluster[pos].maxRadius << endl;
+        }
+        else {
+            int xdiff = fabs(cluster[pos].x-xmid);
+            int ydiff = fabs(cluster[pos].y-ymid);
 
-			cout << "endyball " << sqrt(xdiff*xdiff + ydiff*ydiff) << " " << cluster[pos].maxRadius << " " << cluster[pos].minRadius << endl;
-		}
-	}
+            cout << "endyball " << sqrt(xdiff*xdiff + ydiff*ydiff) << " " << cluster[pos].maxRadius << " " << cluster[pos].minRadius << endl;
+        }
+    }
 }
 
 
 void BallClusterHelp::visualizeCluster(unsigned char *src, int width, int height, ballCluster * cluster, int clusterCount) {
-	ballCluster *bestBall=NULL;
-	int minError=12;
-	for(int i=0; i<clusterCount; i++) {
-		int pos = i;
-		int irad = cluster[i].sizeSum / cluster[i].balls;
-		bool valid=true;
+    ballCluster *bestBall=NULL;
+    int minError=12;
+    for(int i=0; i<clusterCount; i++) {
+        int pos = i;
+        int irad = cluster[i].sizeSum / cluster[i].balls;
+        bool valid=true;
 
-		for(int n=0; n<clusterCount; n++) {
-			if(n==i) continue;
-			int nrad = cluster[n].sizeSum / cluster[n].balls;
-			int xdist = cluster[i].x - cluster[n].x;
-			int ydist = cluster[i].y - cluster[n].y;
+        for(int n=0; n<clusterCount; n++) {
+            if(n==i) continue;
+            int nrad = cluster[n].sizeSum / cluster[n].balls;
+            int xdist = cluster[i].x - cluster[n].x;
+            int ydist = cluster[i].y - cluster[n].y;
 
-			if(xdist < 0) xdist = -xdist;
-			if(ydist < 0) ydist = -ydist;
+            if(xdist < 0) xdist = -xdist;
+            if(ydist < 0) ydist = -ydist;
 
-			if(nrad>irad && (xdist*ydist < nrad*nrad)) {
-				valid=false;
-			}			
-		}
-		if(!valid)
-			continue;
+            if(nrad>irad && (xdist*ydist < nrad*nrad)) {
+                valid=false;
+            }
+        }
+        if(!valid)
+            continue;
 
-		int index = cluster[pos].x + width*cluster[pos].y;
+        int index = cluster[pos].x + width*cluster[pos].y;
 
-		src[index] = 255;
-		src[index+1] = 255;
-		src[index-1] = 255;
-		src[index+2] = 255;
-		src[index-2] = 255;
-		src[index+3] = 255;
-		src[index-3] = 255;
+        src[index] = 255;
+        src[index+1] = 255;
+        src[index-1] = 255;
+        src[index+2] = 255;
+        src[index-2] = 255;
+        src[index+3] = 255;
+        src[index-3] = 255;
 
-		src[index+1*width] = 255;
-		src[index-1*width] = 255;
+        src[index+1*width] = 255;
+        src[index-1*width] = 255;
 
-		src[index+2*width] = 255;
-		src[index-2*width] = 255;
+        src[index+2*width] = 255;
+        src[index-2*width] = 255;
 
-		src[index+3*width] = 255;
-		src[index-3*width] = 255;
-		drawCircle(src, cluster[pos], width, height, (255*(cluster[pos].err/cluster[pos].balls)/2)%256 );
-		if(minError>cluster[pos].err / cluster[pos].balls) {
-			minError = cluster[pos].err / cluster[pos].balls;
-			bestBall = &cluster[pos];
-		}
-	}
-	if(bestBall != NULL) {
-		int index = bestBall->x + width*bestBall->y;
-		src[index-1-width] = 255;
-		src[index+1+width] = 255;
-		src[index+1-width] = 255;
-		src[index-1+width] = 255;
-		src[index] = 0;
-	}
+        src[index+3*width] = 255;
+        src[index-3*width] = 255;
+        drawCircle(src, cluster[pos], width, height, (255*(cluster[pos].err/cluster[pos].balls)/2)%256 );
+        if(minError>cluster[pos].err / cluster[pos].balls) {
+            minError = cluster[pos].err / cluster[pos].balls;
+            bestBall = &cluster[pos];
+        }
+    }
+    if(bestBall != NULL) {
+        int index = bestBall->x + width*bestBall->y;
+        src[index-1-width] = 255;
+        src[index+1+width] = 255;
+        src[index+1-width] = 255;
+        src[index-1+width] = 255;
+        src[index] = 0;
+    }
 }
 
 
@@ -177,160 +177,160 @@ void BallClusterHelp::visualizeCluster(unsigned char *src, int width, int height
 void BallClusterHelp::drawCircle(unsigned char *src, ballCluster &b, int width, int height, int Intens) {
 
 
-//	short radius = b.sizeSum / b.balls;
-	short radius = b.maxRadius;
+//  short radius = b.sizeSum / b.balls;
+    short radius = b.maxRadius;
 
-	short currX = 0;
-	short currY = 0;
+    short currX = 0;
+    short currY = 0;
 
-	currX = b.x + radius;
-	currY = b.y;
+    currX = b.x + radius;
+    currY = b.y;
 
-	//segment 1
-	while(currX >= b.x && currY >= b.y - radius){
+    //segment 1
+    while(currX >= b.x && currY >= b.y - radius){
 
-		double m = 2.0*radius*radius;
-		short indX = -1;
-		short indY = -1;
-		short cX = 0;
-		short cY = 0;
+        double m = 2.0*radius*radius;
+        short indX = -1;
+        short indY = -1;
+        short cX = 0;
+        short cY = 0;
 
-		for(short i = -1; i <= 0; i++){
-			for(short j = -1; j <= 0; j++){
+        for(short i = -1; i <= 0; i++){
+            for(short j = -1; j <= 0; j++){
 
-				if(i != 0 || j != 0){
-				
-					cX = currX + i;
-					cY = currY + j;
+                if(i != 0 || j != 0){
 
-					double f = fabs((cX - b.x)*(cX - b.x) + (cY - b.y)*(cY - b.y) - radius*radius*1.0);
-	
-					if(f < m){
-						m = f;
-						indX = cX;
-						indY = cY;
-					}
+                    cX = currX + i;
+                    cY = currY + j;
 
-				}
-			}
-		}
+                    double f = fabs((cX - b.x)*(cX - b.x) + (cY - b.y)*(cY - b.y) - radius*radius*1.0);
 
-		currX = indX;
-		currY = indY;
+                    if(f < m){
+                        m = f;
+                        indX = cX;
+                        indY = cY;
+                    }
 
-		if(currX < 0 || currX >= width || currY < 0 || currY >= height){
-			printf("Circles out of bounds!\n");
-		}
+                }
+            }
+        }
 
-		src[currX+currY*width] = Intens;
+        currX = indX;
+        currY = indY;
 
-	}
+        if(currX < 0 || currX >= width || currY < 0 || currY >= height){
+            printf("Circles out of bounds!\n");
+        }
 
-	//segment 2
-	while(currX >= b.x - radius && currY <= b.y){
+        src[currX+currY*width] = Intens;
 
-		double m = 2.0*radius*radius;
-		short indX = -1;
-		short indY = -1;
-		short cX = 0;
-		short cY = 0;
+    }
 
-		for(short i = -1; i <= 0; i++){
-			for(short j = 0; j <= 1; j++){
+    //segment 2
+    while(currX >= b.x - radius && currY <= b.y){
 
-				if(i != 0 || j != 0){
-				
-					cX = currX + i;
-					cY = currY + j;
+        double m = 2.0*radius*radius;
+        short indX = -1;
+        short indY = -1;
+        short cX = 0;
+        short cY = 0;
 
-					double f = fabs((cX - b.x)*(cX - b.x) + (cY - b.y)*(cY - b.y) - radius*radius*1.0);
-	
-					if(f < m){
-						m = f;
-						indX = cX;
-						indY = cY;
-					}
+        for(short i = -1; i <= 0; i++){
+            for(short j = 0; j <= 1; j++){
 
-				}
-			}
-		}
+                if(i != 0 || j != 0){
 
-		currX = indX;
-		currY = indY;
+                    cX = currX + i;
+                    cY = currY + j;
 
-		src[currX+currY*width]=Intens;
-	}
+                    double f = fabs((cX - b.x)*(cX - b.x) + (cY - b.y)*(cY - b.y) - radius*radius*1.0);
 
+                    if(f < m){
+                        m = f;
+                        indX = cX;
+                        indY = cY;
+                    }
 
+                }
+            }
+        }
 
-	while(currX <= b.x && currY <= b.y + radius){
+        currX = indX;
+        currY = indY;
 
-		double m = 2.0*radius*radius;
-		short indX = -1;
-		short indY = -1;
-		short cX = 0;
-		short cY = 0;
-
-		for(short i = 0; i <= 1; i++){
-			for(short j = 0; j <= 1; j++){
-
-				if(i != 0 || j != 0){
-				
-					cX = currX + i;
-					cY = currY + j;
-
-					double f = fabs((cX - b.x)*(cX - b.x) + (cY - b.y)*(cY - b.y) - radius*radius*1.0);
-	
-					if(f < m){
-						m = f;
-						indX = cX;
-						indY = cY;
-					}
-
-				}
-			}
-		}
-
-		currX = indX;
-		currY = indY;
-
-		src[currX+currY*width]=Intens;
-	}
+        src[currX+currY*width]=Intens;
+    }
 
 
 
-	while(currX <= b.x + radius && currY >= b.y){
+    while(currX <= b.x && currY <= b.y + radius){
 
-		double m = 2.0*radius*radius;
-		short indX = -1;
-		short indY = -1;
-		short cX = 0;
-		short cY = 0;
+        double m = 2.0*radius*radius;
+        short indX = -1;
+        short indY = -1;
+        short cX = 0;
+        short cY = 0;
 
-		for(short i = 0; i <= 1; i++){
-			for(short j = -1; j <= 0; j++){
+        for(short i = 0; i <= 1; i++){
+            for(short j = 0; j <= 1; j++){
 
-				if(i != 0 || j != 0){
-				
-					cX = currX + i;
-					cY = currY + j;
+                if(i != 0 || j != 0){
 
-					double f = fabs((cX - b.x)*(cX - b.x) + (cY - b.y)*(cY - b.y) - radius*radius*1.0);
-	
-					if(f < m){
-						m = f;
-						indX = cX;
-						indY = cY;
-					}
+                    cX = currX + i;
+                    cY = currY + j;
 
-				}
-			}
-		}
+                    double f = fabs((cX - b.x)*(cX - b.x) + (cY - b.y)*(cY - b.y) - radius*radius*1.0);
 
-		currX = indX;
-		currY = indY;
+                    if(f < m){
+                        m = f;
+                        indX = cX;
+                        indY = cY;
+                    }
 
-		src[currX+currY*width]=Intens;
-	}
+                }
+            }
+        }
+
+        currX = indX;
+        currY = indY;
+
+        src[currX+currY*width]=Intens;
+    }
+
+
+
+    while(currX <= b.x + radius && currY >= b.y){
+
+        double m = 2.0*radius*radius;
+        short indX = -1;
+        short indY = -1;
+        short cX = 0;
+        short cY = 0;
+
+        for(short i = 0; i <= 1; i++){
+            for(short j = -1; j <= 0; j++){
+
+                if(i != 0 || j != 0){
+
+                    cX = currX + i;
+                    cY = currY + j;
+
+                    double f = fabs((cX - b.x)*(cX - b.x) + (cY - b.y)*(cY - b.y) - radius*radius*1.0);
+
+                    if(f < m){
+                        m = f;
+                        indX = cX;
+                        indY = cY;
+                    }
+
+                }
+            }
+        }
+
+        currX = indX;
+        currY = indY;
+
+        src[currX+currY*width]=Intens;
+    }
 
 }

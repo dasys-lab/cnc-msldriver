@@ -35,51 +35,51 @@ using namespace supplementary;
 class ScanLineHelper{
 
 
-	public:
-		
-		ScanLineHelper();
-		ScanLineHelper(int imWidth, int imHeight);
-		~ScanLineHelper();
-	
-		short * getInnerLines();
-		short * getInnerLinesN();
-		short * getOuterLines();
-		short * getOuterLinesN();
-		short * getCircles();
-		short * getCircleOffsets();
-		short getNumberLines();
-		short getNumberCircles();
-		short getMaxPoints();
+    public:
+
+        ScanLineHelper();
+        ScanLineHelper(int imWidth, int imHeight);
+        ~ScanLineHelper();
+
+        short * getInnerLines();
+        short * getInnerLinesN();
+        short * getOuterLines();
+        short * getOuterLinesN();
+        short * getCircles();
+        short * getCircleOffsets();
+        short getNumberLines();
+        short getNumberCircles();
+        short getMaxPoints();
 
 
-	protected:
+    protected:
 
-		SystemConfig* sc;
-		
-		void init();
-		void DrawLine(short * line, short * nPoints, short ax, short ay, short ex, short ey);
-		void initCircles();
+        SystemConfig* sc;
+
+        void init();
+        void DrawLine(short * line, short * nPoints, short ax, short ay, short ex, short ey);
+        void initCircles();
 
         int ownId;
-		
-		short mx;
-		short my;
-		short iRadius;
-		short oRadius;
-		short frontScanlineDistance;
-		short nLines;
-		short maxPoints;
 
-		short * innerLines;
-		short * innerLinesN;
-		short * outerLines;
-		short * outerLinesN;
-		short * circles;
-		short * circleOffsets;
-		short numberOfCircles;
+        short mx;
+        short my;
+        short iRadius;
+        short oRadius;
+        short frontScanlineDistance;
+        short nLines;
+        short maxPoints;
 
-		int scWIDTH;
-		int scHEIGHT;
+        short * innerLines;
+        short * innerLinesN;
+        short * outerLines;
+        short * outerLinesN;
+        short * circles;
+        short * circleOffsets;
+        short numberOfCircles;
+
+        int scWIDTH;
+        int scHEIGHT;
 
 
 

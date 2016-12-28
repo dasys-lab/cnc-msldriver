@@ -32,7 +32,7 @@
 
 namespace openni
 {
-	class Device;
+    class Device;
 }
 
 namespace closest_point
@@ -40,9 +40,9 @@ namespace closest_point
 
 struct IntPoint3D
 {
-	int X;
-	int Y;
-	int Z;
+    int X;
+    int Y;
+    int Z;
 };
 
 struct ClosestPointInternal;
@@ -50,26 +50,26 @@ struct ClosestPointInternal;
 class MW_CP_API ClosestPoint
 {
 public:
-	class Listener
-	{
-	public:
-		virtual void readyForNextData(ClosestPoint*) = 0;
-	};
+    class Listener
+    {
+    public:
+        virtual void readyForNextData(ClosestPoint*) = 0;
+    };
 
-	ClosestPoint(const char* uri = NULL);
-	ClosestPoint(openni::Device* pDevice);
-	~ClosestPoint();
+    ClosestPoint(const char* uri = NULL);
+    ClosestPoint(openni::Device* pDevice);
+    ~ClosestPoint();
 
-	bool isValid() const;
+    bool isValid() const;
 
-	openni::Status setListener(Listener& listener);
-	void resetListener();
+    openni::Status setListener(Listener& listener);
+    void resetListener();
 
-	openni::Status getNextData(IntPoint3D& closestPoint, openni::VideoFrameRef& rawFrame);
+    openni::Status getNextData(IntPoint3D& closestPoint, openni::VideoFrameRef& rawFrame);
 private:
-	void initialize();
+    void initialize();
 
-	ClosestPointInternal* m_pInternal;
+    ClosestPointInternal* m_pInternal;
 };
 
 }

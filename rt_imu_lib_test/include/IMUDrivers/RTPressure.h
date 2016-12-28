@@ -22,7 +22,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef _RTPRESSURE_H
-#define	_RTPRESSURE_H
+#define _RTPRESSURE_H
 
 #include "RTIMUSettings.h"
 #include "RTIMULibDefs.h"

@@ -36,33 +36,33 @@ using namespace castor;
 
 class FilterTitanBraces
 {
-	public:
-		FilterTitanBraces(ScanCircleHelper helper);
-		~FilterTitanBraces();
-		
-		void process(unsigned char* src);
-		
-	protected:		
-		uint16_t width;
-		uint16_t height;
-		
-		uint16_t centerX;
-		uint16_t centerY;
-		
-		uint16_t * circles;
-		uint32_t * circlesOffset;
-		uint16_t maxPoints;
-		uint16_t nCircles;
-		
-		uint8_t CirclePointsThreshold;
-		uint8_t CirclePointsJump;
-		uint8_t MinBracesWidth;
-		uint8_t MaxBracesWidth;
-		uint8_t floorBrightness;
-		
-		std::vector<double> CirclePoints1;
-		std::vector<double> CirclePoints2;
-		std::vector<double> CirclePoints3;
+    public:
+        FilterTitanBraces(ScanCircleHelper helper);
+        ~FilterTitanBraces();
+
+        void process(unsigned char* src);
+
+    protected:
+        uint16_t width;
+        uint16_t height;
+
+        uint16_t centerX;
+        uint16_t centerY;
+
+        uint16_t * circles;
+        uint32_t * circlesOffset;
+        uint16_t maxPoints;
+        uint16_t nCircles;
+
+        uint8_t CirclePointsThreshold;
+        uint8_t CirclePointsJump;
+        uint8_t MinBracesWidth;
+        uint8_t MaxBracesWidth;
+        uint8_t floorBrightness;
+
+        std::vector<double> CirclePoints1;
+        std::vector<double> CirclePoints2;
+        std::vector<double> CirclePoints3;
 };
 
 

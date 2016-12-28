@@ -31,66 +31,66 @@
 
 class FilterLinePoints3D : private ScanLineHelper3D, private Distance3DHelper
 {
-	public:
-		FilterLinePoints3D();
-		~FilterLinePoints3D();
-		
-		void process(unsigned char *&src, unsigned char * const &mask);
-		void panno(unsigned char *&src, unsigned char * const &mask, ImageSize iSize, ImageSize oSize);
-		
-	protected:
-		double FieldLength;
-		double FieldWidth;
-		double GoalAreaWidth;
-		double GoalAreaLength;
-		double MiddleCircleRadius;
-		double GoalInnerAreaWidth;
-		double GoalInnerAreaLength;
-		double CornerCircleRadius;
-		double LineWidth;
-		double GoalWidth;
-		bool GoalInnerAreaExists;
-		bool CornerCircleExists;
-		
-		uint16_t width;
-		uint16_t height;
-		
-		uint16_t centerX;
-		uint16_t centerY;
-		
-		uint16_t * linesInner;
-		uint32_t * linesInnerOffset;
-		uint16_t * linesOuter;
-		uint32_t * linesOuterOffset;
-		uint16_t maxPoints;
-		uint16_t nLines;
-		
-		uint8_t LinePointsThreshold;
-		uint8_t FloorBrightness;
-		uint8_t LinePointsJump;
-		uint8_t MinInnerLineWidth;
-		uint8_t MinOuterLineWidth;
-		uint8_t MaxInnerLineWidth;
-		uint8_t MaxOuterLineWidth;
-		
-		// For panno
-		uint16_t iRadiusStart;
-		uint16_t iRadiusEnd;
-		uint16_t oRadiusStart;
-		uint16_t oRadiusEnd;
-		
-		double * holders;
-		
-		bool * angleValidity;
-		
-		std::vector<double> LinePoints3Dx;
-		std::vector<double> LinePoints3Dy;
-		std::vector<double> LinePoints3Dz;
-		
-		FILE *plot;
-		FILE *logFile;
-		std::string confPath;
-		std::string filePath;
+    public:
+        FilterLinePoints3D();
+        ~FilterLinePoints3D();
+
+        void process(unsigned char *&src, unsigned char * const &mask);
+        void panno(unsigned char *&src, unsigned char * const &mask, ImageSize iSize, ImageSize oSize);
+
+    protected:
+        double FieldLength;
+        double FieldWidth;
+        double GoalAreaWidth;
+        double GoalAreaLength;
+        double MiddleCircleRadius;
+        double GoalInnerAreaWidth;
+        double GoalInnerAreaLength;
+        double CornerCircleRadius;
+        double LineWidth;
+        double GoalWidth;
+        bool GoalInnerAreaExists;
+        bool CornerCircleExists;
+
+        uint16_t width;
+        uint16_t height;
+
+        uint16_t centerX;
+        uint16_t centerY;
+
+        uint16_t * linesInner;
+        uint32_t * linesInnerOffset;
+        uint16_t * linesOuter;
+        uint32_t * linesOuterOffset;
+        uint16_t maxPoints;
+        uint16_t nLines;
+
+        uint8_t LinePointsThreshold;
+        uint8_t FloorBrightness;
+        uint8_t LinePointsJump;
+        uint8_t MinInnerLineWidth;
+        uint8_t MinOuterLineWidth;
+        uint8_t MaxInnerLineWidth;
+        uint8_t MaxOuterLineWidth;
+
+        // For panno
+        uint16_t iRadiusStart;
+        uint16_t iRadiusEnd;
+        uint16_t oRadiusStart;
+        uint16_t oRadiusEnd;
+
+        double * holders;
+
+        bool * angleValidity;
+
+        std::vector<double> LinePoints3Dx;
+        std::vector<double> LinePoints3Dy;
+        std::vector<double> LinePoints3Dz;
+
+        FILE *plot;
+        FILE *logFile;
+        std::string confPath;
+        std::string filePath;
 };
 
 

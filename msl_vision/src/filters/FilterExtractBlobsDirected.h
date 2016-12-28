@@ -36,20 +36,20 @@
 class FilterExtractBlobsDirected  : public Filter {
 
 
-	public:
-		FilterExtractBlobsDirected(int width, int height);
-		~FilterExtractBlobsDirected();
-		
-		unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<ROI>& retROIs, unsigned char blobColor, std::vector<BlobBounds> & blobs, int countThreshold = 800);
+    public:
+        FilterExtractBlobsDirected(int width, int height);
+        ~FilterExtractBlobsDirected();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<ROI>& retROIs, unsigned char blobColor, std::vector<BlobBounds> & blobs, int countThreshold = 800);
 
-		void init();
-		void cleanup();
+    protected:
 
-		ROI * rois;
-		short * rep;
-		int * count;
+        void init();
+        void cleanup();
+
+        ROI * rois;
+        short * rep;
+        int * count;
 
 };
 

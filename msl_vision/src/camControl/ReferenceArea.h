@@ -34,48 +34,48 @@
 #include <map>
 #include "../driver/imagingsource.h"
 #include <pthread.h>
-#include <SystemConfig.h> 
+#include <SystemConfig.h>
 
 using namespace std;
 using namespace supplementary;
 
 class ReferenceArea{
- 
-	public:
-		ReferenceArea(int width, int height, string _datei, string _confName);
-		~ReferenceArea();
 
-		double createHistoBrightness(unsigned char *scr, int dimPixel, bool printHistogr=false);
-		//double createHistoBrightness(unsigned char *scr, int dimPixel, bool printHistogr=false, int uMin, int uMax, int vMin, int vMax);
-		double getArithmHistoBrightness(int dim){return brightness[dim];};
-	
-		void testArea(unsigned char *scr, double *rueck=NULL);
+    public:
+        ReferenceArea(int width, int height, string _datei, string _confName);
+        ~ReferenceArea();
+
+        double createHistoBrightness(unsigned char *scr, int dimPixel, bool printHistogr=false);
+        //double createHistoBrightness(unsigned char *scr, int dimPixel, bool printHistogr=false, int uMin, int uMax, int vMin, int vMax);
+        double getArithmHistoBrightness(int dim){return brightness[dim];};
+
+        void testArea(unsigned char *scr, double *rueck=NULL);
 
 
-	private:
-		void setNextPrioRefPixels(string file, string confName);
-		int width, height, imageSize;
-		map <int, int>nextPrioPixel;
-		int prioPixelSize;
-		map <int, int>pixelPrio;
-		int falseEdgePixel;
-		int histo[256];
-		double brightness[4];
+    private:
+        void setNextPrioRefPixels(string file, string confName);
+        int width, height, imageSize;
+        map <int, int>nextPrioPixel;
+        int prioPixelSize;
+        map <int, int>pixelPrio;
+        int falseEdgePixel;
+        int histo[256];
+        double brightness[4];
 
-		struct circle{
-			int prio;
-			int mx;
-			int my;
-			int r;
-		};
+        struct circle{
+            int prio;
+            int mx;
+            int my;
+            int r;
+        };
 
-		struct rect{
-			int prio;
-			int top;
-			int right;
-			int bottom;
-			int left;
-		};
+        struct rect{
+            int prio;
+            int top;
+            int right;
+            int bottom;
+            int left;
+        };
 };
 
 #endif

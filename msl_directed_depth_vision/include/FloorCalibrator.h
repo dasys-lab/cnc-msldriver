@@ -31,25 +31,25 @@ using namespace std;
 namespace msl_vision
 {
 
-	class FloorCalibrator
-	{
-		public:
-			FloorCalibrator();
-			virtual ~FloorCalibrator();
+    class FloorCalibrator
+    {
+        public:
+            FloorCalibrator();
+            virtual ~FloorCalibrator();
 
-			void calibrate(sensor_msgs::PointCloud2Ptr pcl);
-		private:
-			double min_planeratio;
-			double dist_threshold;
-			int min_inliers;
-			string floorPlaneFilename;
-			mrpt::math::CVectorFloat xs, ys, zs;
+            void calibrate(sensor_msgs::PointCloud2Ptr pcl);
+        private:
+            double min_planeratio;
+            double dist_threshold;
+            int min_inliers;
+            string floorPlaneFilename;
+            mrpt::math::CVectorFloat xs, ys, zs;
 
-			supplementary::SystemConfig *sc;
-			supplementary::Configuration *depthVision;
+            supplementary::SystemConfig *sc;
+            supplementary::Configuration *depthVision;
 
-			void saveFloorPlane(size_t size, mrpt::math::TPlane* plane);
-	};
+            void saveFloorPlane(size_t size, mrpt::math::TPlane* plane);
+    };
 
 } /* namespace msl_vision */
 

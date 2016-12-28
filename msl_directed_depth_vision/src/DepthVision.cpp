@@ -8,12 +8,12 @@
 #include "DepthVision.h"
 
 DepthVision::DepthVision() {
-	// TODO Auto-generated constructor stub
+    // TODO Auto-generated constructor stub
 
 }
 
 DepthVision::~DepthVision() {
-	// TODO Auto-generated destructor stub
+    // TODO Auto-generated destructor stub
 }
 
 void DepthVision::pointCloudCallback(sensor_msgs::PointCloud& pcl) {

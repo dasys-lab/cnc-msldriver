@@ -32,10 +32,10 @@
 
 
 FilterGrayToDarkSeg::FilterGrayToDarkSeg(int width, int height):Filter(OF_GRAY, width, height){
-	
-	init();
-	
-	
+
+    init();
+
+
 
 }
 
@@ -43,60 +43,60 @@ FilterGrayToDarkSeg::FilterGrayToDarkSeg(int width, int height):Filter(OF_GRAY, 
 
 FilterGrayToDarkSeg::~FilterGrayToDarkSeg(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned char * FilterGrayToDarkSeg::process(unsigned char * src, unsigned char * src_uv, unsigned int width, unsigned int height, ImageMaskHelper & maskHelper){
 
-	unsigned char * tgt = outputBuffer;
+    unsigned char * tgt = outputBuffer;
 
-	unsigned char * mask = maskHelper.getLookupTable();
+    unsigned char * mask = maskHelper.getLookupTable();
 
-	unsigned int mx = height/2;
-	unsigned int my = width/2;
+    unsigned int mx = height/2;
+    unsigned int my = width/2;
 
-	unsigned int frame = 25;
+    unsigned int frame = 25;
 
-	unsigned int sum = 0;	
+    unsigned int sum = 0;
 
-	for(unsigned int i = mx - frame; i < mx + frame; i++){
-		for(unsigned int j = my - frame; j < my + frame; j++){
-						
-			sum += src[i*width + j];
-		
-		}
-	}
-			
-	double threshold = ((double)sum)/((double)(4*frame*frame));
+    for(unsigned int i = mx - frame; i < mx + frame; i++){
+        for(unsigned int j = my - frame; j < my + frame; j++){
 
-	double addThreshold = threshold - 10.0;
-	if(addThreshold < 3.0)
-		addThreshold = 3.0;
-	if(addThreshold > 10.0)
-		addThreshold = 10.0;
+            sum += src[i*width + j];
 
-	//threshold += addThreshold;
+        }
+    }
 
-	printf("FilterGrayToSeg: threshold = %f\n", threshold);
+    double threshold = ((double)sum)/((double)(4*frame*frame));
 
-	unsigned char threshold_ind = (unsigned char) lrint(threshold);
-	
-	for(unsigned int i = 0; i < height*width; i++){
+    double addThreshold = threshold - 10.0;
+    if(addThreshold < 3.0)
+        addThreshold = 3.0;
+    if(addThreshold > 10.0)
+        addThreshold = 10.0;
+
+    //threshold += addThreshold;
+
+    printf("FilterGrayToSeg: threshold = %f\n", threshold);
+
+    unsigned char threshold_ind = (unsigned char) lrint(threshold);
+
+    for(unsigned int i = 0; i < height*width; i++){
 
 
-		if(*src < threshold_ind && /*mask > 0 &&*/ *src_uv < 138)
-			*tgt++ = COLOR_BLACK;
-		else
-			*tgt++ = COLOR_UDEF;
+        if(*src < threshold_ind && /*mask > 0 &&*/ *src_uv < 138)
+            *tgt++ = COLOR_BLACK;
+        else
+            *tgt++ = COLOR_UDEF;
 
-		src++;
-		src_uv++;
-		mask++;
-	}
+        src++;
+        src_uv++;
+        mask++;
+    }
 
-	return outputBuffer;
+    return outputBuffer;
 
 }
 

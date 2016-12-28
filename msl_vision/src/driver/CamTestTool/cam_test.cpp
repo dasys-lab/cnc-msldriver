@@ -56,22 +56,22 @@ int main ( int argc, char *argv[] )
     //Set Hue
     unsigned char ucHue = 180;
     camera.setHue(ucHue);
-	std::cout << "Hue: "<< (int)ucHue << std::endl;
+    std::cout << "Hue: "<< (int)ucHue << std::endl;
 
-	//Set Expo
-	unsigned short usExpo = 800;
-	camera.setExposure(usExpo);
-	std::cout << "Expo :"<<  usExpo << std::endl;
+    //Set Expo
+    unsigned short usExpo = 800;
+    camera.setExposure(usExpo);
+    std::cout << "Expo :"<<  usExpo << std::endl;
 
-	//Set Saturation
-	unsigned char ucSat = 127;
-	camera.setSaturation(ucSat);
-	std::cout << "Sat: "<< (int) ucSat << std::endl;
+    //Set Saturation
+    unsigned char ucSat = 127;
+    camera.setSaturation(ucSat);
+    std::cout << "Sat: "<< (int) ucSat << std::endl;
 
-	//Set Brightness
-	//unsigned short usBright = 100;
-	//camera.setBrightness(usBright);
-	//std::cout << "Bright: "<< usBright << std::endl;
+    //Set Brightness
+    //unsigned short usBright = 100;
+    //camera.setBrightness(usBright);
+    //std::cout << "Bright: "<< usBright << std::endl;
 
     //Set AutoWhiteBalance
     //std::cout << "AutoWhiteBalance: on" << std::endl;
@@ -91,7 +91,7 @@ int main ( int argc, char *argv[] )
     //init camera test
     cameratest::DelayTester delayTest;
 
-	char input = 0;
+    char input = 0;
 
     while (input != 'q')
     {
@@ -103,7 +103,7 @@ int main ( int argc, char *argv[] )
         }
         //cvShowImage("CameraWindow", &image);
           xvDisplay->displayFrameYUV((char*) frame.getImagePtr());
-	
+
           //Start Test
           delayTest.startDelayTest(frame);
 

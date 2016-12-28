@@ -46,72 +46,72 @@ using namespace supplementary;
 
 class ParticleFilterGoalie {
 
-	public:
-		ParticleFilterGoalie(int nParticles_);
-		~ParticleFilterGoalie();
+    public:
+        ParticleFilterGoalie(int nParticles_);
+        ~ParticleFilterGoalie();
 
-		void iterate(std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, RandomGaussHelper & gaussHelper, std::vector<Goal> yellowGoals, std::vector<Goal> blueGoals, std::vector<CornerPost> cornerPosts, bool sendOdometry = true);
-		void updateParticles(double deltaX, double deltaY, double deltaH);
-		Particle getMaxParticle();
+        void iterate(std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, RandomGaussHelper & gaussHelper, std::vector<Goal> yellowGoals, std::vector<Goal> blueGoals, std::vector<CornerPost> cornerPosts, bool sendOdometry = true);
+        void updateParticles(double deltaX, double deltaY, double deltaH);
+        Particle getMaxParticle();
 
-		int getNumberParticles();
-		Particle * getParticles();
+        int getNumberParticles();
+        Particle * getParticles();
 
-		WeightedPosition getEstimatedPosition();
+        WeightedPosition getEstimatedPosition();
 
-		static double calculateWeightForEstimatedPosition(Position pos, std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, unsigned char * linePointsInvalidity, int invCounter);
-		void writeCoi();
+        static double calculateWeightForEstimatedPosition(Position pos, std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, unsigned char * linePointsInvalidity, int invCounter);
+        void writeCoi();
 
-	protected:
+    protected:
 
-		SystemConfig* sc;
+        SystemConfig* sc;
 
-		msl_sensor_msgs::CorrectedOdometryInfo coi;
+        msl_sensor_msgs::CorrectedOdometryInfo coi;
 
-		int nParticles;
-		void initParticles();
-		void resample(RandomGaussHelper & gaussHelper);
-		void cleanup();
+        int nParticles;
+        void initParticles();
+        void resample(RandomGaussHelper & gaussHelper);
+        void cleanup();
 
-		Particle * particles;
-		Particle maxParticle;
+        Particle * particles;
+        Particle maxParticle;
 
-		RawOdometryHelper * rawOdometryHelper;
-		CompassValueHelper * compassValueHelper;
+        RawOdometryHelper * rawOdometryHelper;
+        CompassValueHelper * compassValueHelper;
 
-//		Anja::Socket * socket;
-//		std::string destAddress;
-//		std::string socketType;
-//		int destPort;
+//      Anja::Socket * socket;
+//      std::string destAddress;
+//      std::string socketType;
+//      int destPort;
 
-		Position rawUpdatedPosition;
-		unsigned short msgid;
+        Position rawUpdatedPosition;
+        unsigned short msgid;
 
-		bool isGoalie;
-		bool isGoalie2;
+        bool isGoalie;
+        bool isGoalie2;
 
-		double LocalizationSuccess;
-		double LinePointSigma;
-		bool UseRepParticles;
-		bool UseBlueGoal;
-		bool UseCornerPosts;
+        double LocalizationSuccess;
+        double LinePointSigma;
+        bool UseRepParticles;
+        bool UseBlueGoal;
+        bool UseCornerPosts;
 
-		int yellowGoalDirection;
+        int yellowGoalDirection;
 
-		unsigned long long lastIteration;
+        unsigned long long lastIteration;
 
-		Position positionBuffer[RAWODOBUFSIZE];
-		unsigned long long timestampBuffer[RAWODOBUFSIZE];
+        Position positionBuffer[RAWODOBUFSIZE];
+        unsigned long long timestampBuffer[RAWODOBUFSIZE];
 
-		int integrationIndex;
-		bool bufferInitialized;
+        int integrationIndex;
+        bool bufferInitialized;
 
-		MovingRobot mr;
-		MovingRobot mrOld;
+        MovingRobot mr;
+        MovingRobot mrOld;
 
-		//double calculateWeightForEstimatedPosition(Position pos, std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, unsigned char * linePointsInvalidity, int invCounter);
+        //double calculateWeightForEstimatedPosition(Position pos, std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, unsigned char * linePointsInvalidity, int invCounter);
 
-		int initCounter;
+        int initCounter;
 
 
 

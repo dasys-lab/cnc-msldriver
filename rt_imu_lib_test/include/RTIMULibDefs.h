@@ -25,7 +25,7 @@
 //  staslock@gmail.com (www.clickdrive.io)
 
 #ifndef _RTIMULIBDEFS_H
-#define	_RTIMULIBDEFS_H
+#define _RTIMULIBDEFS_H
 
 #include "RTMath.h"
 #include "IMUDrivers/RTIMUDefs.h"

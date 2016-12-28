@@ -42,32 +42,32 @@ using namespace supplementary;
 
 class BasisControl{
 
-	public: 
-		BasisControl(double min, double max, double minDiff, double maxDiff, double m, double b, double targetControlValue, double startManipulationVariable);
-		BasisControl(string file, string confName);
-		~BasisControl(){};
+    public:
+        BasisControl(double min, double max, double minDiff, double maxDiff, double m, double b, double targetControlValue, double startManipulationVariable);
+        BasisControl(string file, string confName);
+        ~BasisControl(){};
 
-		double getManipulateVariable(double measuredValue);
-		double testManipulateVariable(double measuredValue);
-		double getLManipulateVariable(){return MV;};
-		double isManupilateVariableAllowed(double measuredValue);
+        double getManipulateVariable(double measuredValue);
+        double testManipulateVariable(double measuredValue);
+        double getLManipulateVariable(){return MV;};
+        double isManupilateVariableAllowed(double measuredValue);
 
-		double getTargetControlValue(){return tCV;};
+        double getTargetControlValue(){return tCV;};
 
-		void setTargetControlValue(double _tCV){tCV=_tCV;};
-
-		
+        void setTargetControlValue(double _tCV){tCV=_tCV;};
 
 
-	protected:
-		void addtCV(double addVal, string paramName, int max, int min);
-		double protectManipulateVariable(double newMV);
-		double protectComputeVariable(double CV);
-		virtual double computeManipulateVariable(double measuredValue)=0;
 
-		double MV;
-		double minMV, maxMV, minDiffMV, maxDiffMV;
-		double tCV;
+
+    protected:
+        void addtCV(double addVal, string paramName, int max, int min);
+        double protectManipulateVariable(double newMV);
+        double protectComputeVariable(double CV);
+        virtual double computeManipulateVariable(double measuredValue)=0;
+
+        double MV;
+        double minMV, maxMV, minDiffMV, maxDiffMV;
+        double tCV;
 };
 
 #endif

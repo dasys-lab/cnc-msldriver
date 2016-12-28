@@ -39,41 +39,41 @@ SharedBallDirectedHelper *SharedBallDirectedHelper::instance = NULL;
 
 void SharedBallDirectedHelper::handleSharedBallInfo(const SharedBallInfo::ConstPtr& message) {
 
-	// TODO: Handle SharedBallInfo
+    // TODO: Handle SharedBallInfo
 
-	boost::mutex::scoped_lock(this->mutex);
+    boost::mutex::scoped_lock(this->mutex);
 
-	printf("Received SharedBall %f %f %f %d\n", message->point.x, message->point.y, message->confidence, message->evidence);
+    printf("Received SharedBall %f %f %f %d\n", message->point.x, message->point.y, message->confidence, message->evidence);
 
-	ball.x = message->point.x;
-	ball.y = message->point.y;
-	ball.confidence = message->confidence;
-	ball.evidence = message->evidence;
-	ball.timestamp = supplementary::DateTime::getUtcNowC();
+    ball.x = message->point.x;
+    ball.y = message->point.y;
+    ball.confidence = message->confidence;
+    ball.evidence = message->evidence;
+    ball.timestamp = supplementary::DateTime::getUtcNowC();
 
 }
 
 SharedBallDirectedHelper::SharedBallDirectedHelper() : mutex() {
 
-	initialized = false;
+    initialized = false;
 
-	sub = SpicaHelper::visionNode->subscribe<SharedBallInfo, SharedBallDirectedHelper>("SharedBallInfo,", 1, &SharedBallDirectedHelper::handleSharedBallInfo, (this), ros::TransportHints().udp());
-	init();
+    sub = SpicaHelper::visionNode->subscribe<SharedBallInfo, SharedBallDirectedHelper>("SharedBallInfo,", 1, &SharedBallDirectedHelper::handleSharedBallInfo, (this), ros::TransportHints().udp());
+    init();
 }
 
 
 SharedBallDirectedHelper::~SharedBallDirectedHelper(){
 
-	cleanup();
+    cleanup();
 
 }
 
 
 SharedBallDirectedHelper *SharedBallDirectedHelper::getInstance() {
-	if (instance == NULL) {
-		instance = new SharedBallDirectedHelper();
-	}
-	return instance;
+    if (instance == NULL) {
+        instance = new SharedBallDirectedHelper();
+    }
+    return instance;
 }
 
 
@@ -90,7 +90,7 @@ void SharedBallDirectedHelper::cleanup(){
 
 SharedBall SharedBallDirectedHelper::getBall(){
 
-	boost::mutex::scoped_lock(this->mutex);
-	return ball;
+    boost::mutex::scoped_lock(this->mutex);
+    return ball;
 
 }

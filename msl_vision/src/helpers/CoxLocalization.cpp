@@ -255,17 +255,17 @@ namespace Cox
 
   //  for(int i =0; i<gradient.size(); i++) { std::cout<<"NewLoc gradient"<<i<<": "<<gradient[i]<<std::endl; middle += gradient[i]; }
     //std::cout<<"NewLoc gradmiddle: "<<middle/gradient.size()<<std::endl;
-//	if (middle !=0 )
-//	{
-	    pose.x = cur_pose[0];
-	    pose.y = cur_pose[1];
-	    pose.phi = cur_pose[2];
-//	}
-//	else
-	{
-//		std::cout<<"NewLoc globalloc"<<std::endl;
-//		global_localization(pose, rel_scan);
-	}
+//  if (middle !=0 )
+//  {
+        pose.x = cur_pose[0];
+        pose.y = cur_pose[1];
+        pose.phi = cur_pose[2];
+//  }
+//  else
+    {
+//      std::cout<<"NewLoc globalloc"<<std::endl;
+//      global_localization(pose, rel_scan);
+    }
 
 
   }
@@ -342,14 +342,14 @@ namespace Cox
         std::cout <<"(" << fabsf(gradient[i + 3]) <<"<" << __xy_2nd_threshold << ")" << std::endl;
       }
       else {
-	// Schrittweitenanpassung
+    // Schrittweitenanpassung
         if (gradient[i] * former_gradient[i] > 0) stepsize[i] *= 1.2f;
         else if (gradient[i] * former_gradient[i] < 0) stepsize[i] *= 0.5f;
 
         former_gradient[i] = gradient[i];
 
-//	std::cout<<"NewLoc Stepsize "<<stepsize[i]<<std::endl;
-	// Anpassung der Parameter
+//  std::cout<<"NewLoc Stepsize "<<stepsize[i]<<std::endl;
+    // Anpassung der Parameter
         if (gradient[i] > 0) pose[i] += stepsize[i];
         else if (gradient[i] < 0) pose[i] -= stepsize[i];
       }

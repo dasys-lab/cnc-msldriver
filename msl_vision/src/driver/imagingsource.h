@@ -80,7 +80,7 @@ namespace camera
             void printCameraModell();
 
             void opAutoWhiteBalance();
-		void setManualSettingModesGoalie();
+        void setManualSettingModesGoalie();
         void setManualSettingModes();
     void disableAutoWhiteBalance();
             struct white_balance_t {
@@ -223,7 +223,7 @@ namespace camera
                 dc1394error_t err;
 
                 err = dc1394_feature_set_value(this->dc_camera, feature, value);
-		std::cout << "Feature "<<feature<<"\t"<<value<<std::endl;
+        std::cout << "Feature "<<feature<<"\t"<<value<<std::endl;
                 DC1394_ERR_THROW(err, "unable to set feature value");
             }
 

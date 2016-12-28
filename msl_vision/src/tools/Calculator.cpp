@@ -41,133 +41,133 @@ using namespace std;
 int main(int argc, char * argv[]){
 
 
-	DistCalculator DC;
+    DistCalculator DC;
 
-	SystemConfig* sc = SystemConfig::getInstance();
-	std::string confPath = sc->getConfigPath();
+    SystemConfig* sc = SystemConfig::getInstance();
+    std::string confPath = sc->getConfigPath();
 
-	Configuration *vision = (*sc)["Vision"];
-	if(vision==nullptr) {
-		std::cout << "Error ... check source" << std::endl;
-		return 0;
-	}
+    Configuration *vision = (*sc)["Vision"];
+    if(vision==nullptr) {
+        std::cout << "Error ... check source" << std::endl;
+        return 0;
+    }
 
-	std::string filePath = confPath + sc->getHostname() + "/DistanceLookup.dat";
-	FILE * fdtest = fopen(filePath.c_str(), "r");
-	if( fdtest != NULL ) {
-		std::cout << "Not Generating new File: File already exists: " << filePath << std::endl;
-		return 0;
-	}
+    std::string filePath = confPath + sc->getHostname() + "/DistanceLookup.dat";
+    FILE * fdtest = fopen(filePath.c_str(), "r");
+    if( fdtest != NULL ) {
+        std::cout << "Not Generating new File: File already exists: " << filePath << std::endl;
+        return 0;
+    }
 
-	FILE * fd = fopen(filePath.c_str(), "w");
-	if(fd == NULL) {
-		std::cout << "Error creating " << filePath << std::endl;
-		std::cout << "Cannot create File" << std::endl;
-		return 0;
-	}
+    FILE * fd = fopen(filePath.c_str(), "w");
+    if(fd == NULL) {
+        std::cout << "Error creating " << filePath << std::endl;
+        std::cout << "Cannot create File" << std::endl;
+        return 0;
+    }
 
-	int MX;// = atoi((vision->Values["CameraMX"]).c_str());
-	int MY;// = atoi((vision->Values["CameraMY"]).c_str());
+    int MX;// = atoi((vision->Values["CameraMX"]).c_str());
+    int MY;// = atoi((vision->Values["CameraMY"]).c_str());
 
-	int CameraZ = vision->get<int>("Vision", "CameraZ", NULL);
-	double g_m = vision->get<double>("Vision", "DistanceCalibM", NULL);
-	double g_c = vision->get<double>("Vision", "DistanceCalibC", NULL);
+    int CameraZ = vision->get<int>("Vision", "CameraZ", NULL);
+    double g_m = vision->get<double>("Vision", "DistanceCalibM", NULL);
+    double g_c = vision->get<double>("Vision", "DistanceCalibC", NULL);
 
-	int SRadius = vision->get<double>("Vision", "CameraRadius", NULL);
+    int SRadius = vision->get<double>("Vision", "CameraRadius", NULL);
 
-	int dcHEIGHT = vision->get<int>("Vision", "ImageArea", NULL);
-	int dcWIDTH = vision->get<int>("Vision", "ImageArea", NULL);
+    int dcHEIGHT = vision->get<int>("Vision", "ImageArea", NULL);
+    int dcWIDTH = vision->get<int>("Vision", "ImageArea", NULL);
 
-	DC.CD = vision->tryGet<int>(102.0, "Vision", "CD", NULL);
+    DC.CD = vision->tryGet<int>(102.0, "Vision", "CD", NULL);
 
-	MX = dcHEIGHT/2;
-	MY = dcWIDTH/2;
+    MX = dcHEIGHT/2;
+    MY = dcWIDTH/2;
 
-	double LookupTable[dcHEIGHT][dcWIDTH];
-	int LookupTableInt[dcHEIGHT][dcWIDTH][2];
+    double LookupTable[dcHEIGHT][dcWIDTH];
+    int LookupTableInt[dcHEIGHT][dcWIDTH][2];
 
-	int X, Y;
+    int X, Y;
 
-	double D;
+    double D;
 
-	std::cout << "CameraMX: " << MX << std::endl;
-	std::cout << "CameraMY: " << MY << std::endl;
-	std::cout << "DistanceCalibM: " << g_m << std::endl;
-	std::cout << "DistanceCalibC: " << g_c << std::endl;
-	std::cout << "CameraZ: " << CameraZ << std::endl;
+    std::cout << "CameraMX: " << MX << std::endl;
+    std::cout << "CameraMY: " << MY << std::endl;
+    std::cout << "DistanceCalibM: " << g_m << std::endl;
+    std::cout << "DistanceCalibC: " << g_c << std::endl;
+    std::cout << "CameraZ: " << CameraZ << std::endl;
 
-	DC.setHeightOfCam(CameraZ);
+    DC.setHeightOfCam(CameraZ);
 
-	std::cout << "Building DistanceLookup.dat ..." << std::flush;
+    std::cout << "Building DistanceLookup.dat ..." << std::flush;
 
-	for(int i = 0; i < dcHEIGHT; i++){
-		for(int j = 0; j < dcWIDTH; j++){
+    for(int i = 0; i < dcHEIGHT; i++){
+        for(int j = 0; j < dcWIDTH; j++){
 
-			X = i - MX;
-			Y = j - MY;
+            X = i - MX;
+            Y = j - MY;
 
-			D = sqrt((double)(X*X + Y*Y));
-			if(D <= SRadius - 1){
-
-
-				double ux = D*1.0/SRadius*R;
-				double uy = DC.CD;
-
-				double SX;
-				double SY;
-
-				double dist = DC.calcDistance(ux,uy, &SX, &SY);
-
-				double newDist = dist*g_m + g_c;
+            D = sqrt((double)(X*X + Y*Y));
+            if(D <= SRadius - 1){
 
 
-				if(dist > 0.0){
+                double ux = D*1.0/SRadius*R;
+                double uy = DC.CD;
 
-					
-					if(newDist > 0.0 && newDist < 150000.0){
-						LookupTable[i][j] = newDist; //newDist;
-						LookupTableInt[i][j][0] = (int) rint(newDist);
-					}
-					else{
-						LookupTable[i][j] = newDist;
-						LookupTableInt[i][j][0] = -1;				
-					}	
-				}
-				else{
-					LookupTable[i][j] = newDist;
-					LookupTableInt[i][j][0] = -1;
-				}
-					
+                double SX;
+                double SY;
 
-			}
-			else{
-				LookupTable[i][j] = 0.0;
-				LookupTableInt[i][j][0] = -1;
-			}
+                double dist = DC.calcDistance(ux,uy, &SX, &SY);
 
-			LookupTableInt[i][j][1] = (int) floor((-atan2(Y,X) + M_PI)*NSECTORS/(2.0*M_PI));
-			if(LookupTableInt[i][j][1] >= NSECTORS)
-				LookupTableInt[i][j][1] = NSECTORS - 1;
-		}
-		std::cout << "." << std::flush;
-		
-	}
+                double newDist = dist*g_m + g_c;
 
 
-	fwrite(&(LookupTable[0][0]), sizeof(double), dcWIDTH*dcHEIGHT, fd);
-	fwrite(&(LookupTableInt[0][0][0]), sizeof(int), dcWIDTH*dcHEIGHT*2, fd);
-	fclose(fd);
-	std::cout << std::endl << filePath << " was built" << std::endl;
-	
-	/*ofstream ofs("DistanceLookUp.txt");
-	for(int i=0; i<dcWIDTH; i++) {
-		for(int j=0; j<dcHEIGHT; j++) {
-			ofs << LookupTable[i][j] << " ";
-		}
-		ofs << endl;
-	}*/
+                if(dist > 0.0){
 
-	return 0;
+
+                    if(newDist > 0.0 && newDist < 150000.0){
+                        LookupTable[i][j] = newDist; //newDist;
+                        LookupTableInt[i][j][0] = (int) rint(newDist);
+                    }
+                    else{
+                        LookupTable[i][j] = newDist;
+                        LookupTableInt[i][j][0] = -1;
+                    }
+                }
+                else{
+                    LookupTable[i][j] = newDist;
+                    LookupTableInt[i][j][0] = -1;
+                }
+
+
+            }
+            else{
+                LookupTable[i][j] = 0.0;
+                LookupTableInt[i][j][0] = -1;
+            }
+
+            LookupTableInt[i][j][1] = (int) floor((-atan2(Y,X) + M_PI)*NSECTORS/(2.0*M_PI));
+            if(LookupTableInt[i][j][1] >= NSECTORS)
+                LookupTableInt[i][j][1] = NSECTORS - 1;
+        }
+        std::cout << "." << std::flush;
+
+    }
+
+
+    fwrite(&(LookupTable[0][0]), sizeof(double), dcWIDTH*dcHEIGHT, fd);
+    fwrite(&(LookupTableInt[0][0][0]), sizeof(int), dcWIDTH*dcHEIGHT*2, fd);
+    fclose(fd);
+    std::cout << std::endl << filePath << " was built" << std::endl;
+
+    /*ofstream ofs("DistanceLookUp.txt");
+    for(int i=0; i<dcWIDTH; i++) {
+        for(int j=0; j<dcHEIGHT; j++) {
+            ofs << LookupTable[i][j] << " ";
+        }
+        ofs << endl;
+    }*/
+
+    return 0;
 }
 
 

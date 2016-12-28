@@ -39,13 +39,13 @@ namespace camera
         }
 
     for(unsigned int i=0; i<list->num; i++) {
-		this->dc_camera = dc1394_camera_new(this->dc_device, list->ids[i].guid);
-		if(strstr(vendor, this->dc_camera->vendor)!=NULL) {
-			break;
-		} else {
-			dc1394_camera_free(this->dc_camera);
-		}
-	}
+        this->dc_camera = dc1394_camera_new(this->dc_device, list->ids[i].guid);
+        if(strstr(vendor, this->dc_camera->vendor)!=NULL) {
+            break;
+        } else {
+            dc1394_camera_free(this->dc_camera);
+        }
+    }
 
         // initialize new camera structure
         //this->dc_camera = dc1394_camera_new(this->dc_device, list->ids[camInd].guid);
@@ -108,10 +108,10 @@ namespace camera
                        DC1394_FEATURE_MODE_ONE_PUSH_AUTO);
     }
 
-	void Sony::disableAutoWhiteBalance()
+    void Sony::disableAutoWhiteBalance()
     {
         setFeatureMode(DC1394_FEATURE_WHITE_BALANCE,
-                       DC1394_FEATURE_MODE_MANUAL); 
+                       DC1394_FEATURE_MODE_MANUAL);
     }
     void Sony::setWhiteBalance(const white_balance_t wb)
     {
@@ -162,7 +162,7 @@ namespace camera
 
     void Sony::setSaturation(unsigned char value)
     {
-	enableFeature(DC1394_FEATURE_SATURATION, true);
+    enableFeature(DC1394_FEATURE_SATURATION, true);
         setFeatureValue(DC1394_FEATURE_SATURATION, value);
     }
 
@@ -316,12 +316,12 @@ namespace camera
 //by me
     void Sony::setFramerate(unsigned short value)
     {
-	// not possible with FORMAT7 ... have to be done with packet size
+    // not possible with FORMAT7 ... have to be done with packet size
         //setFeatureValue(DC1394_FEATURE_FRAME_RATE, (dc1394framerate_t)value);
-	dc1394error_t err;
-	err = dc1394_video_set_framerate(this->dc_camera,(dc1394framerate_t)value);
+    dc1394error_t err;
+    err = dc1394_video_set_framerate(this->dc_camera,(dc1394framerate_t)value);
 
-	DC1394_ERR_THROW(err, "unable to set framerate");
+    DC1394_ERR_THROW(err, "unable to set framerate");
 
     }
 
@@ -336,7 +336,7 @@ namespace camera
         dc1394error_t err;
 
         // reset camera (in case it is being busy)
-	//TODO: DOMINIK reset does not work
+    //TODO: DOMINIK reset does not work
         err = dc1394_camera_reset(this->dc_camera);
         DC1394_ERR_OUT(err, "camera reset failed");
 
@@ -368,10 +368,10 @@ namespace camera
 
         dc1394_video_set_mode(this->dc_camera, this->video_mode); // currently supported: DC1394_VIDEO_MODE_FORMAT7_0
 
-	//get supported framrates
-	//dc1394error_t err;
-	dc1394framerates_t framerates;
-	err = dc1394_video_get_supported_framerates( this->dc_camera, DC1394_VIDEO_MODE_640x480_YUV422, &framerates);
+    //get supported framrates
+    //dc1394error_t err;
+    dc1394framerates_t framerates;
+    err = dc1394_video_get_supported_framerates( this->dc_camera, DC1394_VIDEO_MODE_640x480_YUV422, &framerates);
         std::cout << "Supported framerate modes:" << std::endl;
         for (unsigned int i = 0; i < framerates.num; i++)
         {
@@ -381,12 +381,12 @@ namespace camera
                 supported = true;
             }*/
         }
-	
-	dc1394video_mode_t mode;
-	//video modes
-	err = dc1394_video_get_mode(this->dc_camera, &mode);
+
+    dc1394video_mode_t mode;
+    //video modes
+    err = dc1394_video_get_mode(this->dc_camera, &mode);
         std::cout << "video mode:"<< mode << std::endl;
-    
+
     }
 
     void Sony::startCaptureInternal()

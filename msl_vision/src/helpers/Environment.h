@@ -30,29 +30,29 @@ using namespace supplementary;
 
 class Environment{
 
-	public:
+    public:
 
 
-		static Environment * getInstance();
-		//std::string logFileName;
+        static Environment * getInstance();
+        //std::string logFileName;
 
-		void setLogFileName(std::string filename);
-		void setLoggingMode(bool mode);
+        void setLogFileName(std::string filename);
+        void setLoggingMode(bool mode);
 
-		std::string getLogFileName();
-		bool getLoggingMode();
+        std::string getLogFileName();
+        bool getLoggingMode();
 
 
-	private:
+    private:
 
-		SystemConfig* sc;
+        SystemConfig* sc;
 
-		std::string logFileName;
-		bool loggingMode;
+        std::string logFileName;
+        bool loggingMode;
 
-		static Environment * instance;
-		Environment();
-		~Environment();
+        static Environment * instance;
+        Environment();
+        ~Environment();
 
 
 

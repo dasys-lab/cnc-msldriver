@@ -36,29 +36,29 @@
 class Replayer{
 
 
-	public:
+    public:
 
-		~Replayer();
+        ~Replayer();
 
-		unsigned long long replay(int currImage);
+        unsigned long long replay(int currImage);
 
-		static Replayer * getInstance();
+        static Replayer * getInstance();
 
 
-	protected:
+    protected:
 
-		Replayer();
+        Replayer();
 
-		static Replayer * instance_;
+        static Replayer * instance_;
 
-		void init();
-		void cleanup();
+        void init();
+        void cleanup();
 
-		unsigned long long lastImageTime;
+        unsigned long long lastImageTime;
 
-		FILE * logfile;
+        FILE * logfile;
 
-		//boost::mutex mutex;
+        //boost::mutex mutex;
 };
 
 

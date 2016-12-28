@@ -36,53 +36,53 @@ using namespace std;
 namespace msl_vision
 {
 
-	class DirectedDepthVisionNodelet : public nodelet::Nodelet
-	{
-	public:
-		DirectedDepthVisionNodelet();
-		virtual ~DirectedDepthVisionNodelet();
-		virtual void onInit();
+    class DirectedDepthVisionNodelet : public nodelet::Nodelet
+    {
+    public:
+        DirectedDepthVisionNodelet();
+        virtual ~DirectedDepthVisionNodelet();
+        virtual void onInit();
 
-	private:
-		ros::NodeHandle nh;
-		ros::Subscriber pclSub;
+    private:
+        ros::NodeHandle nh;
+        ros::Subscriber pclSub;
 
-		pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_voxel;
-		pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_in;
-		pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster;
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_voxel;
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_in;
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster;
 
-		pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_ground; // only for visualize the plane
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_ground; // only for visualize the plane
 
-		pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_temp;
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_temp;
 
-		supplementary::SystemConfig* sc;
-		supplementary::Configuration* depthVision;
+        supplementary::SystemConfig* sc;
+        supplementary::Configuration* depthVision;
 
-		pcl::visualization::CloudViewer *viewer;
-		pcl_filters::FilterVoxelGrid *vg;
-		pcl::console::TicToc tt;
+        pcl::visualization::CloudViewer *viewer;
+        pcl_filters::FilterVoxelGrid *vg;
+        pcl::console::TicToc tt;
 
 
-		bool calibrateFloor = false;
-		bool debugDisplay = false;
-		string floorPlaneFilename;
+        bool calibrateFloor = false;
+        bool debugDisplay = false;
+        string floorPlaneFilename;
 
-		double voxelSize;
-		double maxFloorDist;
-		double a=0, b=0, c=0, d=0;
+        double voxelSize;
+        double maxFloorDist;
+        double a=0, b=0, c=0, d=0;
 
-		double height = 480;
-		double width = 640;
+        double height = 480;
+        double width = 640;
 
-		FloorCalibrator floorCalib;
-		ClusterTracker clusterTracker;
+        FloorCalibrator floorCalib;
+        ClusterTracker clusterTracker;
 
-		void PointCloudCallback(sensor_msgs::PointCloud2Ptr msg);
-		bool loadPlane();
-		void projectPixelOnCenter(pcl::PointCloud<pcl::PointXYZRGB>::Ptr pcl);
-		static bool customRegionGrowing(const pcl::PointXYZRGB& point_a, const pcl::PointXYZRGB& point_b, float squared_distance);
+        void PointCloudCallback(sensor_msgs::PointCloud2Ptr msg);
+        bool loadPlane();
+        void projectPixelOnCenter(pcl::PointCloud<pcl::PointXYZRGB>::Ptr pcl);
+        static bool customRegionGrowing(const pcl::PointXYZRGB& point_a, const pcl::PointXYZRGB& point_b, float squared_distance);
 
-	};
+    };
 
 } /* namespace msl_vision */
 

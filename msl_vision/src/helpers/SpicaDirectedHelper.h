@@ -29,10 +29,10 @@
 using namespace msl_sensor_msgs;
 
 class SpicaDirectedHelper {
-	public:
-		SpicaDirectedHelper();
-		static void initialize();
-		static ros::NodeHandle* visionDirectedNode;
+    public:
+        SpicaDirectedHelper();
+        static void initialize();
+        static ros::NodeHandle* visionDirectedNode;
 };
 
 #endif

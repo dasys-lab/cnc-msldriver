@@ -218,7 +218,7 @@ MainWindow::MainWindow(QWidget *parent) :
         } else {
             robot->setGain(vision->get<int>("Vision", "Camera1394Settings", "Gain", NULL), false);
         }
-	SystemConfig::resetHostname();
+    SystemConfig::resetHostname();
     }
 
     connect(ui->ySlider, SIGNAL(valueChanged(int)), ui->ySpinBox, SLOT(setValue(int)));

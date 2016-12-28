@@ -29,16 +29,16 @@
 
 FilterBox::FilterBox(int width, int height):Filter(OF_ZERO, width, height){
 
-	boxImage = (unsigned short *) malloc(width*height*sizeof(unsigned short));
-	bzero((unsigned char *) boxImage, width*height*sizeof(unsigned short));
+    boxImage = (unsigned short *) malloc(width*height*sizeof(unsigned short));
+    bzero((unsigned char *) boxImage, width*height*sizeof(unsigned short));
 
-	boxImageChar = (unsigned char *) malloc(width*height);
-	bzero((unsigned char *) boxImageChar, width*height);
+    boxImageChar = (unsigned char *) malloc(width*height);
+    bzero((unsigned char *) boxImageChar, width*height);
 
-	imWidth = width;
-	imHeight = height;
+    imWidth = width;
+    imHeight = height;
 
-	init();
+    init();
 
 }
 
@@ -46,59 +46,59 @@ FilterBox::FilterBox(int width, int height):Filter(OF_ZERO, width, height){
 
 FilterBox::~FilterBox(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned short * FilterBox::process(unsigned char * src, int width, int height){
 
 
-	unsigned short * tgt = boxImage;
-	bzero((unsigned char *) boxImage, width*height*sizeof(unsigned short));
+    unsigned short * tgt = boxImage;
+    bzero((unsigned char *) boxImage, width*height*sizeof(unsigned short));
 
-	int counterPos = 0;
-	int counterNeg = 0;
+    int counterPos = 0;
+    int counterNeg = 0;
 
-	for(int i = 1; i < height - 1; i++){
+    for(int i = 1; i < height - 1; i++){
 
-		tgt =  boxImage + i*width + 1;
+        tgt =  boxImage + i*width + 1;
 
-		for(int j = 1; j < width-1; j++){
+        for(int j = 1; j < width-1; j++){
 
-			if(src[i*width + j] >= 128){
-	
-				unsigned char * curr = src + i*width + j - 1;
-				unsigned char * above = curr - width;
-				unsigned char * below = curr + width;
-	
-				*tgt += *curr++;
-				*tgt += *curr++;
-				*tgt += *curr;
-	
-				*tgt += *above++;
-				*tgt += *above++;
-				*tgt += *above;
-	
-				*tgt += *below++;
-				*tgt += *below++;
-				*tgt += *below;
-	
-				*tgt++ /= 9;
-				//counterPos++;
-			}
-			else {
-				*tgt++ = src[i*width + j];
-				//counterNeg++;
-			}
+            if(src[i*width + j] >= 128){
 
-		}
-	}
+                unsigned char * curr = src + i*width + j - 1;
+                unsigned char * above = curr - width;
+                unsigned char * below = curr + width;
 
-	printf("counterPos = %d\n", counterPos);
-	printf("counterNeg = %d\n", counterNeg);
+                *tgt += *curr++;
+                *tgt += *curr++;
+                *tgt += *curr;
 
-	return boxImage;
+                *tgt += *above++;
+                *tgt += *above++;
+                *tgt += *above;
+
+                *tgt += *below++;
+                *tgt += *below++;
+                *tgt += *below;
+
+                *tgt++ /= 9;
+                //counterPos++;
+            }
+            else {
+                *tgt++ = src[i*width + j];
+                //counterNeg++;
+            }
+
+        }
+    }
+
+    printf("counterPos = %d\n", counterPos);
+    printf("counterNeg = %d\n", counterNeg);
+
+    return boxImage;
 
 
 }
@@ -113,33 +113,33 @@ void FilterBox::init(){
 
 void FilterBox::cleanup(){
 
-	free(boxImage);
-	free(boxImageChar);
+    free(boxImage);
+    free(boxImageChar);
 }
 
 
 unsigned short * FilterBox::getResult(){
 
-	return boxImage;
+    return boxImage;
 }
 
 unsigned char * FilterBox::getResultChar(){
 
-	unsigned char * tgt = boxImageChar;
-	unsigned short * src = boxImage;
+    unsigned char * tgt = boxImageChar;
+    unsigned short * src = boxImage;
 
-	for(int i = 0; i < imWidth*imHeight; i++){
-		if(*src >= 0)
-			*tgt++ = (unsigned char) *src++;
-		else{
-			*tgt++ = 0;
-			src++;
-		}
+    for(int i = 0; i < imWidth*imHeight; i++){
+        if(*src >= 0)
+            *tgt++ = (unsigned char) *src++;
+        else{
+            *tgt++ = 0;
+            src++;
+        }
 
-	}
+    }
 
 
 
-	return boxImageChar;
+    return boxImageChar;
 }
 

@@ -37,22 +37,22 @@ using namespace supplementary;
 class FilterDrawScanLines  : public Filter {
 
 
-	public:
-		FilterDrawScanLines(int width, int height);
-		~FilterDrawScanLines();
-		
-		unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, ScanLineHelper & helper, bool gray);
-		unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, ScanLineHelperDirected & helper, bool gray);
+    public:
+        FilterDrawScanLines(int width, int height);
+        ~FilterDrawScanLines();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, ScanLineHelper & helper, bool gray);
+        unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, ScanLineHelperDirected & helper, bool gray);
 
-		SystemConfig* sc;
+    protected:
 
-		void init();
-		void cleanup();
+        SystemConfig* sc;
 
-		short negRanges[3][2];
-		std::vector<Holder> addHolders;
+        void init();
+        void cleanup();
+
+        short negRanges[3][2];
+        std::vector<Holder> addHolders;
 
 
 };

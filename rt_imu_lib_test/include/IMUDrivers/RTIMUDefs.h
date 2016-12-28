@@ -26,7 +26,7 @@
 
 
 #ifndef _RTIMUDEFS_H
-#define	_RTIMUDEFS_H
+#define _RTIMUDEFS_H
 
 //  IMU type codes
 //

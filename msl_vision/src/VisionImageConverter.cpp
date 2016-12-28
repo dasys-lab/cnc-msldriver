@@ -44,122 +44,122 @@
 
 
 struct IppiSize {
-	int height;
-	int width;
+    int height;
+    int width;
 };
 
 
 int main(int argc,char *argv[]){
 
 
-	bool display_frames = true;
-	bool directedCam = false;
-	XVDisplay * xvDisplay = NULL;
+    bool display_frames = true;
+    bool directedCam = false;
+    XVDisplay * xvDisplay = NULL;
 
-	if(argc > 1){
+    if(argc > 1){
 
-		for(int i = 1; i < argc; i++){
-			if(std::string(argv[i]) == "--false")
-				display_frames = false;
-			if(std::string(argv[i]) == "--directedCam")
-				directedCam = true;
+        for(int i = 1; i < argc; i++){
+            if(std::string(argv[i]) == "--false")
+                display_frames = false;
+            if(std::string(argv[i]) == "--directedCam")
+                directedCam = true;
 
-		}
+        }
 
-	}
-
-
-
-	if(display_frames){
-		xvDisplay = new XVDisplay(640, 480, XV_UYVY);
-	}
+    }
 
 
 
-	IppiSize imagesize_;
-	imagesize_.width = 640; //camera.getDeviceWidth();
-	imagesize_.height = 480; //camera.getDeviceHeight();
-
-
-	unsigned char * currImage = NULL;
-
-	//ScanLineHelper scanHelper(238, 349, 60, 254, 180);
-
-	FilterYUVToRGB filterYUVToRGB(imagesize_.width, imagesize_.height);
-	FilterYUVToYUVFull filterYUVToYUVFull(imagesize_.width, imagesize_.height);
-	FilterYUVQuickCamToYUV filterYUVQuickCamToYUV(imagesize_.width, imagesize_.height);
-
-	unsigned char * saved_image = (unsigned char *) malloc(imagesize_.width*imagesize_.height*2);
-	unsigned char * yuv_image = NULL;
-
-	unsigned int counter = 0;
-	//bool drawOutput = true;
-
-	int imCounter = 1;
-
-	while(1){
+    if(display_frames){
+        xvDisplay = new XVDisplay(640, 480, XV_UYVY);
+    }
 
 
 
-		char filename[256];
-		char filename2[256];
-		char path[256];
-		char path2[256];
-		strcpy(path, getenv("VISION_LOG"));
-		strcpy(path2, getenv("VISION_LOG"));
+    IppiSize imagesize_;
+    imagesize_.width = 640; //camera.getDeviceWidth();
+    imagesize_.height = 480; //camera.getDeviceHeight();
 
-		sprintf(filename, "/log-image-%04d.raw", imCounter);
-		char * path_filename = strcat(path, filename);
-		sprintf(filename2, "/log-image-%04d.raw", imCounter);
-		char * path_filename2 = strcat(path2, filename2);
 
-		imCounter++;
+    unsigned char * currImage = NULL;
 
-		//camera.captureBegin();
-		printf("LogFileName: %s\n", path_filename);
+    //ScanLineHelper scanHelper(238, 349, 60, 254, 180);
 
-		FILE * logfile = fopen(path_filename, "r");
+    FilterYUVToRGB filterYUVToRGB(imagesize_.width, imagesize_.height);
+    FilterYUVToYUVFull filterYUVToYUVFull(imagesize_.width, imagesize_.height);
+    FilterYUVQuickCamToYUV filterYUVQuickCamToYUV(imagesize_.width, imagesize_.height);
 
-		if(logfile != NULL){
+    unsigned char * saved_image = (unsigned char *) malloc(imagesize_.width*imagesize_.height*2);
+    unsigned char * yuv_image = NULL;
 
-			fread(saved_image, sizeof(char), imagesize_.width*imagesize_.height*2, logfile);
-			fclose(logfile);
+    unsigned int counter = 0;
+    //bool drawOutput = true;
 
-			currImage = filterYUVToYUVFull.process(saved_image, imagesize_.width*imagesize_.height*2);
+    int imCounter = 1;
 
-			FILE * logfile2 = fopen(path_filename2, "w");
-			fwrite(currImage, sizeof(char), imagesize_.width*imagesize_.height*3, logfile2);
-			fclose(logfile2);
+    while(1){
 
 
 
-		}
-		else{
-			printf("Log file not found\n");
-			break;
-		}
+        char filename[256];
+        char filename2[256];
+        char path[256];
+        char path2[256];
+        strcpy(path, getenv("VISION_LOG"));
+        strcpy(path2, getenv("VISION_LOG"));
+
+        sprintf(filename, "/log-image-%04d.raw", imCounter);
+        char * path_filename = strcat(path, filename);
+        sprintf(filename2, "/log-image-%04d.raw", imCounter);
+        char * path_filename2 = strcat(path2, filename2);
+
+        imCounter++;
+
+        //camera.captureBegin();
+        printf("LogFileName: %s\n", path_filename);
+
+        FILE * logfile = fopen(path_filename, "r");
+
+        if(logfile != NULL){
+
+            fread(saved_image, sizeof(char), imagesize_.width*imagesize_.height*2, logfile);
+            fclose(logfile);
+
+            currImage = filterYUVToYUVFull.process(saved_image, imagesize_.width*imagesize_.height*2);
+
+            FILE * logfile2 = fopen(path_filename2, "w");
+            fwrite(currImage, sizeof(char), imagesize_.width*imagesize_.height*3, logfile2);
+            fclose(logfile2);
 
 
-		if(directedCam){
-			yuv_image = filterYUVQuickCamToYUV.process((unsigned char *) saved_image, imagesize_.width* imagesize_.height*2);
-			currImage = filterYUVToRGB.process(yuv_image, imagesize_.width*imagesize_.height*2);
-		}
-		else {
-			currImage = filterYUVToRGB.process((unsigned char *) saved_image, imagesize_.width*imagesize_.height*2);
-		}
 
-		if(xvDisplay != NULL){
-			xvDisplay->displayFrameRGB((char *) currImage);
-		}
-
-		//camera.captureEnd();
-		usleep(10000);
-
-		counter++;
+        }
+        else{
+            printf("Log file not found\n");
+            break;
+        }
 
 
-	}
+        if(directedCam){
+            yuv_image = filterYUVQuickCamToYUV.process((unsigned char *) saved_image, imagesize_.width* imagesize_.height*2);
+            currImage = filterYUVToRGB.process(yuv_image, imagesize_.width*imagesize_.height*2);
+        }
+        else {
+            currImage = filterYUVToRGB.process((unsigned char *) saved_image, imagesize_.width*imagesize_.height*2);
+        }
+
+        if(xvDisplay != NULL){
+            xvDisplay->displayFrameRGB((char *) currImage);
+        }
+
+        //camera.captureEnd();
+        usleep(10000);
+
+        counter++;
 
 
-	exit(0);
+    }
+
+
+    exit(0);
 }

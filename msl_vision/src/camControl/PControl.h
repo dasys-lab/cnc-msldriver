@@ -42,15 +42,15 @@ using namespace std;
 
 class PControl : public BasisControl{
 
-	public: 
-		PControl(string file, string confName);
-		~PControl(){};
+    public:
+        PControl(string file, string confName);
+        ~PControl(){};
 
-		double computeManipulateVariable(double measuredValue);
+        double computeManipulateVariable(double measuredValue);
 
 
-	private:
-		double m, b;
+    private:
+        double m, b;
 };
 
 #endif

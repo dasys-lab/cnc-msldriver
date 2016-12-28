@@ -23,7 +23,7 @@
 
 
 #ifndef _RTFUSIONKALMAN4_H
-#define	_RTFUSIONKALMAN4_H
+#define _RTFUSIONKALMAN4_H
 
 #include "RTFusion.h"
 
@@ -55,10 +55,10 @@ private:
     void predict();
     void update();
 
-    RTVector3 m_gyro;										// unbiased gyro data
+    RTVector3 m_gyro;                                       // unbiased gyro data
     RTFLOAT m_timeDelta;                                    // time between predictions
 
-    RTQuaternion m_stateQ;									// quaternion state vector
+    RTQuaternion m_stateQ;                                  // quaternion state vector
     RTQuaternion m_stateQError;                             // difference between stateQ and measuredQ
 
     RTMatrix4x4 m_Kk;                                       // the Kalman gain matrix

@@ -59,7 +59,7 @@ namespace camera
             //***
             //*** Guppy specific API follows
             //***
-            
+
             void enableHDR(bool value, uint32_t knee1 = 0, uint32_t knee2 = 0);
             bool isHDR();
 
@@ -120,7 +120,7 @@ namespace camera
             void enableTriggerDelay(bool value);
             bool isTriggerDelay();
 
-	void setFramerate(unsigned short value);
+    void setFramerate(unsigned short value);
 
             void enableMirror(bool value);
             bool isMirror();
@@ -166,7 +166,7 @@ namespace camera
 
             bool getFrameInternal(Frame &frame);
 
-	void DummyTestMethod();
+    void DummyTestMethod();
 
         protected:
             /**
@@ -179,23 +179,23 @@ namespace camera
             inline void setFeatureMode(dc1394feature_t feature, dc1394feature_mode_t mode)
             {
                 if (!this->dc_camera) return;
-        
+
                 dc1394error_t err;
-        
+
                 err = dc1394_feature_set_mode(this->dc_camera, feature, mode);
-        
+
                 DC1394_ERR_THROW(err, "unable to modify feature auto state");
             }
 
             inline dc1394feature_mode_t getFeatureMode(dc1394feature_t feature)
             {
                 if (!this->dc_camera) return DC1394_FEATURE_MODE_MANUAL;
-       
+
                 dc1394feature_mode_t mode;
                 dc1394error_t err;
-        
+
                 err = dc1394_feature_get_mode(this->dc_camera, feature, &mode);
-        
+
                 DC1394_ERR_THROW(err, "unable to query feature auto state");
 
                 return mode;
@@ -204,11 +204,11 @@ namespace camera
             inline void setFeatureValue(dc1394feature_t feature, unsigned long value)
             {
                 if (!this->dc_camera) return;
-    
+
                 dc1394error_t err;
 
                 err = dc1394_feature_set_value(this->dc_camera, feature, value);
-                
+
                 DC1394_ERR_THROW(err, "unable to set feature value");
             }
 
@@ -216,12 +216,12 @@ namespace camera
                 inline T getFeatureValue(dc1394feature_t feature)
                 {
                     if (!this->dc_camera) return static_cast<T>(0);
-        
+
                     unsigned int value;
                     dc1394error_t err;
-        
+
                     err = dc1394_feature_get_value(this->dc_camera, feature, &value);
-        
+
                     DC1394_ERR_THROW(err, "unable to query feature value");
 
                     return static_cast<T>(value);
@@ -230,24 +230,24 @@ namespace camera
             inline void enableFeature(dc1394feature_t feature, bool enabled)
             {
                 if (!this->dc_camera) return;
-    
+
                 dc1394error_t err;
 
                 err = dc1394_feature_set_power(this->dc_camera, feature,
                                                static_cast<dc1394switch_t>(enabled));
-                
+
                 DC1394_ERR_THROW(err, "unable to set power for feature");
             }
 
             inline bool isFeature(dc1394feature_t feature)
             {
                 if (!this->dc_camera) return false;
-      
+
                 dc1394switch_t value;
                 dc1394error_t err;
-        
+
                 err = dc1394_feature_get_power(this->dc_camera, feature, &value);
-        
+
                 DC1394_ERR_THROW(err, "unable to query power for feature");
 
                 return static_cast<bool>(value);

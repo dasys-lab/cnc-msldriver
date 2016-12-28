@@ -38,25 +38,25 @@ class DistCalculator {
       public:
          DistCalculator() {CD=102.0;};
          double calcDistance(double ux, double uy, double *sx, double *sy);
-		 void setHeightOfCam(int height);
+         void setHeightOfCam(int height);
 
 
       protected:
          double kx(double b);
-		 double ky(double b);
-		 double dkx(double b);
-		 double dky(double b);
-		 double gx(double a, double ux);
-		 double gy(double a, double uy);
-		 double nx(double b);
-		 double ny(double b);
-		 void solveNonLinear(double ux, double uy, double * a, double * b);
-		 double distance(double b, double vx, double vy);
-		 void spiegleVektor(double b, double ux, double uy, double * vx, double * vy);
+         double ky(double b);
+         double dkx(double b);
+         double dky(double b);
+         double gx(double a, double ux);
+         double gy(double a, double uy);
+         double nx(double b);
+         double ny(double b);
+         void solveNonLinear(double ux, double uy, double * a, double * b);
+         double distance(double b, double vx, double vy);
+         void spiegleVektor(double b, double ux, double uy, double * vx, double * vy);
 
-		 int CAMERAHOEHE;
-	public:
-		 double CD;
+         int CAMERAHOEHE;
+    public:
+         double CD;
 
    };
 

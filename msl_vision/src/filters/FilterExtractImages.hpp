@@ -27,37 +27,37 @@
 
 class FilterExtractImages
 {
-	public:
-		FilterExtractImages();
-		~FilterExtractImages();
-		
-		void process(unsigned char * &src, unsigned char * &gray_image_, unsigned char * &uv_image_);
-		
-		bool setLookupTableValue(uint32_t const index, unsigned char const value);
-		bool setLookupTableUVYValue(uint32_t const index, unsigned char const value);
-		
-		unsigned char getLookupTableValue(uint32_t const index) const;
-		unsigned char getLookupTableUVYValue(uint32_t const index) const;
-	protected:
-		
-		void init();
-		
-		uint16_t width;
-		uint16_t height;
-		
-		uint16_t iRadiusStart;
-		uint16_t iRadiusEnd;
-		uint16_t oRadiusStart;
-		uint16_t oRadiusEnd;
-		uint16_t iRadiusOffset;
-// 		
-		unsigned char * uvImage;
-		unsigned char * grayImage;
-// 		
-		uint32_t lTsize;
-		uint32_t lTUVYsize;
-		unsigned char *lookupTable;
-		unsigned char * lookupTableUVY;
+    public:
+        FilterExtractImages();
+        ~FilterExtractImages();
+
+        void process(unsigned char * &src, unsigned char * &gray_image_, unsigned char * &uv_image_);
+
+        bool setLookupTableValue(uint32_t const index, unsigned char const value);
+        bool setLookupTableUVYValue(uint32_t const index, unsigned char const value);
+
+        unsigned char getLookupTableValue(uint32_t const index) const;
+        unsigned char getLookupTableUVYValue(uint32_t const index) const;
+    protected:
+
+        void init();
+
+        uint16_t width;
+        uint16_t height;
+
+        uint16_t iRadiusStart;
+        uint16_t iRadiusEnd;
+        uint16_t oRadiusStart;
+        uint16_t oRadiusEnd;
+        uint16_t iRadiusOffset;
+//
+        unsigned char * uvImage;
+        unsigned char * grayImage;
+//
+        uint32_t lTsize;
+        uint32_t lTUVYsize;
+        unsigned char *lookupTable;
+        unsigned char * lookupTableUVY;
 };
 
 #endif

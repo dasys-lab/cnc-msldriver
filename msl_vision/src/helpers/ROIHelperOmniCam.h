@@ -33,32 +33,32 @@ using namespace supplementary;
 
 class ROIHelperOmniCam {
 
-	public:
+    public:
 
-		ROIHelperOmniCam();
-		~ROIHelperOmniCam();
+        ROIHelperOmniCam();
+        ~ROIHelperOmniCam();
 
-		static ROIHelperOmniCam * getInstance();
+        static ROIHelperOmniCam * getInstance();
 
-		ROI getROIForObject(double x, double y, double z, double radius, DistanceLookupHelper & distanceHelper);
+        ROI getROIForObject(double x, double y, double z, double radius, DistanceLookupHelper & distanceHelper);
 
-	private:
+    private:
 
-		static ROIHelperOmniCam * instance_;
+        static ROIHelperOmniCam * instance_;
 
-		SystemConfig* sc;
+        SystemConfig* sc;
 
-		int scWIDTH;
-		int scHEIGHT;
+        int scWIDTH;
+        int scHEIGHT;
 
-		short mx;
-		short my;
-		int CameraZ;
+        short mx;
+        short my;
+        int CameraZ;
 
-		void goForLine(short ax, short ay, short ex, short ey, double angle, DistanceLookupHelper & distanceHelper, int * xcoord, int * ycoord);
+        void goForLine(short ax, short ay, short ex, short ey, double angle, DistanceLookupHelper & distanceHelper, int * xcoord, int * ycoord);
 
-		void init();
-		void cleanup();
+        void init();
+        void cleanup();
 
 };
 

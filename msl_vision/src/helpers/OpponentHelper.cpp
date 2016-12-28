@@ -38,16 +38,16 @@
 
 OpponentHelper::OpponentHelper() : sc() {
 
-	this->sc = SystemConfig::getInstance();
+    this->sc = SystemConfig::getInstance();
 
-	FootballField::getInstance();
+    FootballField::getInstance();
 
-	MX = (*this->sc)["Vision.h"]->get<int>("Vision", "CameraMX", NULL);
-	MY = (*this->sc)["Vision.h"]->get<int>("Vision", "CameraMY", NULL);
+    MX = (*this->sc)["Vision.h"]->get<int>("Vision", "CameraMX", NULL);
+    MY = (*this->sc)["Vision.h"]->get<int>("Vision", "CameraMY", NULL);
 
-	LocalizationSuccess = (*this->sc)["Localization"]->get<double>("Localization", "LocalizationSuccess", NULL);
+    LocalizationSuccess = (*this->sc)["Localization"]->get<double>("Localization", "LocalizationSuccess", NULL);
 
-	init();
+    init();
 
 
 }
@@ -55,7 +55,7 @@ OpponentHelper::OpponentHelper() : sc() {
 
 OpponentHelper::~OpponentHelper(){
 
-	cleanup();
+    cleanup();
 
 }
 
@@ -76,46 +76,46 @@ void OpponentHelper::cleanup(){
 void OpponentHelper::processOpponentBlobs(std::vector<BlobBounds> & potOpponentBlobs, Particle * maxParticle){
 
 /*
-	//Point2dInfoPtrListPtr positions = Point2dInfoPtrListPtr(new Point2dInfoPtrList);
-	OpponentInfo oi;
+    //Point2dInfoPtrListPtr positions = Point2dInfoPtrListPtr(new Point2dInfoPtrList);
+    OpponentInfo oi;
 
-	oi->setPositionInfos(positions);
+    oi->setPositionInfos(positions);
 
-	std::vector<ObservedPoint> observedPoints;
-	observedPoints.clear();
+    std::vector<ObservedPoint> observedPoints;
+    observedPoints.clear();
 
-	for(unsigned int i = 0; i < potOpponentBlobs.size(); i++){
+    for(unsigned int i = 0; i < potOpponentBlobs.size(); i++){
 
-		int midX = (potOpponentBlobs[i].top + potOpponentBlobs[i].bottom)/2;
-		int midY = (potOpponentBlobs[i].left + potOpponentBlobs[i].right)/2;
+        int midX = (potOpponentBlobs[i].top + potOpponentBlobs[i].bottom)/2;
+        int midY = (potOpponentBlobs[i].left + potOpponentBlobs[i].right)/2;
 
-		double angle = -atan2((midY - MY), (midX - MX));
+        double angle = -atan2((midY - MY), (midX - MX));
 
-		Point2dInfo opponentPoint;// = Point2dInfo::create();
+        Point2dInfo opponentPoint;// = Point2dInfo::create();
 
-		double xcoord = cos(angle)*potOpponentBlobs[i].minDistance;
-		double ycoord = sin(angle)*potOpponentBlobs[i].minDistance;
+        double xcoord = cos(angle)*potOpponentBlobs[i].minDistance;
+        double ycoord = sin(angle)*potOpponentBlobs[i].minDistance;
 
-		opponentPoint.x = (xcoord);
-		opponentPoint.y = (ycoord);
+        opponentPoint.x = (xcoord);
+        opponentPoint.y = (ycoord);
 
-		ObservedPoint op;
-		op.x = xcoord;
-		op.y = ycoord;
-		op.valid = true;
+        ObservedPoint op;
+        op.x = xcoord;
+        op.y = ycoord;
+        op.valid = true;
 
-		positions->push_back(opponentPoint);
-		observedPoints.push_back(op);
-
-
-	}
+        positions->push_back(opponentPoint);
+        observedPoints.push_back(op);
 
 
-	unsigned char * validity = (unsigned char *) malloc(observedPoints.size()*sizeof(unsigned char));
-	unsigned char * assignedPoints = (unsigned char *) malloc(observedPoints.size()*sizeof(unsigned char));
+    }
 
-	free(validity);
-	free(assignedPoints);
+
+    unsigned char * validity = (unsigned char *) malloc(observedPoints.size()*sizeof(unsigned char));
+    unsigned char * assignedPoints = (unsigned char *) malloc(observedPoints.size()*sizeof(unsigned char));
+
+    free(validity);
+    free(assignedPoints);
 */
 }
 

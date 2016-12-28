@@ -41,7 +41,7 @@
 
 FilterHoughCalib::FilterHoughCalib(int width, int height):Filter(OF_GRAY, width, height){
 
-	init();
+    init();
 
 }
 
@@ -49,72 +49,72 @@ FilterHoughCalib::FilterHoughCalib(int width, int height):Filter(OF_GRAY, width,
 
 FilterHoughCalib::~FilterHoughCalib(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned char * FilterHoughCalib::process(unsigned char * src, int width, int height){
 
-	unsigned char * tgt = outputBuffer;
-	memcpy(tgt, src, width*height);
+    unsigned char * tgt = outputBuffer;
+    memcpy(tgt, src, width*height);
 
-	int * HoughSpace = (int *) malloc(DX*DY*DR*sizeof(int));
-	bzero(HoughSpace, DX*DY*DR*sizeof(int));
+    int * HoughSpace = (int *) malloc(DX*DY*DR*sizeof(int));
+    bzero(HoughSpace, DX*DY*DR*sizeof(int));
 
-	for(int x = 0; x < height; x++){
+    for(int x = 0; x < height; x++){
 
-		printf("*");
+        printf("*");
 
-		for(int y = 0; y < width; y++){
+        for(int y = 0; y < width; y++){
 
-			if(src[x*width + y] > 0 && ((x-MX)*(x-MX) + (y-MY)*(y-MY) > 180*180)){
+            if(src[x*width + y] > 0 && ((x-MX)*(x-MX) + (y-MY)*(y-MY) > 180*180)){
 
-				for(int r = 0; r < DR; r++){
+                for(int r = 0; r < DR; r++){
 
-					DrawCircleInc(x - OX, y - OY, r + OR, (int*) &(HoughSpace[r*DX*DY]), DY, DX);
+                    DrawCircleInc(x - OX, y - OY, r + OR, (int*) &(HoughSpace[r*DX*DY]), DY, DX);
 
 
-				}
+                }
 
-			}
+            }
 
-		}
+        }
 
-	}
+    }
 
-	printf("\n");
+    printf("\n");
 
-	int maxValue = 0;
-	int indX = 0;
-	int indY = 0;
-	int indR = 0;
+    int maxValue = 0;
+    int indX = 0;
+    int indY = 0;
+    int indR = 0;
 
-	for(int r = 0; r < DR; r++){
-		for(int x = 0; x < DX; x++){
-			for(int y = 0; y < DY; y++){
-				if(HoughSpace[r*(DX*DY) + x*(DY) + y] > maxValue){
-					maxValue = HoughSpace[r*(DX*DY) + x*(DY) + y];
-					indX = x;
-					indY = y;
-					indR = r;
-				}
+    for(int r = 0; r < DR; r++){
+        for(int x = 0; x < DX; x++){
+            for(int y = 0; y < DY; y++){
+                if(HoughSpace[r*(DX*DY) + x*(DY) + y] > maxValue){
+                    maxValue = HoughSpace[r*(DX*DY) + x*(DY) + y];
+                    indX = x;
+                    indY = y;
+                    indR = r;
+                }
 
-			}
-		}
-	}
+            }
+        }
+    }
 
-	mx = indX + OX;
-	my = indY + OY;
-	radius = indR + OR;
+    mx = indX + OX;
+    my = indY + OY;
+    radius = indR + OR;
 
-	DrawCircle(mx, my, radius, tgt, width, height);
-	
-	printf("Hough Transformation Results MX: %d MY: %d Radius: %d\n\n", mx, my, radius);
+    DrawCircle(mx, my, radius, tgt, width, height);
 
-	free(HoughSpace);
+    printf("Hough Transformation Results MX: %d MY: %d Radius: %d\n\n", mx, my, radius);
 
-	return outputBuffer;
+    free(HoughSpace);
+
+    return outputBuffer;
 
 
 }
@@ -136,94 +136,94 @@ void FilterHoughCalib::DrawCircleInc(int midX, int midY, int rad, int * space, i
 
 
 
-	int d = 3 - (2 * rad);
-	int x = 0;
-	int y = rad;
+    int d = 3 - (2 * rad);
+    int x = 0;
+    int y = rad;
 
-	while(y > x){
+    while(y > x){
 
-		if(midX + x >= 0 && midX + x < height && midY + y >= 0 && MY + y < width)
-			space[(midX + x) * width + midY + y]++;
-	
-		if(midX + x >= 0 && midX + x < height && midY - y >= 0 && MY - y < width)
-			space[(midX + x) * width + midY - y]++;
-	
-		if(midX - x >= 0 && midX - x < height && midY + y >= 0 && MY + y < width)
-			space[(midX - x) * width + midY + y]++;
-	
-		if(midX - x >= 0 && midX - x < height && midY - y >= 0 && MY - y < width)
-			space[(midX - x) * width + midY - y]++;
-	
-		if(midX + y >= 0 && midX + y < height && midY + x >= 0 && MY + x < width)
-			space[(midX + y) * width + midY + x]++;
-	
-		if(midX + y >= 0 && midX + y < height && midY - x >= 0 && MY - x < width)
-			space[(midX + y) * width + midY - x]++;
-	
-		if(midX - y >= 0 && midX - y < height && midY + x >= 0 && MY + x < width)
-			space[(midX - y) * width + midY + x]++;
-	
-		if(midX - y >= 0 && midX - y < height && midY - x >= 0 && MY - x < width)
-			space[(midX - y) * width + midY - x]++;
-	
-		if(d < 0){ 
-			d = d + (4 * x) + 6; 
-		}
-		else{
-			d = d + 4 * (x - y) + 10;
-			y = y - 1;
-	
-		}
-		x = x + 1;
-	}
+        if(midX + x >= 0 && midX + x < height && midY + y >= 0 && MY + y < width)
+            space[(midX + x) * width + midY + y]++;
+
+        if(midX + x >= 0 && midX + x < height && midY - y >= 0 && MY - y < width)
+            space[(midX + x) * width + midY - y]++;
+
+        if(midX - x >= 0 && midX - x < height && midY + y >= 0 && MY + y < width)
+            space[(midX - x) * width + midY + y]++;
+
+        if(midX - x >= 0 && midX - x < height && midY - y >= 0 && MY - y < width)
+            space[(midX - x) * width + midY - y]++;
+
+        if(midX + y >= 0 && midX + y < height && midY + x >= 0 && MY + x < width)
+            space[(midX + y) * width + midY + x]++;
+
+        if(midX + y >= 0 && midX + y < height && midY - x >= 0 && MY - x < width)
+            space[(midX + y) * width + midY - x]++;
+
+        if(midX - y >= 0 && midX - y < height && midY + x >= 0 && MY + x < width)
+            space[(midX - y) * width + midY + x]++;
+
+        if(midX - y >= 0 && midX - y < height && midY - x >= 0 && MY - x < width)
+            space[(midX - y) * width + midY - x]++;
+
+        if(d < 0){
+            d = d + (4 * x) + 6;
+        }
+        else{
+            d = d + 4 * (x - y) + 10;
+            y = y - 1;
+
+        }
+        x = x + 1;
+    }
 }
 
 void FilterHoughCalib::DrawCircle(int midX, int midY, int rad, unsigned char * space, int width, int height){
 
 
 
-	int d = 3 - (2 * rad);
-	int x = 0;
-	int y = rad;
+    int d = 3 - (2 * rad);
+    int x = 0;
+    int y = rad;
 
-	space[midX * width + midY] = 128;
+    space[midX * width + midY] = 128;
 
-	while(y > x){
+    while(y > x){
 
-		if(midX + x >= 0 && midX + x < height && midY + y >= 0 && MY + y < width)
-			space[(midX + x) * width + midY + y] = 128;
-	
-		if(midX + x >= 0 && midX + x < height && midY - y >= 0 && MY - y < width)
-			space[(midX + x) * width + midY - y] = 128;
-	
-		if(midX - x >= 0 && midX - x < height && midY + y >= 0 && MY + y < width)
-			space[(midX - x) * width + midY + y] = 128;
-	
-		if(midX - x >= 0 && midX - x < height && midY - y >= 0 && MY - y < width)
-			space[(midX - x) * width + midY - y] = 128;
-	
-		if(midX + y >= 0 && midX + y < height && midY + x >= 0 && MY + x < width)
-			space[(midX + y) * width + midY + x] = 128;
-	
-		if(midX + y >= 0 && midX + y < height && midY - x >= 0 && MY - x < width)
-			space[(midX + y) * width + midY - x] = 128;
-	
-		if(midX - y >= 0 && midX - y < height && midY + x >= 0 && MY + x < width)
-			space[(midX - y) * width + midY + x] = 128;
-	
-		if(midX - y >= 0 && midX - y < height && midY - x >= 0 && MY - x < width)
-			space[(midX - y) * width + midY - x] = 128;
-	
-		if(d < 0){ 
-			d = d + (4 * x) + 6; 
-		}
-		else{
-			d = d + 4 * (x - y) + 10;
-			y = y - 1;
-	
-		}
-		x = x + 1;
-	}
+        if(midX + x >= 0 && midX + x < height && midY + y >= 0 && MY + y < width)
+            space[(midX + x) * width + midY + y] = 128;
+
+        if(midX + x >= 0 && midX + x < height && midY - y >= 0 && MY - y < width)
+            space[(midX + x) * width + midY - y] = 128;
+
+        if(midX - x >= 0 && midX - x < height && midY + y >= 0 && MY + y < width)
+            space[(midX - x) * width + midY + y] = 128;
+
+        if(midX - x >= 0 && midX - x < height && midY - y >= 0 && MY - y < width)
+            space[(midX - x) * width + midY - y] = 128;
+
+        if(midX + y >= 0 && midX + y < height && midY + x >= 0 && MY + x < width)
+            space[(midX + y) * width + midY + x] = 128;
+
+        if(midX + y >= 0 && midX + y < height && midY - x >= 0 && MY - x < width)
+            space[(midX + y) * width + midY - x] = 128;
+
+        if(midX - y >= 0 && midX - y < height && midY + x >= 0 && MY + x < width)
+            space[(midX - y) * width + midY + x] = 128;
+
+        if(midX - y >= 0 && midX - y < height && midY - x >= 0 && MY - x < width)
+            space[(midX - y) * width + midY - x] = 128;
+
+        if(d < 0){
+            d = d + (4 * x) + 6;
+        }
+        else{
+            d = d + 4 * (x - y) + 10;
+            y = y - 1;
+
+        }
+        x = x + 1;
+    }
 
 
 }

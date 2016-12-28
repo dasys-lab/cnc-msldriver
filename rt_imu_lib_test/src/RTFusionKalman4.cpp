@@ -27,16 +27,16 @@
 
 //  The QVALUE affects the gyro response.
 
-#define KALMAN_QVALUE	0.001f
+#define KALMAN_QVALUE   0.001f
 
 //  The RVALUE controls the influence of the accels and compass.
 //  The bigger the value, the more sluggish the response.
 
-#define KALMAN_RVALUE	0.0005f
+#define KALMAN_RVALUE   0.0005f
 
-#define KALMAN_QUATERNION_LENGTH	4
+#define KALMAN_QUATERNION_LENGTH    4
 
-#define	KALMAN_STATE_LENGTH	4								// just the quaternion for the moment
+#define KALMAN_STATE_LENGTH 4                               // just the quaternion for the moment
 
 
 RTFusionKalman4::RTFusionKalman4()
@@ -140,12 +140,12 @@ void RTFusionKalman4::update()
         m_stateQError = RTQuaternion();
     }
 
-    //	Compute residual covariance Sk = Hk * Pkk_1 * HkTranspose + Rk
+    //  Compute residual covariance Sk = Hk * Pkk_1 * HkTranspose + Rk
     //  Note: since Hk is the identity matrix, this has been simplified
 
     Sk = m_Pkk_1 + m_Rk;
 
-    //	Compute Kalman gain Kk = Pkk_1 * HkTranspose * SkInverse
+    //  Compute Kalman gain Kk = Pkk_1 * HkTranspose * SkInverse
     //  Note: again, the HkTranspose part is omitted
 
     SkInverse = Sk.inverted();

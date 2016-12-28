@@ -28,7 +28,7 @@
 #include <conio.h>
 int wasKeyboardHit()
 {
-	return (int)_kbhit();
+    return (int)_kbhit();
 }
 
 #else // linux
@@ -39,79 +39,79 @@ int wasKeyboardHit()
 #include <fcntl.h>
 int wasKeyboardHit()
 {
-	struct termios oldt, newt;
-	int ch;
-	int oldf;
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
 
-	// don't echo and don't wait for ENTER
-	tcgetattr(STDIN_FILENO, &oldt);
-	newt = oldt;
-	newt.c_lflag &= ~(ICANON | ECHO);
-	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-	oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-	
-	// make it non-blocking (so we can check without waiting)
-	if (0 != fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK))
-	{
-		return 0;
-	}
+    // don't echo and don't wait for ENTER
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
 
-	ch = getchar();
+    // make it non-blocking (so we can check without waiting)
+    if (0 != fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK))
+    {
+        return 0;
+    }
 
-	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-	if (0 != fcntl(STDIN_FILENO, F_SETFL, oldf))
-	{
-		return 0;
-	}
+    ch = getchar();
 
-	if(ch != EOF)
-	{
-		ungetc(ch, stdin);
-		return 1;
-	}
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    if (0 != fcntl(STDIN_FILENO, F_SETFL, oldf))
+    {
+        return 0;
+    }
 
-	return 0;
+    if(ch != EOF)
+    {
+        ungetc(ch, stdin);
+        return 1;
+    }
+
+    return 0;
 }
 
 void Sleep(int millisecs)
 {
-	usleep(millisecs * 1000);
+    usleep(millisecs * 1000);
 }
 #endif // WIN32
 
 void calculateHistogram(float* pHistogram, int histogramSize, const openni::VideoFrameRef& frame)
 {
-	const openni::DepthPixel* pDepth = (const openni::DepthPixel*)frame.getData();
-	// Calculate the accumulative histogram (the yellow display...)
-	memset(pHistogram, 0, histogramSize*sizeof(float));
-	int restOfRow = frame.getStrideInBytes() / sizeof(openni::DepthPixel) - frame.getWidth();
-	int height = frame.getHeight();
-	int width = frame.getWidth();
+    const openni::DepthPixel* pDepth = (const openni::DepthPixel*)frame.getData();
+    // Calculate the accumulative histogram (the yellow display...)
+    memset(pHistogram, 0, histogramSize*sizeof(float));
+    int restOfRow = frame.getStrideInBytes() / sizeof(openni::DepthPixel) - frame.getWidth();
+    int height = frame.getHeight();
+    int width = frame.getWidth();
 
-	unsigned int nNumberOfPoints = 0;
-	for (int y = 0; y < height; ++y)
-	{
-		for (int x = 0; x < width; ++x, ++pDepth)
-		{
-			if (*pDepth != 0)
-			{
-				pHistogram[*pDepth]++;
-				nNumberOfPoints++;
-			}
-		}
-		pDepth += restOfRow;
-	}
-	for (int nIndex=1; nIndex<histogramSize; nIndex++)
-	{
-		pHistogram[nIndex] += pHistogram[nIndex-1];
-	}
-	if (nNumberOfPoints)
-	{
-		for (int nIndex=1; nIndex<histogramSize; nIndex++)
-		{
-			pHistogram[nIndex] = (256 * (1.0f - (pHistogram[nIndex] / nNumberOfPoints)));
-		}
-	}
+    unsigned int nNumberOfPoints = 0;
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x, ++pDepth)
+        {
+            if (*pDepth != 0)
+            {
+                pHistogram[*pDepth]++;
+                nNumberOfPoints++;
+            }
+        }
+        pDepth += restOfRow;
+    }
+    for (int nIndex=1; nIndex<histogramSize; nIndex++)
+    {
+        pHistogram[nIndex] += pHistogram[nIndex-1];
+    }
+    if (nNumberOfPoints)
+    {
+        for (int nIndex=1; nIndex<histogramSize; nIndex++)
+        {
+            pHistogram[nIndex] = (256 * (1.0f - (pHistogram[nIndex] / nNumberOfPoints)));
+        }
+    }
 }
 
 

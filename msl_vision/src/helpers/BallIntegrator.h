@@ -31,36 +31,36 @@
 
 class BallIntegrator {
 
-	public:
+    public:
 
-		BallIntegrator();
-		~BallIntegrator();
-		void decreaseDirtyPointCertainty();
-		void integratePoint(ObservedPoint p_, double threshold);
-		ObservedPoint getPoint();
-		ObjectContainer * getContainer();
+        BallIntegrator();
+        ~BallIntegrator();
+        void decreaseDirtyPointCertainty();
+        void integratePoint(ObservedPoint p_, double threshold);
+        ObservedPoint getPoint();
+        ObjectContainer * getContainer();
 
-		static BallIntegrator * getInstance();
+        static BallIntegrator * getInstance();
 
-		void setRefPosition(Position pos);
-		Position getRefPosition();
+        void setRefPosition(Position pos);
+        Position getRefPosition();
 
-	private:
-		void init();
-		void cleanup();
+    private:
+        void init();
+        void cleanup();
 
-		static BallIntegrator * instance_;
+        static BallIntegrator * instance_;
 
-		std::vector<PointHypothesis> points;
-		std::vector<ObjectContainer *> containers;
+        std::vector<PointHypothesis> points;
+        std::vector<ObjectContainer *> containers;
 
-		ObservedPoint currPoint;
-		ObjectContainer * currContainer;
+        ObservedPoint currPoint;
+        ObjectContainer * currContainer;
 
-		Position refPos;
+        Position refPos;
 
-		double increaseCertainty(double certainty);
-		double decreaseCertainty(double certainty);
+        double increaseCertainty(double certainty);
+        double decreaseCertainty(double certainty);
 };
 
 #endif

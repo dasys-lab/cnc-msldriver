@@ -37,9 +37,9 @@ Replayer * Replayer::instance_ = NULL;
 
 Replayer * Replayer::getInstance(){
 
-	if(instance_ == NULL)
-		instance_ = new Replayer();
-	return instance_;
+    if(instance_ == NULL)
+        instance_ = new Replayer();
+    return instance_;
 
 
 }
@@ -47,84 +47,84 @@ Replayer * Replayer::getInstance(){
 
 Replayer::Replayer() {
 
-	Environment * environment = Environment::getInstance();
+    Environment * environment = Environment::getInstance();
 
-	logfile = NULL;
-	lastImageTime = 0;
+    logfile = NULL;
+    lastImageTime = 0;
 
-	//if(environment->getLoggingMode()){
+    //if(environment->getLoggingMode()){
 
-	logfile = fopen(environment->getLogFileName().c_str(), "r");
+    logfile = fopen(environment->getLogFileName().c_str(), "r");
 
-	//}
+    //}
 
-	unsigned char type = 5;
-	int writeCounter = 0;
-	Position posTmp;
-	unsigned long long time;
+    unsigned char type = 5;
+    int writeCounter = 0;
+    Position posTmp;
+    unsigned long long time;
 
-	int value = 0;
-	int imageNumber = 0;
-
-
-	while(!feof(logfile) && !ferror(logfile) && imageNumber != 1){	
-
-		fread(&type, sizeof(unsigned char), 1, logfile);
-
-		if(type == LOGTYPE_IMAGE){
-			printf("Found Image LogEntry\n");
-
-			fread(&writeCounter, sizeof(int), 1, logfile);
-			fread(&imageNumber, sizeof(int), 1, logfile);
-			fread(&time, sizeof(unsigned long long), 1, logfile);
-
-			//imageNumber = *((int *) &posTmp);
-
-			lastImageTime = time;
-
-			printf("1234567891: Image %d %d %lld\n", writeCounter, imageNumber, time);
-
-		} else 	if(type == LOGTYPE_RAWODOMETRY){
-			printf("Found RawOdometry LogEntry\n");
-
-			fread(&writeCounter, sizeof(int), 1, logfile);
-			fread(&posTmp, sizeof(Position), 1, logfile);
-			fread(&time, sizeof(unsigned long long), 1, logfile);
-
-			printf("1234567891 %d %f %f %f %lld\n", writeCounter, posTmp.x, posTmp.y, posTmp.heading, time);
-
-		} else 	if(type == LOGTYPE_COMPASS){
+    int value = 0;
+    int imageNumber = 0;
 
 
-			fread(&writeCounter, sizeof(int), 1, logfile);
-			fread(&value, sizeof(int), 1, logfile);
-			fread(&time, sizeof(unsigned long long), 1, logfile);
+    while(!feof(logfile) && !ferror(logfile) && imageNumber != 1){
 
-			//value = *((int *) &posTmp);
+        fread(&type, sizeof(unsigned char), 1, logfile);
 
-			printf("Found Compass LogEntry\n");
-			printf("1234567892 %d %d %lld\n", writeCounter, value, time);
+        if(type == LOGTYPE_IMAGE){
+            printf("Found Image LogEntry\n");
 
-		} else {
-			printf("Unknown LogEntry\n");
-		}
+            fread(&writeCounter, sizeof(int), 1, logfile);
+            fread(&imageNumber, sizeof(int), 1, logfile);
+            fread(&time, sizeof(unsigned long long), 1, logfile);
+
+            //imageNumber = *((int *) &posTmp);
+
+            lastImageTime = time;
+
+            printf("1234567891: Image %d %d %lld\n", writeCounter, imageNumber, time);
+
+        } else  if(type == LOGTYPE_RAWODOMETRY){
+            printf("Found RawOdometry LogEntry\n");
+
+            fread(&writeCounter, sizeof(int), 1, logfile);
+            fread(&posTmp, sizeof(Position), 1, logfile);
+            fread(&time, sizeof(unsigned long long), 1, logfile);
+
+            printf("1234567891 %d %f %f %f %lld\n", writeCounter, posTmp.x, posTmp.y, posTmp.heading, time);
+
+        } else  if(type == LOGTYPE_COMPASS){
 
 
-	}
+            fread(&writeCounter, sizeof(int), 1, logfile);
+            fread(&value, sizeof(int), 1, logfile);
+            fread(&time, sizeof(unsigned long long), 1, logfile);
+
+            //value = *((int *) &posTmp);
+
+            printf("Found Compass LogEntry\n");
+            printf("1234567892 %d %d %lld\n", writeCounter, value, time);
+
+        } else {
+            printf("Unknown LogEntry\n");
+        }
+
+
+    }
 
 
 
 
-	init();
+    init();
 }
 
 
 Replayer::~Replayer(){
 
-	if(logfile != NULL)
-		fclose(logfile);
+    if(logfile != NULL)
+        fclose(logfile);
 
-	cleanup();
+    cleanup();
 
 }
 
@@ -144,66 +144,66 @@ void Replayer::cleanup(){
 
 unsigned long long Replayer::replay(int currImage){
 
-	unsigned char type = 5;
-	int writeCounter = 0;
-	Position posTmp;
-	unsigned long long time;
+    unsigned char type = 5;
+    int writeCounter = 0;
+    Position posTmp;
+    unsigned long long time;
 
-	int value = 0;
-	int imageNumber = 0;
+    int value = 0;
+    int imageNumber = 0;
 
-	unsigned long long timeRet = 0;
-
-
-	while(!feof(logfile) && !ferror(logfile) && imageNumber < currImage + 1){	
-
-		fread(&type, sizeof(unsigned char), 1, logfile);
-
-		if(type == LOGTYPE_IMAGE){
-			printf("Found Image LogEntry\n");
-
-			fread(&writeCounter, sizeof(int), 1, logfile);
-			fread(&imageNumber, sizeof(int), 1, logfile);
-			fread(&time, sizeof(unsigned long long), 1, logfile);
-
-			//imageNumber = *((int *) &posTmp);
-
-			timeRet = lastImageTime;
-			lastImageTime = time;
-
-			printf("1234567891: Image %d %d %lld\n", writeCounter, imageNumber, time);
-
-		} else 	if(type == LOGTYPE_RAWODOMETRY){
-			printf("Found RawOdometry LogEntry\n");
-
-			fread(&writeCounter, sizeof(int), 1, logfile);
-			fread(&posTmp, sizeof(Position), 1, logfile);
-			fread(&time, sizeof(unsigned long long), 1, logfile);
-
-			printf("1234567891 %d %f %f %f %lld\n", writeCounter, posTmp.x, posTmp.y, posTmp.heading, time);
-
-			RawOdometryHelper::getInstance()->integrateData(posTmp, time);
-
-		} else 	if(type == LOGTYPE_COMPASS){
+    unsigned long long timeRet = 0;
 
 
-			fread(&writeCounter, sizeof(int), 1, logfile);
-			fread(&value, sizeof(int), 1, logfile);
-			fread(&time, sizeof(unsigned long long), 1, logfile);
+    while(!feof(logfile) && !ferror(logfile) && imageNumber < currImage + 1){
 
-			//value = *((int *) &posTmp);
+        fread(&type, sizeof(unsigned char), 1, logfile);
 
-			printf("Found Compass LogEntry\n");
-			printf("1234567892 %d %d %lld\n", writeCounter, value, time);
-			CompassValueHelper::getInstance()->integrateData(value);
+        if(type == LOGTYPE_IMAGE){
+            printf("Found Image LogEntry\n");
 
-		} else {
-			printf("Unknown LogEntry\n");
-		}
-	}
+            fread(&writeCounter, sizeof(int), 1, logfile);
+            fread(&imageNumber, sizeof(int), 1, logfile);
+            fread(&time, sizeof(unsigned long long), 1, logfile);
+
+            //imageNumber = *((int *) &posTmp);
+
+            timeRet = lastImageTime;
+            lastImageTime = time;
+
+            printf("1234567891: Image %d %d %lld\n", writeCounter, imageNumber, time);
+
+        } else  if(type == LOGTYPE_RAWODOMETRY){
+            printf("Found RawOdometry LogEntry\n");
+
+            fread(&writeCounter, sizeof(int), 1, logfile);
+            fread(&posTmp, sizeof(Position), 1, logfile);
+            fread(&time, sizeof(unsigned long long), 1, logfile);
+
+            printf("1234567891 %d %f %f %f %lld\n", writeCounter, posTmp.x, posTmp.y, posTmp.heading, time);
+
+            RawOdometryHelper::getInstance()->integrateData(posTmp, time);
+
+        } else  if(type == LOGTYPE_COMPASS){
 
 
-	return timeRet;
+            fread(&writeCounter, sizeof(int), 1, logfile);
+            fread(&value, sizeof(int), 1, logfile);
+            fread(&time, sizeof(unsigned long long), 1, logfile);
+
+            //value = *((int *) &posTmp);
+
+            printf("Found Compass LogEntry\n");
+            printf("1234567892 %d %d %lld\n", writeCounter, value, time);
+            CompassValueHelper::getInstance()->integrateData(value);
+
+        } else {
+            printf("Unknown LogEntry\n");
+        }
+    }
+
+
+    return timeRet;
 
 }
 

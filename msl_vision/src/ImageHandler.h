@@ -30,30 +30,30 @@
 
 class ImageHandler {
 public:
-	ImageHandler(int imageWidth, int imageHeight, int fragments);
-	virtual ~ImageHandler();
-	bool sendp(unsigned char* data, int size, int imageWidth, int imageHeight, int stepX, int stepY, int x, int y, char imageType);
-	void writeImage(unsigned char* i, bool isGray, int sizeX, int sizeY);
-	void initImageWriter();
+    ImageHandler(int imageWidth, int imageHeight, int fragments);
+    virtual ~ImageHandler();
+    bool sendp(unsigned char* data, int size, int imageWidth, int imageHeight, int stepX, int stepY, int x, int y, char imageType);
+    void writeImage(unsigned char* i, bool isGray, int sizeX, int sizeY);
+    void initImageWriter();
 
-	std::ofstream outFile;
-//	okto::MulticastSender* ms;
-//	network::MulticastSender* ms;
+    std::ofstream outFile;
+//  okto::MulticastSender* ms;
+//  network::MulticastSender* ms;
 
-	unsigned char* image;
-	unsigned char* imageRaw;
-	long long imageRawTime;
-	int imageWidth;
-	int imageHeight;
-	int fragments;
-	Magick::Image* image2;
-	int quality;
-	bool sending;
-	bool savingRaw;
-	bool run;
+    unsigned char* image;
+    unsigned char* imageRaw;
+    long long imageRawTime;
+    int imageWidth;
+    int imageHeight;
+    int fragments;
+    Magick::Image* image2;
+    int quality;
+    bool sending;
+    bool savingRaw;
+    bool run;
 
-	boost::thread* threadRaw;
-	boost::thread* threadSend;
+    boost::thread* threadRaw;
+    boost::thread* threadSend;
 
 
 };

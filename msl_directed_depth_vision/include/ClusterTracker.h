@@ -18,21 +18,21 @@ using namespace std;
 
 namespace msl_vision
 {
-	class ClusterTracker
-	{
-		public:
-			ClusterTracker();
-			virtual ~ClusterTracker();
-			void process(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_xyzseg, pcl::IndicesClustersPtr clusters);
-			void includeCluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_color, pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_xyzseg);
-		private:
-			std::vector<Cluster> clusterVec;
-			std::vector<Cluster> newClusters;
+    class ClusterTracker
+    {
+        public:
+            ClusterTracker();
+            virtual ~ClusterTracker();
+            void process(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_xyzseg, pcl::IndicesClustersPtr clusters);
+            void includeCluster(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_color, pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_xyzseg);
+        private:
+            std::vector<Cluster> clusterVec;
+            std::vector<Cluster> newClusters;
 
-			pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_visualize;
-			pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_indices;
+            pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_visualize;
+            pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_indices;
 
 
-	};
+    };
 }
 #endif /* CNC_MSLDRIVER_MSL_DIRECTED_DEPTH_VISION_SRC_CLUSTERTRACKER_H_ */

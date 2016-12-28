@@ -35,20 +35,20 @@
 class FilterExtractBlobs  : public Filter {
 
 
-	public:
-		FilterExtractBlobs(int width, int height);
-		~FilterExtractBlobs();
-		
-		unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<ROI>& retROIs, unsigned char blobColor, std::vector<BlobBounds> & blobs, DistanceLookupHelper & helper, int countThreshold = 800);
+    public:
+        FilterExtractBlobs(int width, int height);
+        ~FilterExtractBlobs();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, std::vector<ROI>& retROIs, unsigned char blobColor, std::vector<BlobBounds> & blobs, DistanceLookupHelper & helper, int countThreshold = 800);
 
-		void init();
-		void cleanup();
+    protected:
 
-		ROI * rois;
-		short * rep;
-		int * count;
+        void init();
+        void cleanup();
+
+        ROI * rois;
+        short * rep;
+        int * count;
 
 };
 

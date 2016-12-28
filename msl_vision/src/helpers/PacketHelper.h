@@ -36,9 +36,9 @@
 
 class PacketHelper {
 
-	public:
-		static void initHeader(PacketHeader & header, int type);
-		static void initHeaderMDT(CarpeNoctem::Header * header, CarpeNoctem::EventHeader * manHeader, unsigned short msgid);
+    public:
+        static void initHeader(PacketHeader & header, int type);
+        static void initHeaderMDT(CarpeNoctem::Header * header, CarpeNoctem::EventHeader * manHeader, unsigned short msgid);
 
 };
 */

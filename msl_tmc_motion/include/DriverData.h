@@ -11,11 +11,11 @@
 namespace msl_driver
 {
 
-	class DriverData
-	{
-	public:
-		long timespamp;
-	};
+    class DriverData
+    {
+    public:
+        long timespamp;
+    };
 
 } /* namespace msl_driver */
 

@@ -12,40 +12,40 @@
 namespace msl_driver
 {
 
-	class MotionSet
-	{
-	public:
-		long timespamp;
-		double angle = 0.0;
-		double translation = 0.0;
-		double rotation = 0.0;
-		short pwm[];
-	};
+    class MotionSet
+    {
+    public:
+        long timespamp;
+        double angle = 0.0;
+        double translation = 0.0;
+        double rotation = 0.0;
+        short pwm[];
+    };
 
-	class MotionSlipControl
-	{
-	public:
-		long timespamp;
-		bool enabled = false;
-	};
-	class MotionCurrent
-	{
-	public:
-		long timespamp;
-		double current[];
-	};
-	class MotionTemperature
-	{
-	public:
-		long timespamp;
-		double temperature[];
-	};
-	class MotionSupplyVoltage
-	{
-	public:
-		long timespamp;
-		double voltage = 0.0;
-	};
+    class MotionSlipControl
+    {
+    public:
+        long timespamp;
+        bool enabled = false;
+    };
+    class MotionCurrent
+    {
+    public:
+        long timespamp;
+        double current[];
+    };
+    class MotionTemperature
+    {
+    public:
+        long timespamp;
+        double temperature[];
+    };
+    class MotionSupplyVoltage
+    {
+    public:
+        long timespamp;
+        double voltage = 0.0;
+    };
 
 } /* namespace msl_driver */
 

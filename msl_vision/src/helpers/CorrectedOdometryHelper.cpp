@@ -35,34 +35,34 @@ CorrectedOdometryHelper *CorrectedOdometryHelper::instance = NULL;
 
 void CorrectedOdometryHelper::handleCorrectedOdometryInfo() {
 
-	// TODO: Handle CorrectedOdometryInfo
+    // TODO: Handle CorrectedOdometryInfo
 }
 
 CorrectedOdometryHelper::CorrectedOdometryHelper() {
 
-	initialized = false;
+    initialized = false;
 
-	/*if (SpicaDirectedHelper::visionDirectedCEP != NULL) {
-		SpicaDirectedHelper::visionDirectedCEP->getCoi().added = boost::bind(
-				&CorrectedOdometryHelper::handleCorrectedOdometryInfo, this, _1, _2);
-	}*/
+    /*if (SpicaDirectedHelper::visionDirectedCEP != NULL) {
+        SpicaDirectedHelper::visionDirectedCEP->getCoi().added = boost::bind(
+                &CorrectedOdometryHelper::handleCorrectedOdometryInfo, this, _1, _2);
+    }*/
 
-	init();
+    init();
 }
 
 
 CorrectedOdometryHelper::~CorrectedOdometryHelper(){
 
-	cleanup();
+    cleanup();
 
 }
 
 
 CorrectedOdometryHelper *CorrectedOdometryHelper::getInstance() {
-	if (instance == NULL) {
-		instance = new CorrectedOdometryHelper();
-	}
-	return instance;
+    if (instance == NULL) {
+        instance = new CorrectedOdometryHelper();
+    }
+    return instance;
 }
 
 

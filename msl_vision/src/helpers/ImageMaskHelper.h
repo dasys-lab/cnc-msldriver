@@ -31,22 +31,22 @@
 class ImageMaskHelper{
 
 
-	public:
-		ImageMaskHelper();
-		ImageMaskHelper(int widht, int height);
-		~ImageMaskHelper();
-	
-		unsigned char * getLookupTable();
+    public:
+        ImageMaskHelper();
+        ImageMaskHelper(int widht, int height);
+        ~ImageMaskHelper();
 
-	protected:
-		
-		void init();
-		void cleanup();
+        unsigned char * getLookupTable();
 
-		unsigned char * LookupTable;
+    protected:
 
-		int imHeight;
-		int imWidth;
+        void init();
+        void cleanup();
+
+        unsigned char * LookupTable;
+
+        int imHeight;
+        int imWidth;
 
 };
 

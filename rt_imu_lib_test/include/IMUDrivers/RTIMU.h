@@ -22,7 +22,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef _RTIMU_H
-#define	_RTIMU_H
+#define _RTIMU_H
 
 #include "RTMath.h"
 #include "RTFusion.h"

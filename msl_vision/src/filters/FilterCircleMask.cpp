@@ -27,27 +27,27 @@
 #include <cmath>
 
 FilterCircleMask::FilterCircleMask(int width, int height):Filter(OF_ZERO, width, height) {
-	output = (unsigned int*) malloc(((width*height/32)*sizeof(int));
-	memset(output,0,9600);
+    output = (unsigned int*) malloc(((width*height/32)*sizeof(int));
+    memset(output,0,9600);
 }
 
 FilterCircleMask::~FilterCircleMask(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned int* FilterCircleMask::process(unsigned int width, unsigned int height, unsigned int mx, unsigned int my, unsigned int r){
-	
-	for (int i = 0; i<width; i++) {
-		for (int j = 0; j<height; j++) {
-			if (sqrt(i-mx)*(i-mx)+(j-my)*(j-my)<radius) {
-				*(output) = (*(output) & 1)<<1
-			}
-		}
-	}
-	
+
+    for (int i = 0; i<width; i++) {
+        for (int j = 0; j<height; j++) {
+            if (sqrt(i-mx)*(i-mx)+(j-my)*(j-my)<radius) {
+                *(output) = (*(output) & 1)<<1
+            }
+        }
+    }
+
 }
 
 
@@ -58,6 +58,6 @@ void FilterCircleMask::init(){
 }
 
 void FilterCircleMask::cleanup(){
-	delete output;	
+    delete output;
 }
 

@@ -33,54 +33,54 @@ using namespace supplementary;
 
 class PositionHelper {
 
-	private:
-		double abs_double(double d);
+    private:
+        double abs_double(double d);
 
-		double MX; //images size
-		double MY;
+        double MX; //images size
+        double MY;
 
-		double fieldLength; //mm
-		double fieldWidth; //mm
+        double fieldLength; //mm
+        double fieldWidth; //mm
 
-		double camProjDistX; //px
-		double camProjDistY; //px
-		double camZ; //mm
-		double camX; //mm
+        double camProjDistX; //px
+        double camProjDistY; //px
+        double camZ; //mm
+        double camX; //mm
 
-		double dist2center; //px
+        double dist2center; //px
 
-		double ball_r; //mm
+        double ball_r; //mm
 
-		double camAngle;
+        double camAngle;
 
 
-		int scWIDTH;
-		int scHEIGHT;
+        int scWIDTH;
+        int scHEIGHT;
 
-		short mx;
-		short my;
-		int CameraZ;
+        short mx;
+        short my;
+        int CameraZ;
 
-		void goForLine(short ax, short ay, short ex, short ey, double angle, int * xcoord, int * ycoord);
-		SystemConfig* sc;
+        void goForLine(short ax, short ay, short ex, short ey, double angle, int * xcoord, int * ycoord);
+        SystemConfig* sc;
 
-		PositionHelper();
-		static PositionHelper * instance;
+        PositionHelper();
+        static PositionHelper * instance;
 
-	public:
-		static PositionHelper * getInstance();
+    public:
+        static PositionHelper * getInstance();
 
-		Point3D getPointCam2Point3D(double x, double y, double r, double ball_r);
-		Point3D getPointCam2Point3D(double x, double y, double r);
+        Point3D getPointCam2Point3D(double x, double y, double r, double ball_r);
+        Point3D getPointCam2Point3D(double x, double y, double r);
 
-		Point getPointCam2Field(double x, double y);
-		Point getPointCam2Angle(double x, double y);
-		Point getPointField2Cam(double x, double y);
-		Point getAngle2Cam(double x, double y);
-		Point getPoint3D2Cam(double x, double y, double z);
-		double getPoint3D2Radius(double x, double y, double z);
+        Point getPointCam2Field(double x, double y);
+        Point getPointCam2Angle(double x, double y);
+        Point getPointField2Cam(double x, double y);
+        Point getAngle2Cam(double x, double y);
+        Point getPoint3D2Cam(double x, double y, double z);
+        double getPoint3D2Radius(double x, double y, double z);
 
-		Point3D getBallPositionFromBallMid(double x, double y);
+        Point3D getBallPositionFromBallMid(double x, double y);
 
 
 };

@@ -22,7 +22,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef _RTHUMIDITY_H
-#define	_RTHUMIDITY_H
+#define _RTHUMIDITY_H
 
 #include "RTIMUSettings.h"
 #include "RTIMULibDefs.h"

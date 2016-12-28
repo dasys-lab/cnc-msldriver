@@ -25,57 +25,57 @@
 #include <stdlib.h>
 
 Filter::Filter(int bufferFormat_, int width, int height){
-	outputBuffer = NULL;
+    outputBuffer = NULL;
 
-	bufferFormat = bufferFormat;
-	unsigned int bufferSize = 0;
+    bufferFormat = bufferFormat;
+    unsigned int bufferSize = 0;
 
-	switch (bufferFormat_){
+    switch (bufferFormat_){
 
-		case OF_ZERO:
-			bufferSize = 0;
-			break;
-		case OF_RGB:
-			bufferSize = width*height*3;
-			break;
-		case OF_GRAY:
-			bufferSize = width*height;
-			break;
-		case OF_YUV422:
-			bufferSize = width*height*2;
-			break;
-		case OF_IPP8u:
-			bufferSize = width*height;
-			break;
-		case OF_IPP16s:
-			bufferSize = width*height*2;
-			break;
-		case OF_YUV_FULL:
-			bufferSize = width*height*3;
-			break;
-		default:
-			bufferSize = 0;
-	
+        case OF_ZERO:
+            bufferSize = 0;
+            break;
+        case OF_RGB:
+            bufferSize = width*height*3;
+            break;
+        case OF_GRAY:
+            bufferSize = width*height;
+            break;
+        case OF_YUV422:
+            bufferSize = width*height*2;
+            break;
+        case OF_IPP8u:
+            bufferSize = width*height;
+            break;
+        case OF_IPP16s:
+            bufferSize = width*height*2;
+            break;
+        case OF_YUV_FULL:
+            bufferSize = width*height*3;
+            break;
+        default:
+            bufferSize = 0;
 
-	}
 
-	if (bufferSize > 0)	{
-		outputBuffer = (unsigned char *) malloc(bufferSize);
-	}
+    }
+
+    if (bufferSize > 0) {
+        outputBuffer = (unsigned char *) malloc(bufferSize);
+    }
 }
 
 
 
 Filter::~Filter(){
-	if (outputBuffer != NULL) {
-		free(outputBuffer);
-	}
+    if (outputBuffer != NULL) {
+        free(outputBuffer);
+    }
 }
 
 
 unsigned char * Filter::getOutputBuffer(){
 
-	return outputBuffer;
+    return outputBuffer;
 
 }
 

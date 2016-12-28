@@ -31,11 +31,11 @@
 class BallClusterHelp {
 
 
-	public:
-		int clusterBalls(int * balls, int ballCount, ballCluster * cluster, int maxClusterCount);
-		void clusterStdOut(ballCluster * cluster, int clusterCount, int xmid, int ymid, bool dist);
-		void visualizeCluster(unsigned char *src, int width, int height, ballCluster * cluster, int clusterCount);
-		void drawCircle(unsigned char *src, ballCluster &b, int width, int height, int Intens);
+    public:
+        int clusterBalls(int * balls, int ballCount, ballCluster * cluster, int maxClusterCount);
+        void clusterStdOut(ballCluster * cluster, int clusterCount, int xmid, int ymid, bool dist);
+        void visualizeCluster(unsigned char *src, int width, int height, ballCluster * cluster, int clusterCount);
+        void drawCircle(unsigned char *src, ballCluster &b, int width, int height, int Intens);
 };
 
 

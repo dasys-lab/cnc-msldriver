@@ -42,9 +42,9 @@ namespace camera
     class Flea2 : public Camera1394
     {
         public:
-			static const unsigned short usImageWidth = 1288;
-			static const unsigned short usImageHeight = 964;
-			/**
+            static const unsigned short usImageWidth = 1288;
+            static const unsigned short usImageHeight = 964;
+            /**
              * Setect the camera (let dc1394 enumerate the cameras on the bus)
              * @param index Flea2 to use [0..avail-1]
              */
@@ -78,8 +78,8 @@ namespace camera
             void printCameraModell();
 
             void opAutoWhiteBalance();
-	    void setManualSettingModes();
-	void disableAutoWhiteBalance();
+        void setManualSettingModes();
+    void disableAutoWhiteBalance();
             struct white_balance_t {
                 uint32_t bu;
                 uint32_t rv;

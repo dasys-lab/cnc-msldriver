@@ -12,7 +12,7 @@ class CameraSettingsDialog;
 class CameraSettingsDialog : public QDialog
 {
     Q_OBJECT
-    
+
 public:
     explicit CameraSettingsDialog(QWidget *parent = 0);
     ~CameraSettingsDialog();
@@ -20,7 +20,7 @@ public:
     static CameraSettingsDialog *getInstance(QWidget *parent = 0);
 
     void show();
-    
+
 private:
     Ui::CameraSettingsDialog *ui;
 

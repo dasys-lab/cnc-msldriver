@@ -77,25 +77,25 @@ typedef struct                       /**** Bitmap information structure ****/
     } BITMAPINFO;
 
 typedef struct {
-	const char * magicKey;
-	unsigned int width;
-	unsigned int height;
-	unsigned char maxColors;
+    const char * magicKey;
+    unsigned int width;
+    unsigned int height;
+    unsigned char maxColors;
 } PPMHEADER;
 
 class FilterBitmapWriter : public Filter {
 
 
-	public:
-		FilterBitmapWriter(int width, int height);
-		~FilterBitmapWriter();
-		
-		unsigned char* process(FILE* fid, unsigned char * src, unsigned int width, unsigned int height);
+    public:
+        FilterBitmapWriter(int width, int height);
+        ~FilterBitmapWriter();
 
-	protected:
+        unsigned char* process(FILE* fid, unsigned char * src, unsigned int width, unsigned int height);
 
-		void init();
-		void cleanup();
+    protected:
+
+        void init();
+        void cleanup();
 
 };
 

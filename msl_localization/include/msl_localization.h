@@ -41,77 +41,77 @@
 
 class msl_localization {
 
-	public:
-		msl_localization(int nParticles_);
-		~msl_localization();
+    public:
+        msl_localization(int nParticles_);
+        ~msl_localization();
 
-		void iterate(msl_sensor_msgs::LinePointListPtr & linePoints, unsigned char* distanceMap, msl_actuator_msgs::IMUDataPtr imu);
-		void updateParticles(double deltaX, double deltaY, double deltaH); 
-		Particle getMaxParticle();
+        void iterate(msl_sensor_msgs::LinePointListPtr & linePoints, unsigned char* distanceMap, msl_actuator_msgs::IMUDataPtr imu);
+        void updateParticles(double deltaX, double deltaY, double deltaH);
+        Particle getMaxParticle();
 
-		int getNumberParticles();
-		Particle * getParticles();
+        int getNumberParticles();
+        Particle * getParticles();
 
-		Particle getEstimatedPosition();
-		
-		double calculateWeightForEstimatedPosition(Position pos, msl_sensor_msgs::LinePointListPtr & linePoints, unsigned char *distanceMap);
-		void writeCoi();
-		
-		void sendParticleCloud();
-		void initParticles(double x, double y, double angle, double maxX, double maxY, double maxAngle);
+        Particle getEstimatedPosition();
 
-		void resetStartParticle();
+        double calculateWeightForEstimatedPosition(Position pos, msl_sensor_msgs::LinePointListPtr & linePoints, unsigned char *distanceMap);
+        void writeCoi();
 
-	protected:
-		bool useOdometry;
-		int minimizationSteps;
-		bool minimize;
-		RandomGaussHelper* gaussHelper;
+        void sendParticleCloud();
+        void initParticles(double x, double y, double angle, double maxX, double maxY, double maxAngle);
 
-		msl_actuator_msgs::RawOdometryInfo oldOdometryInfo;
+        void resetStartParticle();
 
-		msl_sensor_msgs::CorrectedOdometryInfo coi;
+    protected:
+        bool useOdometry;
+        int minimizationSteps;
+        bool minimize;
+        RandomGaussHelper* gaussHelper;
 
-		int nParticles;
-		void initParticles();
-		void resample(RandomGaussHelper & gaussHelper);
-		void cleanup();
-		void normalizeAngle(double &ang);
+        msl_actuator_msgs::RawOdometryInfo oldOdometryInfo;
 
-		Particle * particles;
-		Particle maxParticle;
-		Particle startParticle;
+        msl_sensor_msgs::CorrectedOdometryInfo coi;
 
-		Position rawUpdatedPosition;
-		unsigned short msgid;
-		
-		bool isGoalie;
+        int nParticles;
+        void initParticles();
+        void resample(RandomGaussHelper & gaussHelper);
+        void cleanup();
+        void normalizeAngle(double &ang);
 
-		double LocalizationSuccess;
-		double LinePointSigma;
-		bool UseRepParticles;
-		bool UseBlueGoal;
-		bool UseCornerPosts;
-		
-		double yellowGoalDirection;
-		int xShift;
-		int yShift;
+        Particle * particles;
+        Particle maxParticle;
+        Particle startParticle;
 
-		Position positionBuffer[RAWODOBUFSIZE];
-		unsigned long long timestampBuffer[RAWODOBUFSIZE];
+        Position rawUpdatedPosition;
+        unsigned short msgid;
 
-		int integrationIndex;
-		bool bufferInitialized;
-		bool reinit;
+        bool isGoalie;
 
-		MovingRobot mr;
-		MovingRobot mrOld;
+        double LocalizationSuccess;
+        double LinePointSigma;
+        bool UseRepParticles;
+        bool UseBlueGoal;
+        bool UseCornerPosts;
 
-		int initCounter;
-		tf::TransformBroadcaster tfBroadcaster;
-		MapHelper *mh;
-		int IHEIGHT, IWIDTH, IHEIGHT_2, IWIDTH_2; 
-		double RESOLUTION;
+        double yellowGoalDirection;
+        int xShift;
+        int yShift;
+
+        Position positionBuffer[RAWODOBUFSIZE];
+        unsigned long long timestampBuffer[RAWODOBUFSIZE];
+
+        int integrationIndex;
+        bool bufferInitialized;
+        bool reinit;
+
+        MovingRobot mr;
+        MovingRobot mrOld;
+
+        int initCounter;
+        tf::TransformBroadcaster tfBroadcaster;
+        MapHelper *mh;
+        int IHEIGHT, IWIDTH, IHEIGHT_2, IWIDTH_2;
+        double RESOLUTION;
 };
 
 

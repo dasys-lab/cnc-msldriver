@@ -18,7 +18,7 @@ class PolygonQGraphicsScene : public QGraphicsScene
 public:
     PolygonQGraphicsScene(QObject *parent = 0);
 
-	QPolygon getPolygon();
+    QPolygon getPolygon();
     void updateItems(QGraphicsSceneMouseEvent *event);
 
     void setDrawingMode(DrawingMode drawingMode);
@@ -31,7 +31,7 @@ public:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 public Q_SLOTS:
-	void clear();
+    void clear();
 
 private:
     DrawingMode m_drawingMode;
@@ -39,11 +39,11 @@ private:
     int m_startX, m_startY;
 
     bool m_draw, m_drag;
-	Qt::MouseButton m_pressedButton;
+    Qt::MouseButton m_pressedButton;
 
     Qt::KeyboardModifiers m_modifiers;
 
-	QPolygon m_polygon;
+    QPolygon m_polygon;
     QGraphicsPolygonItem* m_polygonItem;
 
     void addItems();

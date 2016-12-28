@@ -29,19 +29,19 @@
 class FilterCircleMask : public Filter {
 
 
-	private:										
-		unsigned int *output;
+    private:
+        unsigned int *output;
 
-	public:
-		FilterCircleMask(int width, int height);
-		~FilterCircleMask();
-		
-		double* process(FILE* fid, unsigned int * src, unsigned int width, unsigned int height);
+    public:
+        FilterCircleMask(int width, int height);
+        ~FilterCircleMask();
 
-	protected:
+        double* process(FILE* fid, unsigned int * src, unsigned int width, unsigned int height);
 
-		void init();
-		void cleanup();
+    protected:
+
+        void init();
+        void cleanup();
 
 };
 

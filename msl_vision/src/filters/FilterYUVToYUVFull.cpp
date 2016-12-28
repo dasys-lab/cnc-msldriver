@@ -27,7 +27,7 @@
 
 FilterYUVToYUVFull::FilterYUVToYUVFull(int width, int height):Filter(OF_YUV_FULL, width, height){
 
-	init();
+    init();
 
 }
 
@@ -35,38 +35,38 @@ FilterYUVToYUVFull::FilterYUVToYUVFull(int width, int height):Filter(OF_YUV_FULL
 
 FilterYUVToYUVFull::~FilterYUVToYUVFull(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned char * FilterYUVToYUVFull::process(unsigned char * src, unsigned int imagesize){
 
-	unsigned char * tgt = outputBuffer;
+    unsigned char * tgt = outputBuffer;
 
-	unsigned char y = 0;
-	unsigned char u = 0;
-	unsigned char v = 0;
+    unsigned char y = 0;
+    unsigned char u = 0;
+    unsigned char v = 0;
 
-	for(unsigned int i = 0; i < imagesize/4; i++){
-		
-		u = *src++;
-		y = *src++;
-		v = *src++;
+    for(unsigned int i = 0; i < imagesize/4; i++){
 
-		*tgt++ = y;
-		*tgt++ = u;
-		*tgt++ = v;
+        u = *src++;
+        y = *src++;
+        v = *src++;
 
-		y = *src++;
+        *tgt++ = y;
+        *tgt++ = u;
+        *tgt++ = v;
 
-		*tgt++ = y;
-		*tgt++ = u;
-		*tgt++ = v;
+        y = *src++;
 
-	}
+        *tgt++ = y;
+        *tgt++ = u;
+        *tgt++ = v;
 
-	return outputBuffer;
+    }
+
+    return outputBuffer;
 
 }
 

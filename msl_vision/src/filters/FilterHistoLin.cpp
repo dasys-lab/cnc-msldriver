@@ -32,55 +32,55 @@ using namespace std;
 
 FilterHistoLin::FilterHistoLin(int width, int height):Filter(OF_GRAY, width, height){
 
-	AreaLookup = (unsigned char *) malloc(width*height*sizeof(unsigned char));
+    AreaLookup = (unsigned char *) malloc(width*height*sizeof(unsigned char));
 
-	FILE * areafile = fopen("ReduceAreaLookup.dat", "r");
-	if(areafile != NULL){
+    FILE * areafile = fopen("ReduceAreaLookup.dat", "r");
+    if(areafile != NULL){
 
-		int n = fread(AreaLookup, sizeof(char), width*height, areafile);
-		fclose(areafile);
-		printf("AreaLookup: %d bytes read\n", n);
-	}
-	else{
-		printf("Area Lookup File not found\n");
+        int n = fread(AreaLookup, sizeof(char), width*height, areafile);
+        fclose(areafile);
+        printf("AreaLookup: %d bytes read\n", n);
+    }
+    else{
+        printf("Area Lookup File not found\n");
 
-	}
-	init();
+    }
+    init();
 
 }
 
 
 
 FilterHistoLin::~FilterHistoLin(){
-	cleanup();
+    cleanup();
 }
-		
+
 unsigned char * FilterHistoLin::process(unsigned char * src, int width, int height, int threshold) {
 
-	unsigned char * tgt = outputBuffer;
-	static int histogram[256];
-	for(int i = 0; i<256; i++) {
-		histogram[i]=0;
-	}
+    unsigned char * tgt = outputBuffer;
+    static int histogram[256];
+    for(int i = 0; i<256; i++) {
+        histogram[i]=0;
+    }
 
-	for(int i = 1; i<(height*width); i++) {
-		histogram[src[i]]++;
-	}
+    for(int i = 1; i<(height*width); i++) {
+        histogram[src[i]]++;
+    }
 
-	for(int i=1; i<256; i++) {
-		histogram[i] = (histogram[i]+histogram[i-1]);
-	}
-	for(int i=1; i<256; i++) {
-		histogram[i] = (histogram[i]*255)/((int)(width*height));
-	}
+    for(int i=1; i<256; i++) {
+        histogram[i] = (histogram[i]+histogram[i-1]);
+    }
+    for(int i=1; i<256; i++) {
+        histogram[i] = (histogram[i]*255)/((int)(width*height));
+    }
 
-	//cout << histogram[10] << "\t" << histogram[21] << "\t" << histogram[32] << "\t" << histogram[43] << "\t" << endl;
+    //cout << histogram[10] << "\t" << histogram[21] << "\t" << histogram[32] << "\t" << histogram[43] << "\t" << endl;
 
-	for(int i = 1; i < (height*width); i++){
-		tgt[i] = histogram[src[i]];
-	}
+    for(int i = 1; i < (height*width); i++){
+        tgt[i] = histogram[src[i]];
+    }
 
-	return outputBuffer;
+    return outputBuffer;
 }
 
 
@@ -90,7 +90,7 @@ void FilterHistoLin::init(){
 
 
 void FilterHistoLin::cleanup(){
-	if(AreaLookup != NULL)
-		free(AreaLookup);
+    if(AreaLookup != NULL)
+        free(AreaLookup);
 }
 

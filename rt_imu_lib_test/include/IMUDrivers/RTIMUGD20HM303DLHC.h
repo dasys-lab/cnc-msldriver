@@ -23,7 +23,7 @@
 
 
 #ifndef _RTIMUGD20HM303DLHC_H
-#define	_RTIMUGD20HM303DLHC_H
+#define _RTIMUGD20HM303DLHC_H
 
 #include "RTIMU.h"
 

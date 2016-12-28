@@ -64,39 +64,39 @@
 
 class XVDisplay
 {
-	
-	public:
-		XVDisplay(long width, long height, long _format);
-		~XVDisplay();
-		
 
-		static void iyu12yuy2 (unsigned char *src, unsigned char *dest, int NumPixels);
-		static void rgb2yuy2 (unsigned char *RGB, unsigned char *YUV, int NumPixels);
+    public:
+        XVDisplay(long width, long height, long _format);
+        ~XVDisplay();
 
-		void displayFrameYUV(char * cameraBuffer);
-		void displayFrameRGB(char * cameraBuffer);
-		void displayFrameGRAY(char * cameraBuffer);
-		void setTitle(char * title);
 
-	protected:
+        static void iyu12yuy2 (unsigned char *src, unsigned char *dest, int NumPixels);
+        static void rgb2yuy2 (unsigned char *RGB, unsigned char *YUV, int NumPixels);
 
-		void cleanup();
-		void QueryXv();
+        void displayFrameYUV(char * cameraBuffer);
+        void displayFrameRGB(char * cameraBuffer);
+        void displayFrameGRAY(char * cameraBuffer);
+        void setTitle(char * title);
 
-		Display *display;
-		Window window;
-		long device_width;
-		long device_height;
-		int connection;
-		XvImage *xv_image;
-		XvAdaptorInfo *info;
-		long format;
-		GC gc;
+    protected:
 
-		int adaptor;
+        void cleanup();
+        void QueryXv();
 
-		unsigned char * frame_buffer;
-		unsigned char * tmp_buffer;
+        Display *display;
+        Window window;
+        long device_width;
+        long device_height;
+        int connection;
+        XvImage *xv_image;
+        XvAdaptorInfo *info;
+        long format;
+        GC gc;
+
+        int adaptor;
+
+        unsigned char * frame_buffer;
+        unsigned char * tmp_buffer;
 
 
 

@@ -29,24 +29,24 @@
 class FilterHoughCalib  : public Filter {
 
 
-	public:
-		FilterHoughCalib(int width, int height);
-		~FilterHoughCalib();
-		
-		unsigned char * process(unsigned char * src, int width, int height);
-		void DrawCircle(int midX, int midY, int rad, unsigned char * space, int width, int height);
+    public:
+        FilterHoughCalib(int width, int height);
+        ~FilterHoughCalib();
 
-	protected:
+        unsigned char * process(unsigned char * src, int width, int height);
+        void DrawCircle(int midX, int midY, int rad, unsigned char * space, int width, int height);
 
-		void init();
-		void cleanup();
+    protected:
 
-		int mx;
-		int my;
-		int radius;
+        void init();
+        void cleanup();
 
-		void DrawCircleInc(int midX, int midY, int rad, int * space, int width, int height);
-		
+        int mx;
+        int my;
+        int radius;
+
+        void DrawCircleInc(int midX, int midY, int rad, int * space, int width, int height);
+
 
 };
 

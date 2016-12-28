@@ -5,26 +5,26 @@
 
 int main(int argc, char * argv[]){
 
-	PositionHelperDirected * posHelper = PositionHelperDirected::getInstance();
+    PositionHelperDirected * posHelper = PositionHelperDirected::getInstance();
 
-	
-	Point p = posHelper->getPointCam2FieldSony(atof(argv[1]),atof(argv[2]));
 
-	printf("p.x = %f p.y = %f\n", p.x, p.y);
+    Point p = posHelper->getPointCam2FieldSony(atof(argv[1]),atof(argv[2]));
 
-	Point p2 = posHelper->getPoint3D2CamSony(p.x, p.y, 0.0);
+    printf("p.x = %f p.y = %f\n", p.x, p.y);
 
-	printf("CameraX = %f CameraY = %f\n", p2.x, p2.y);
+    Point p2 = posHelper->getPoint3D2CamSony(p.x, p.y, 0.0);
 
-	Point3D p3 = posHelper->getPointCam2Point3DSony(atof(argv[1]), atof(argv[2]), atof(argv[3]));
+    printf("CameraX = %f CameraY = %f\n", p2.x, p2.y);
 
-	printf("p3.x = %f p3.y = %f p3.z = %f\n", p3.x, p3.y, p3.z);
+    Point3D p3 = posHelper->getPointCam2Point3DSony(atof(argv[1]), atof(argv[2]), atof(argv[3]));
 
-	double r = posHelper->getPoint3D2RadiusSony(p3.x, p3.y, p3.z);
+    printf("p3.x = %f p3.y = %f p3.z = %f\n", p3.x, p3.y, p3.z);
 
-	printf("radius: %f\n", r);
+    double r = posHelper->getPoint3D2RadiusSony(p3.x, p3.y, p3.z);
 
-	return 0;
+    printf("radius: %f\n", r);
+
+    return 0;
 }
 
 

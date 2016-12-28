@@ -30,8 +30,8 @@
 
 
 FilterAddBallBlobsToSeg::FilterAddBallBlobsToSeg(int width, int height):Filter(OF_ZERO, width, height){
-	
-	init();
+
+    init();
 
 }
 
@@ -39,26 +39,26 @@ FilterAddBallBlobsToSeg::FilterAddBallBlobsToSeg(int width, int height):Filter(O
 
 FilterAddBallBlobsToSeg::~FilterAddBallBlobsToSeg(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned char * FilterAddBallBlobsToSeg::process(unsigned char * src, unsigned char * tgt, std::vector<BlobBounds> & blobs, unsigned int width, unsigned int height, unsigned char addColor){
 
-	for(unsigned int a = 0; a < blobs.size(); a++){
-		for(int i = blobs[a].top; i <= blobs[a].bottom; i++){
-			for(int j = blobs[a].left; j <= blobs[a].right; j++){
-				if(src[i*width + j] == addColor)
-					tgt[i*width + j] = COLOR_RED;
+    for(unsigned int a = 0; a < blobs.size(); a++){
+        for(int i = blobs[a].top; i <= blobs[a].bottom; i++){
+            for(int j = blobs[a].left; j <= blobs[a].right; j++){
+                if(src[i*width + j] == addColor)
+                    tgt[i*width + j] = COLOR_RED;
 
 
-			}
-		}
+            }
+        }
 
-	}
+    }
 
-	return tgt;
+    return tgt;
 
 }
 
@@ -71,8 +71,8 @@ void FilterAddBallBlobsToSeg::init(){
 
 
 void FilterAddBallBlobsToSeg::cleanup(){
-	
-	//delete sharedMemoryHelper;
+
+    //delete sharedMemoryHelper;
 
 }
 

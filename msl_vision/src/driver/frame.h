@@ -86,7 +86,7 @@ namespace camera
             void reset()
             {
                 //this->stamp = DFKI::Time(0);
-		this->stamp = 0;
+        this->stamp = 0;
                 if (this->image.size() > 0) {
                     memset(&this->image[0], 0, this->image.size());
                 }
@@ -95,8 +95,8 @@ namespace camera
             bool isRaw()       { return this->frame_mode == MODE_RAW; }
             bool isHDR()       { return this->frame_mode == MODE_HDR; }
             bool isGrayscale() { return this->frame_mode == MODE_GRAYSCALE; }
-            bool isColour()    { return this->frame_mode == MODE_COLOUR || this->frame_mode==MODE_YUV422; 
-	    }
+            bool isColour()    { return this->frame_mode == MODE_COLOUR || this->frame_mode==MODE_YUV422;
+        }
 
             int getChannelCount() const { return getChannelCount(this->frame_mode); }
             static int getChannelCount(frame_mode_t mode)
@@ -106,7 +106,7 @@ namespace camera
                     case MODE_RAW:       return 1;
                     case MODE_HDR:       return 1;
                     case MODE_GRAYSCALE: return 1;
-		    case MODE_YUV422:	 return 2;
+            case MODE_YUV422:    return 2;
                     case MODE_COLOR:     return 3;
                     default:             return 0;
                 }
@@ -155,16 +155,16 @@ namespace camera
                         << std::endl;
                     return;
                 }
-		//this->image.resize(4*640*480*2);
+        //this->image.resize(4*640*480*2);
                 memcpy(&this->image[0], data, size);
-		//unsigned char* speicherloch = new unsigned char[4*640*480*2];
-		//unsigned char speicherloch[4*640*480*2];
-		//if(speicherloch==NULL) std::cout << "SCHEISSE" << std::endl;
-		//for(int i=0; i<size;i++) {
-		//if (i>600000) printf("SCH %0x \n",&(data[i]));
-		//	speicherloch[i] = data[i];
-		//}
-		//memcpy(&this->image[0], speicherloch, size/2);
+        //unsigned char* speicherloch = new unsigned char[4*640*480*2];
+        //unsigned char speicherloch[4*640*480*2];
+        //if(speicherloch==NULL) std::cout << "SCHEISSE" << std::endl;
+        //for(int i=0; i<size;i++) {
+        //if (i>600000) printf("SCH %0x \n",&(data[i]));
+        //  speicherloch[i] = data[i];
+        //}
+        //memcpy(&this->image[0], speicherloch, size/2);
             }
 
             inline uint8_t *getImagePtr() { return static_cast<uint8_t *>(&this->image[0]); }
@@ -174,7 +174,7 @@ namespace camera
             // The unix time at which the camFrame was captured
             // in the video1394 ringbuffer
             //DFKI::Time              stamp;
-		long              stamp;
+        long              stamp;
             std::vector<uint8_t>    image;
 
             // The image size [width, height]

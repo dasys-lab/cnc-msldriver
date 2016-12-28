@@ -26,7 +26,7 @@
 
 //  Pressure sensor type codes
 
-#define RTHUMIDITY_TYPE_AUTODISCOVER	0                   // audodiscover the humidity sensor
+#define RTHUMIDITY_TYPE_AUTODISCOVER    0                   // audodiscover the humidity sensor
 #define RTHUMIDITY_TYPE_NULL            1                   // if no physical hardware
 #define RTHUMIDITY_TYPE_HTS221          2                   // HTS221
 #define RTHUMIDITY_TYPE_HTU21D          3                   // HTU21D

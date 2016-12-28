@@ -37,133 +37,133 @@ using namespace supplementary;
 
 int main(int argc, char * argv[]){
 
-	//Calculate Image Mask
+    //Calculate Image Mask
 
-	SystemConfigPtr sc = SystemConfig::getInstance();
+    SystemConfigPtr sc = SystemConfig::getInstance();
 
-	Configuration *vision = (*sc)["Vision"];
+    Configuration *vision = (*sc)["Vision"];
 
-	int area = vision->get<int>("Vision", "ImageArea", NULL);
+    int area = vision->get<int>("Vision", "ImageArea", NULL);
 
-	int mx = vision->get<int>("Vision", "CameraMX", NULL);
-	int my = vision->get<int>("Vision", "CameraMY", NULL);
+    int mx = vision->get<int>("Vision", "CameraMX", NULL);
+    int my = vision->get<int>("Vision", "CameraMY", NULL);
 
-	mx = area/2;
-	my = area/2;
-
-
-	unsigned char LookupTable[area][area];
-
-	memset((void *) LookupTable, 255, area*area);
-
-	unsigned char * CenterMask = NULL;
-	unsigned char dx = 0;
-	unsigned char dy = 0;
+    mx = area/2;
+    my = area/2;
 
 
-	std::string file_name = sc->getRootPath() + "/src/Vision5/tools/CenterMask.dat";
+    unsigned char LookupTable[area][area];
 
-	FILE * fd = fopen(file_name.c_str(), "r");
-	if(fd != NULL){
+    memset((void *) LookupTable, 255, area*area);
 
-		int n1 = fread(&dx, sizeof(unsigned char), 1, fd);
-		int n2 = fread(&dy, sizeof(unsigned char), 1, fd);
-
-		printf("dx = %d read %d\n", dx, n1);
-		printf("dy = %d read %d\n", dy, n2);
-
-		CenterMask = (unsigned char*) malloc((2*dx+1)*(2*dy+1));
-
-		fread(CenterMask, sizeof(unsigned char), (2*dx+1)*(2*dy+1), fd);
-
-		fclose(fd);
-	}
-	else{
-		printf("CenterMask file not found ....\n");
-		printf("file name: %s\n", file_name.c_str());
-		exit(1);
-	}
-
-	printf("Calculating Image Mask ...................................\n");
+    unsigned char * CenterMask = NULL;
+    unsigned char dx = 0;
+    unsigned char dy = 0;
 
 
-	//out of circle
+    std::string file_name = sc->getRootPath() + "/src/Vision5/tools/CenterMask.dat";
 
-	for(int i = 0; i < area; i++){
-		for(int j = 0; j < area; j++){
+    FILE * fd = fopen(file_name.c_str(), "r");
+    if(fd != NULL){
 
-			int x = i - mx;
-			int y = j - my;
+        int n1 = fread(&dx, sizeof(unsigned char), 1, fd);
+        int n2 = fread(&dy, sizeof(unsigned char), 1, fd);
 
-			double d = sqrt((double)(x*x + y*y));
-			if(d > RADIUS){
+        printf("dx = %d read %d\n", dx, n1);
+        printf("dy = %d read %d\n", dy, n2);
 
-				LookupTable[i][j] = 0;
-			}
-			if(d < INNERRADIUS){
-				
-				LookupTable[i][j] = 128;
+        CenterMask = (unsigned char*) malloc((2*dx+1)*(2*dy+1));
 
-			}
-		}
-		std::cout << "." << std::flush;
-		
-	}
+        fread(CenterMask, sizeof(unsigned char), (2*dx+1)*(2*dy+1), fd);
 
-	//CenterMask 
+        fclose(fd);
+    }
+    else{
+        printf("CenterMask file not found ....\n");
+        printf("file name: %s\n", file_name.c_str());
+        exit(1);
+    }
 
-	for(int i = -dx; i <= dx; i++){
-		for(int j = -dy; j <= dy; j++){
-
-			int xm = i + dx;
-			int ym = j + dy;
-
-			int x = mx + i;
-			int y = my + j;
-
-			//LookupTable[x][y] = 0;
-
-			if(CenterMask[xm*(2*dy+1) + ym] < 1){
-				LookupTable[x][y] = 0; //CenterMask[xm*(2*dy+1) + ym];
-			}
-			//if(CenterMask[xm*dy + ym] < 1){
-			//	LookupTable[x][y] = 0;
-			//}
-		}
-	}
+    printf("Calculating Image Mask ...................................\n");
 
 
+    //out of circle
+
+    for(int i = 0; i < area; i++){
+        for(int j = 0; j < area; j++){
+
+            int x = i - mx;
+            int y = j - my;
+
+            double d = sqrt((double)(x*x + y*y));
+            if(d > RADIUS){
+
+                LookupTable[i][j] = 0;
+            }
+            if(d < INNERRADIUS){
+
+                LookupTable[i][j] = 128;
+
+            }
+        }
+        std::cout << "." << std::flush;
+
+    }
+
+    //CenterMask
+
+    for(int i = -dx; i <= dx; i++){
+        for(int j = -dy; j <= dy; j++){
+
+            int xm = i + dx;
+            int ym = j + dy;
+
+            int x = mx + i;
+            int y = my + j;
+
+            //LookupTable[x][y] = 0;
+
+            if(CenterMask[xm*(2*dy+1) + ym] < 1){
+                LookupTable[x][y] = 0; //CenterMask[xm*(2*dy+1) + ym];
+            }
+            //if(CenterMask[xm*dy + ym] < 1){
+            //  LookupTable[x][y] = 0;
+            //}
+        }
+    }
 
 
-	//holders
-
-	for(int i = 0; i < area; i++){
-		for(int j = 0; j < area; j++){
-
-			int x = i - mx;
-			int y = j - my;
-
-			double angle = fabs(atan2(y, x))*180.0/M_PI;
-			double angleDiff = fabs(angle - 120.0);
-
-			if( angle <= HOLDER || angleDiff <= HOLDER){
-
-				LookupTable[i][j] = 0;
-			}
-		}
-		std::cout << "." << std::flush;
-		
-	}
 
 
-	std::cout << std::endl << "Image Mask calculated" << std::endl;
+    //holders
 
-	fd = fopen("ImageMask.dat", "w");
-	fwrite(&(LookupTable[0][0]), sizeof(char), area*area, fd);
-	fclose(fd);
-	
+    for(int i = 0; i < area; i++){
+        for(int j = 0; j < area; j++){
 
-	return 0;
+            int x = i - mx;
+            int y = j - my;
+
+            double angle = fabs(atan2(y, x))*180.0/M_PI;
+            double angleDiff = fabs(angle - 120.0);
+
+            if( angle <= HOLDER || angleDiff <= HOLDER){
+
+                LookupTable[i][j] = 0;
+            }
+        }
+        std::cout << "." << std::flush;
+
+    }
+
+
+    std::cout << std::endl << "Image Mask calculated" << std::endl;
+
+    fd = fopen("ImageMask.dat", "w");
+    fwrite(&(LookupTable[0][0]), sizeof(char), area*area, fd);
+    fclose(fd);
+
+
+    return 0;
 }
 
 

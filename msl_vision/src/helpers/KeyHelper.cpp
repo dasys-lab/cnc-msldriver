@@ -20,12 +20,12 @@ void KeyHelper::checkKeyPress()
 
         tcsetattr(0, TCSANOW, &new_settings);
         int n = getchar();
-	tcsetattr(0, TCSANOW, &initial_settings);
-	key = n;
-	if(SpicaHelper::key != EOF) {
-		key = SpicaHelper::key;
-		key = EOF;
-	}
+    tcsetattr(0, TCSANOW, &initial_settings);
+    key = n;
+    if(SpicaHelper::key != EOF) {
+        key = SpicaHelper::key;
+        key = EOF;
+    }
 }
 
 void KeyHelper::checkRemoteKey() {
@@ -38,11 +38,11 @@ void KeyHelper::checkRemoteKey() {
 
 bool KeyHelper::checkKey(unsigned char k) {
 
-	if(key != EOF)
-	{
-		if(key==k) {
-			return true;
-		}
-    	}
-	return false;
+    if(key != EOF)
+    {
+        if(key==k) {
+            return true;
+        }
+        }
+    return false;
 }

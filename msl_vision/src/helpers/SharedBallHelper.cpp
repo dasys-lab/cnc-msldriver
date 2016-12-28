@@ -35,33 +35,33 @@ SharedBallHelper *SharedBallHelper::instance = NULL;
 
 void SharedBallHelper::handleSharedBallInfo(const SharedBallInfo::ConstPtr& message) {
 
-	// TODO: Handle SharedBallInfo
+    // TODO: Handle SharedBallInfo
 }
 
 SharedBallHelper::SharedBallHelper() {
 
-	initialized = false;
+    initialized = false;
 
-	/*if (SpicaHelper::visionCEP != NULL) {
-		SpicaHelper::visionCEP->getSharedBall().added = boost::bind(
-				&SharedBallHelper::handleSharedBallInfo, this, _1, _2);
-	}*/
+    /*if (SpicaHelper::visionCEP != NULL) {
+        SpicaHelper::visionCEP->getSharedBall().added = boost::bind(
+                &SharedBallHelper::handleSharedBallInfo, this, _1, _2);
+    }*/
 
-	init();
+    init();
 }
 
 
 SharedBallHelper::~SharedBallHelper(){
 
-	cleanup();
+    cleanup();
 
 }
 
 SharedBallHelper *SharedBallHelper::getInstance() {
-	if (instance == NULL) {
-		instance = new SharedBallHelper();
-	}
-	return instance;
+    if (instance == NULL) {
+        instance = new SharedBallHelper();
+    }
+    return instance;
 }
 
 

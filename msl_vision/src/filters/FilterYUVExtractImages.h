@@ -29,35 +29,35 @@
 class FilterYUVExtractImages  : public Filter {
 
 
-	public:
-		FilterYUVExtractImages(int width_, int height_, int refx_, int refy_, int areaWidth_, int areaHeight_);
-		~FilterYUVExtractImages();
-		
-		void process(unsigned char * src, unsigned char* & gray_image_, unsigned char* & uv_image_);
-		void process(unsigned char * src, unsigned char*  & gray_image_, unsigned char* & uv_image_, unsigned char* & roi_image_);
-		 
-	protected:
+    public:
+        FilterYUVExtractImages(int width_, int height_, int refx_, int refy_, int areaWidth_, int areaHeight_);
+        ~FilterYUVExtractImages();
 
-		void init();
-		void initROI();
-		void cleanup();
+        void process(unsigned char * src, unsigned char* & gray_image_, unsigned char* & uv_image_);
+        void process(unsigned char * src, unsigned char*  & gray_image_, unsigned char* & uv_image_, unsigned char* & roi_image_);
 
-		int width;
-		int height;
+    protected:
 
-		int refx;
-		int refy;
+        void init();
+        void initROI();
+        void cleanup();
 
-		int areaWidth;
-		int areaHeight;
+        int width;
+        int height;
 
-		unsigned char * uv_image;
-		unsigned char * gray_image;
-		unsigned char * roi_image;
-		unsigned char * lookupTable;
-		unsigned char * lookupTableROI;
+        int refx;
+        int refy;
 
-		
+        int areaWidth;
+        int areaHeight;
+
+        unsigned char * uv_image;
+        unsigned char * gray_image;
+        unsigned char * roi_image;
+        unsigned char * lookupTable;
+        unsigned char * lookupTableROI;
+
+
 
 };
 

@@ -36,15 +36,15 @@
 
 class Filter {
 
-	public:
-		Filter(int bufferFormat_, int width, int heigth);
-		~Filter();
-		unsigned char * getOutputBuffer();
+    public:
+        Filter(int bufferFormat_, int width, int heigth);
+        ~Filter();
+        unsigned char * getOutputBuffer();
 
-	protected:
-		
-		unsigned char * outputBuffer;
-		int bufferFormat;
+    protected:
+
+        unsigned char * outputBuffer;
+        int bufferFormat;
 
 };
 

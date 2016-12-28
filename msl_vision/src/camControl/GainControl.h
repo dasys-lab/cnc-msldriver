@@ -43,15 +43,15 @@ using namespace std;
 
 class GainControl : public BasisControl{
 
-	public:
-		GainControl(string file, string confName);
-		~GainControl(){};
-		double computeManipulateVariable(double measuredValue);
-		void addBright(double addVal);
+    public:
+        GainControl(string file, string confName);
+        ~GainControl(){};
+        double computeManipulateVariable(double measuredValue);
+        void addBright(double addVal);
 
-	private:
-		double hellGainLUT[256];
-		double LUTAdd;
+    private:
+        double hellGainLUT[256];
+        double LUTAdd;
 };
 
 #endif

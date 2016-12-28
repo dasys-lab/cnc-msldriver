@@ -29,27 +29,27 @@
 
 void PacketHelper::initHeader(PacketHeader & header, int type){
 
-	header.endian = ENDIANESS;
-	header.version = VERSION;
-	header.origin = ORIGIN;
-	header.type = type;
+    header.endian = ENDIANESS;
+    header.version = VERSION;
+    header.origin = ORIGIN;
+    header.type = type;
 
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	header.timestamp =  (((unsigned long long)tv.tv_sec + EPOCH_ADJUST)* 1000000 + tv.tv_usec)*10;
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    header.timestamp =  (((unsigned long long)tv.tv_sec + EPOCH_ADJUST)* 1000000 + tv.tv_usec)*10;
 
 }
 
 
 void PacketHelper::initHeaderMDT(CarpeNoctem::Header * header, CarpeNoctem::EventHeader * manHeader, unsigned short msgid){
 
-	manHeader->setOrigin(ORIGIN);
+    manHeader->setOrigin(ORIGIN);
 
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	manHeader->setTimestamp((((unsigned long long)tv.tv_sec + EPOCH_ADJUST)* 1000000 + tv.tv_usec)*10);
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    manHeader->setTimestamp((((unsigned long long)tv.tv_sec + EPOCH_ADJUST)* 1000000 + tv.tv_usec)*10);
 
-	header->setMsgid(msgid);
+    header->setMsgid(msgid);
 
 }
 */

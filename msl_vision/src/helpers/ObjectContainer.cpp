@@ -30,30 +30,30 @@
 
 ObjectContainer::ObjectContainer(int size_){
 
-	size = size_;
+    size = size_;
 
-	points = (ObservedPoint *) malloc(size*sizeof(ObservedPoint));
-	memset(points, 0, size*sizeof(ObservedPoint));
+    points = (ObservedPoint *) malloc(size*sizeof(ObservedPoint));
+    memset(points, 0, size*sizeof(ObservedPoint));
 
-	startIndex = 0;
-	lastIndex = 0;
-	lastValidIndex = 0;
-	points[0].valid = false;
+    startIndex = 0;
+    lastIndex = 0;
+    lastValidIndex = 0;
+    points[0].valid = false;
 
-	//printf("+++++++++++++++++++++lastIndex %d %d\n", lastIndex, size*sizeof(ObservedPoint));
+    //printf("+++++++++++++++++++++lastIndex %d %d\n", lastIndex, size*sizeof(ObservedPoint));
 
-	validCounter = 0;
+    validCounter = 0;
 
-	init();
+    init();
 
 }
 
 
 ObjectContainer::~ObjectContainer(){
 
-	printf("Destructor of ObjectContainer\n");
+    printf("Destructor of ObjectContainer\n");
 
-	cleanup();
+    cleanup();
 
 }
 
@@ -66,7 +66,7 @@ void ObjectContainer::init(){
 
 void ObjectContainer::cleanup(){
 
-	free(points);
+    free(points);
 
 
 }
@@ -74,45 +74,45 @@ void ObjectContainer::cleanup(){
 
 void ObjectContainer::integratePoint(ObservedPoint p){
 
-	//printf("ObjectContainer integratePoint %d %d %d\n", lastIndex, startIndex, validCounter);
+    //printf("ObjectContainer integratePoint %d %d %d\n", lastIndex, startIndex, validCounter);
 
 
 
-	if(lastIndex != startIndex || (lastIndex == startIndex && validCounter == 1)){
-		lastIndex++;
-		if(lastIndex >= size)
-			lastIndex -= size;
-	}
+    if(lastIndex != startIndex || (lastIndex == startIndex && validCounter == 1)){
+        lastIndex++;
+        if(lastIndex >= size)
+            lastIndex -= size;
+    }
 
-	//printf("ObjectContainer integratePoint %d\n", lastIndex);
-	points[lastIndex] = p;
+    //printf("ObjectContainer integratePoint %d\n", lastIndex);
+    points[lastIndex] = p;
 
-	//printf("p.valid %d - points.valid %d\n", p.valid, points[lastIndex].valid);
+    //printf("p.valid %d - points.valid %d\n", p.valid, points[lastIndex].valid);
 
-	lastValidIndex = -1;
-	validCounter = 0;
-	if(points[lastIndex].valid){
-		validCounter++;
-		lastValidIndex = lastIndex;
-	}
+    lastValidIndex = -1;
+    validCounter = 0;
+    if(points[lastIndex].valid){
+        validCounter++;
+        lastValidIndex = lastIndex;
+    }
 
-	int currIndex = startIndex;
+    int currIndex = startIndex;
 
-	while(currIndex != lastIndex){
+    while(currIndex != lastIndex){
 
-		if(points[currIndex].valid){
-			validCounter++;
-			if(lastValidIndex != lastIndex)
-				lastValidIndex = currIndex;
-		}
+        if(points[currIndex].valid){
+            validCounter++;
+            if(lastValidIndex != lastIndex)
+                lastValidIndex = currIndex;
+        }
 
-		currIndex++;
-		if(currIndex >= size)
-			currIndex -= size;
+        currIndex++;
+        if(currIndex >= size)
+            currIndex -= size;
 
-	}
+    }
 
-	//printf("ObjectContainer integratePoint %d %d\n", lastValidIndex, validCounter);
+    //printf("ObjectContainer integratePoint %d %d\n", lastValidIndex, validCounter);
 
 
 }
@@ -120,58 +120,58 @@ void ObjectContainer::integratePoint(ObservedPoint p){
 
 void ObjectContainer::invalidate(int ms){
 
-	printf("BallPos ObjectContainer invalidate: %d %d\n", lastValidIndex, validCounter);
+    printf("BallPos ObjectContainer invalidate: %d %d\n", lastValidIndex, validCounter);
 
-	int currIndex = startIndex;
+    int currIndex = startIndex;
 
-	unsigned long long timeDiff = 0;
+    unsigned long long timeDiff = 0;
 
-	while(currIndex != lastIndex){
-		timeDiff = TimeHelper::getInstance()->getTimeDiffToOmniCam(points[currIndex].timestamp);
-		//printf("BallPos Invalidate %lld\n", timeDiff);
-		if(timeDiff > ms*10000){
-			points[currIndex].valid = false;
-			startIndex = currIndex + 1;
-			if(startIndex >= size)
-				startIndex -= size;
-		}
+    while(currIndex != lastIndex){
+        timeDiff = TimeHelper::getInstance()->getTimeDiffToOmniCam(points[currIndex].timestamp);
+        //printf("BallPos Invalidate %lld\n", timeDiff);
+        if(timeDiff > ms*10000){
+            points[currIndex].valid = false;
+            startIndex = currIndex + 1;
+            if(startIndex >= size)
+                startIndex -= size;
+        }
 
-		currIndex++;
-		if(currIndex >= size)
-			currIndex -= size;
-	}
+        currIndex++;
+        if(currIndex >= size)
+            currIndex -= size;
+    }
 
-	timeDiff = TimeHelper::getInstance()->getTimeDiffToOmniCam(points[lastIndex].timestamp);
+    timeDiff = TimeHelper::getInstance()->getTimeDiffToOmniCam(points[lastIndex].timestamp);
 
-	if(timeDiff > ms*10000){
-		points[lastIndex].valid = false;
-		startIndex = lastIndex;
-	}
+    if(timeDiff > ms*10000){
+        points[lastIndex].valid = false;
+        startIndex = lastIndex;
+    }
 
 
-	validCounter = 0;
-	lastValidIndex = -1;
-	if(points[lastIndex].valid){
-		validCounter++;
-		lastValidIndex = lastIndex;
-	}
+    validCounter = 0;
+    lastValidIndex = -1;
+    if(points[lastIndex].valid){
+        validCounter++;
+        lastValidIndex = lastIndex;
+    }
 
-	currIndex = startIndex;
+    currIndex = startIndex;
 
-	while(currIndex != lastIndex){
+    while(currIndex != lastIndex){
 
-		if(points[currIndex].valid){
-			validCounter++;
-			if(lastValidIndex != lastIndex)
-				lastValidIndex = currIndex;
-		}
+        if(points[currIndex].valid){
+            validCounter++;
+            if(lastValidIndex != lastIndex)
+                lastValidIndex = currIndex;
+        }
 
-		currIndex++;
-		if(currIndex >= size)
-			currIndex -= size;
-	}
+        currIndex++;
+        if(currIndex >= size)
+            currIndex -= size;
+    }
 
-	//printf("ObjectContainer invalidate: %d %d\n", lastValidIndex, validCounter);
+    //printf("ObjectContainer invalidate: %d %d\n", lastValidIndex, validCounter);
 
 
 }
@@ -179,11 +179,11 @@ void ObjectContainer::invalidate(int ms){
 
 void ObjectContainer::reset(){
 
-	startIndex = 0;
-	lastIndex = 0;
-	lastValidIndex = 0;
-	validCounter = 0;
-	points[0].valid = false;
+    startIndex = 0;
+    lastIndex = 0;
+    lastValidIndex = 0;
+    validCounter = 0;
+    points[0].valid = false;
 
 }
 
@@ -191,32 +191,32 @@ void ObjectContainer::reset(){
 
 int ObjectContainer::getSize(){
 
-	return size;
+    return size;
 
 }
 
 int ObjectContainer::getStartIndex(){
 
-	return startIndex;
+    return startIndex;
 
 }
 
 int ObjectContainer::getLastIndex(){
 
-	return lastIndex;
+    return lastIndex;
 
 }
 
 int ObjectContainer::getNumberValidPoints(){
 
-	return validCounter;
+    return validCounter;
 
 }
 
 
 ObservedPoint * ObjectContainer::getPoints(){
 
-	return points;
+    return points;
 
 }
 

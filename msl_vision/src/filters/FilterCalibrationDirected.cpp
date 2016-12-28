@@ -30,10 +30,10 @@
 
 FilterCalibrationDirected::FilterCalibrationDirected(int width, int height):Filter(OF_ZERO, width, height){
 
-	imWidth = width;
-	imHeight = height;
+    imWidth = width;
+    imHeight = height;
 
-	init();
+    init();
 
 }
 
@@ -41,31 +41,31 @@ FilterCalibrationDirected::FilterCalibrationDirected(int width, int height):Filt
 
 FilterCalibrationDirected::~FilterCalibrationDirected(){
 
-	cleanup();
+    cleanup();
 
 }
-		
+
 
 unsigned char * FilterCalibrationDirected::process(unsigned char * src, int width, int height){
 
 
-	unsigned char * tgt = src;
+    unsigned char * tgt = src;
 
-	PositionHelperDirected * helper = PositionHelperDirected::getInstance();
+    PositionHelperDirected * helper = PositionHelperDirected::getInstance();
 
-	for(int i = 0; i < height; i++){
+    for(int i = 0; i < height; i++){
 
-		for(int j = 0; j < width; j++){
+        for(int j = 0; j < width; j++){
 
-			double dist = helper->getPointCam2Dist(j, i)/500.0;
+            double dist = helper->getPointCam2Dist(j, i)/500.0;
 
-			if(dist > 0 && dist < 10000.0 && fabs(dist - trunc(dist)) < 0.30)
-				tgt[i*width + j] = 0;
+            if(dist > 0 && dist < 10000.0 && fabs(dist - trunc(dist)) < 0.30)
+                tgt[i*width + j] = 0;
 
-		}
-	}
+        }
+    }
 
-	return tgt;
+    return tgt;
 
 
 }

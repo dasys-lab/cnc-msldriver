@@ -27,28 +27,28 @@
 
 class FilterExtractLineImage
 {
-	public:
-		FilterExtractLineImage();
-		FilterExtractLineImage(struct ImageSize size);
-		~FilterExtractLineImage();
-		
-		void process(unsigned char * &src, unsigned char * &lineImage_);
-				
-		void setLineLookupTableValue(int index, int value);
-		int getLineLookupTableValue(int index);
-		
-	protected:
-		void init();
-		void cleanup();
-		
-		uint16_t width;
-		uint16_t height;
-		
-		unsigned char * uvImage;
-		unsigned char * grayImage;
-		unsigned char * lineImage;
-		
-		unsigned char * lineLookupTable;
+    public:
+        FilterExtractLineImage();
+        FilterExtractLineImage(struct ImageSize size);
+        ~FilterExtractLineImage();
+
+        void process(unsigned char * &src, unsigned char * &lineImage_);
+
+        void setLineLookupTableValue(int index, int value);
+        int getLineLookupTableValue(int index);
+
+    protected:
+        void init();
+        void cleanup();
+
+        uint16_t width;
+        uint16_t height;
+
+        unsigned char * uvImage;
+        unsigned char * grayImage;
+        unsigned char * lineImage;
+
+        unsigned char * lineLookupTable;
 };
 
 #endif

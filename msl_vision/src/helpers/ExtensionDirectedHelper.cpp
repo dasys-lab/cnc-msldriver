@@ -15,14 +15,14 @@ ros::Publisher ExtensionDirectedHelper::kcpub;
 
 
 void ExtensionDirectedHelper::initialize() {
-	 kcpub = SpicaHelper::visionNode->advertise<KickControl>("KickControl", 1);
+     kcpub = SpicaHelper::visionNode->advertise<KickControl>("KickControl", 1);
 }
 
 //Not Testet
 int ExtensionDirectedHelper::extendUpperExtension()
 {
-	KickControl kick;
-	kick.extension = (1);
-	kick.extTime = (1000);
+    KickControl kick;
+    kick.extension = (1);
+    kick.extTime = (1000);
         kcpub.publish(kick);
 }

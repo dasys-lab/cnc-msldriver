@@ -40,20 +40,20 @@ namespace Cox
   class CoxLocalization
   {
     public:
-      CoxLocalization(field_lines_t &lines, 
-                                   field_circles_t &circles, 
-                                   float resolution = 20.f, 
-                                   float border = 1000.f, 
+      CoxLocalization(field_lines_t &lines,
+                                   field_circles_t &circles,
+                                   float resolution = 20.f,
+                                   float border = 1000.f,
                                    float stepsize_x = 40.f,
-                                   float stepsize_y = 40.f, 
+                                   float stepsize_y = 40.f,
                                    float stepsize_phi = 0.1f);
 
       void set_2nd_deviation_thresholds(float xy, float phi);
       virtual ~CoxLocalization();
       void get_pose(field_pose_t &pose, line_points_t &scan);
       void global_localization(field_pose_t &pose, line_points_t &scan);
-      
-      
+
+
     protected: /* Methods */
       field_lines_t getLines();
       void rprob(float_vector_t &pose,float_vector_t &gradient, float_vector_t &former_gradient, float_vector_t &stepsize);

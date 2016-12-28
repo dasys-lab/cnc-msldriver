@@ -33,9 +33,9 @@ BallZTracker * BallZTracker::instance_ = NULL;
 
 BallZTracker * BallZTracker::getInstance(){
 
-	if(instance_ == NULL)
-		instance_ = new BallZTracker();
-	return instance_;
+    if(instance_ == NULL)
+        instance_ = new BallZTracker();
+    return instance_;
 
 
 }
@@ -43,16 +43,16 @@ BallZTracker * BallZTracker::getInstance(){
 
 BallZTracker::BallZTracker(){
 
-	rawHelper = RawOdometryHelper::getInstance();
+    rawHelper = RawOdometryHelper::getInstance();
 
-	init();
+    init();
 
 }
 
 BallZTracker::~BallZTracker(){
 
 
-	cleanup();
+    cleanup();
 
 }
 
@@ -71,114 +71,114 @@ void BallZTracker::cleanup(){
 
 ZEstimate BallZTracker::trackObject(ObservedPoint * points, int length, int startIndex, int lastIndex){
 
-	ZEstimate ze;
+    ZEstimate ze;
 
-	double * zvalues = (double *) malloc(length*sizeof(double));
+    double * zvalues = (double *) malloc(length*sizeof(double));
 
-	for(int i = 0; i < length; i++){
+    for(int i = 0; i < length; i++){
 
-		zvalues[i] = points[i].z;
+        zvalues[i] = points[i].z;
 
-		//printf("BallTracker - Object Tracker - Point %f %f\n", points[i].x, points[i].y);
-		//printf("BallTracker - Object Tracker - Point %f %f\n", pointsTmp[i].x, pointsTmp[i].y);
+        //printf("BallTracker - Object Tracker - Point %f %f\n", points[i].x, points[i].y);
+        //printf("BallTracker - Object Tracker - Point %f %f\n", pointsTmp[i].x, pointsTmp[i].y);
 
-	}
+    }
 
-	double sumTimesSquare = 0.0;
-	double sumTimesThree = 0.0;
-	double sumTimes = 0.0;
-	double sumZ = 0.0;
-	double sumTimesZ = 0.0;
-	double lambda = 0.0;
-	int validCounter = 0;
+    double sumTimesSquare = 0.0;
+    double sumTimesThree = 0.0;
+    double sumTimes = 0.0;
+    double sumZ = 0.0;
+    double sumTimesZ = 0.0;
+    double lambda = 0.0;
+    int validCounter = 0;
 
-	unsigned long long timeOmniCam = TimeHelper::getInstance()->getVisionTimeOmniCam();
+    unsigned long long timeOmniCam = TimeHelper::getInstance()->getVisionTimeOmniCam();
 
-	if(points[lastIndex].valid){
+    if(points[lastIndex].valid){
 
-		sumZ = zvalues[lastIndex];
-		unsigned long long timediff = TimeHelper::getInstance()->getTimeDiffToOmniCam(points[lastIndex].timestamp);
+        sumZ = zvalues[lastIndex];
+        unsigned long long timediff = TimeHelper::getInstance()->getTimeDiffToOmniCam(points[lastIndex].timestamp);
 
-		double a = -1.0;
-		if(timeOmniCam < points[lastIndex].timestamp)
-			a = 1.0;
+        double a = -1.0;
+        if(timeOmniCam < points[lastIndex].timestamp)
+            a = 1.0;
 
-		sumTimes = a*timediff/1.0E07;
-		sumTimesSquare = (a*timediff/1.0E07)*(a*timediff/1.0E07);
-		sumTimesThree = (a*timediff/1.0E07)*(a*timediff/1.0E07)*(a*timediff/1.0E07);
-		sumTimesZ = zvalues[lastIndex]*(a*timediff/1.0E07);
-
-
-
-		validCounter++;
-	}
-
-	int currIndex = startIndex;
-	
-	while(currIndex != lastIndex){
-
-		if(!points[currIndex].valid){
-			currIndex++;
-			if(currIndex >= length)
-				currIndex -= length;
-			continue;
-		}
-		validCounter++;
-
-		unsigned long long timediff = TimeHelper::getInstance()->getTimeDiffToOmniCam(points[currIndex].timestamp);
-
-		double a = -1.0;
-		if(timeOmniCam < points[currIndex].timestamp)
-			a = 1.0;
-
-		sumZ += zvalues[currIndex];
-		sumTimes += (a*timediff/1.0E07);
-		sumTimesSquare += (a*timediff/1.0E07)*(a*timediff/1.0E07);
-		sumTimesThree += (a*timediff/1.0E07)*(a*timediff/1.0E07)*(a*timediff/1.0E07);
-		sumTimesZ += zvalues[currIndex]*(a*timediff/1.0E07);
-
-
-		currIndex++;
-		if(currIndex >= length)
-			currIndex -= length;
-
-	}
-
-	ze.z = 120.0;
-	ze.vz = 0.0;
-
-	if(validCounter >= 1) {
-
-		ze.z = zvalues[lastIndex];
-		ze.vz = 0.0;
-
-	}
-
-	if(validCounter >= 4){
-
-		double a = 9810;
-
-
-		double lambda = 12.0;
-
-		ze.z = (sumTimesSquare + lambda)*sumZ - sumTimesZ*sumTimes - 0.5*a*sumTimesThree*sumTimes + 0.5*a*sumTimesSquare*(sumTimesSquare + lambda);
-		ze.z = ze.z/(validCounter*(sumTimesSquare + lambda) - sumTimes*sumTimes);
-
-		if(ze.z < 120.0)
-			ze.z = 120.0;
-
-		lambda = -0.01*ze.z;
-		
-		ze.vz = validCounter*sumTimesZ - sumTimes*sumZ - 0.5*a*sumTimesSquare*sumTimes + 0.5*validCounter*a*sumTimesThree;
-		ze.vz = ze.vz/(validCounter*(sumTimesSquare + lambda) - sumTimes*sumTimes);
+        sumTimes = a*timediff/1.0E07;
+        sumTimesSquare = (a*timediff/1.0E07)*(a*timediff/1.0E07);
+        sumTimesThree = (a*timediff/1.0E07)*(a*timediff/1.0E07)*(a*timediff/1.0E07);
+        sumTimesZ = zvalues[lastIndex]*(a*timediff/1.0E07);
 
 
 
-	}
+        validCounter++;
+    }
 
-	free(zvalues);	
+    int currIndex = startIndex;
 
-	return ze;
+    while(currIndex != lastIndex){
+
+        if(!points[currIndex].valid){
+            currIndex++;
+            if(currIndex >= length)
+                currIndex -= length;
+            continue;
+        }
+        validCounter++;
+
+        unsigned long long timediff = TimeHelper::getInstance()->getTimeDiffToOmniCam(points[currIndex].timestamp);
+
+        double a = -1.0;
+        if(timeOmniCam < points[currIndex].timestamp)
+            a = 1.0;
+
+        sumZ += zvalues[currIndex];
+        sumTimes += (a*timediff/1.0E07);
+        sumTimesSquare += (a*timediff/1.0E07)*(a*timediff/1.0E07);
+        sumTimesThree += (a*timediff/1.0E07)*(a*timediff/1.0E07)*(a*timediff/1.0E07);
+        sumTimesZ += zvalues[currIndex]*(a*timediff/1.0E07);
+
+
+        currIndex++;
+        if(currIndex >= length)
+            currIndex -= length;
+
+    }
+
+    ze.z = 120.0;
+    ze.vz = 0.0;
+
+    if(validCounter >= 1) {
+
+        ze.z = zvalues[lastIndex];
+        ze.vz = 0.0;
+
+    }
+
+    if(validCounter >= 4){
+
+        double a = 9810;
+
+
+        double lambda = 12.0;
+
+        ze.z = (sumTimesSquare + lambda)*sumZ - sumTimesZ*sumTimes - 0.5*a*sumTimesThree*sumTimes + 0.5*a*sumTimesSquare*(sumTimesSquare + lambda);
+        ze.z = ze.z/(validCounter*(sumTimesSquare + lambda) - sumTimes*sumTimes);
+
+        if(ze.z < 120.0)
+            ze.z = 120.0;
+
+        lambda = -0.01*ze.z;
+
+        ze.vz = validCounter*sumTimesZ - sumTimes*sumZ - 0.5*a*sumTimesSquare*sumTimes + 0.5*validCounter*a*sumTimesThree;
+        ze.vz = ze.vz/(validCounter*(sumTimesSquare + lambda) - sumTimes*sumTimes);
+
+
+
+    }
+
+    free(zvalues);
+
+    return ze;
 
 }
 

@@ -38,13 +38,13 @@
 #define HORIZON 20000.0
 #define RANGE 5
 
-#define NSECTORS 60 
+#define NSECTORS 60
 
 struct Range {
 
-	short start;
-	short end;
-	double minDistance;
+    short start;
+    short end;
+    double minDistance;
 
 
 };
@@ -54,35 +54,35 @@ using namespace supplementary;
 class FilterDistanceProfileNew  : public Filter {
 
 
-	public:
-		FilterDistanceProfileNew(int width, int height);
-		~FilterDistanceProfileNew();
-		
-		unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, ScanLineHelper & helper, DistanceLookupHelper & distanceHelper);
+    public:
+        FilterDistanceProfileNew(int width, int height);
+        ~FilterDistanceProfileNew();
 
-		double * getProfile();
+        unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, ScanLineHelper & helper, DistanceLookupHelper & distanceHelper);
 
-		double getThreshold();
+        double * getProfile();
 
-	protected:
+        double getThreshold();
 
-		SystemConfig* sc;
+    protected:
 
-		void init();
-		void cleanup();
+        SystemConfig* sc;
 
-		void calculateOpponentsFromRange(Range range, double * profile, short profileLength, double sectorAngle, std::vector<Point> & opponentPoints);
-		void DrawCircle(int midX, int midY, int rad, unsigned char * space, int width, int height);
+        void init();
+        void cleanup();
 
-		double * profile;
-		double * tmpProfile;
-		
-		double threshold_;
-		
-		int numberOfLines;
-		short minObsDistance, obsThreshOffset;
-		short negRanges[3][2];
-		std::vector<Holder> addHolders;
+        void calculateOpponentsFromRange(Range range, double * profile, short profileLength, double sectorAngle, std::vector<Point> & opponentPoints);
+        void DrawCircle(int midX, int midY, int rad, unsigned char * space, int width, int height);
+
+        double * profile;
+        double * tmpProfile;
+
+        double threshold_;
+
+        int numberOfLines;
+        short minObsDistance, obsThreshOffset;
+        short negRanges[3][2];
+        std::vector<Holder> addHolders;
 
 
 };

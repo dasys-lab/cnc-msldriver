@@ -28,21 +28,21 @@
 class FilterYUVToRGB : public Filter {
 
 
-	public:
-		FilterYUVToRGB(int width, int height);
-		~FilterYUVToRGB();
-		
-		unsigned char * process(unsigned char * src, unsigned int imagesize);
+    public:
+        FilterYUVToRGB(int width, int height);
+        ~FilterYUVToRGB();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned int imagesize);
 
-		void init();
-		void cleanup();
+    protected:
 
-		unsigned char t_r[65536];
-		unsigned char t_b[65536];
-		unsigned char t_g1[65536];
-		unsigned char t_g2[65536];
+        void init();
+        void cleanup();
+
+        unsigned char t_r[65536];
+        unsigned char t_b[65536];
+        unsigned char t_g1[65536];
+        unsigned char t_g2[65536];
 
 
 };

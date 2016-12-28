@@ -36,31 +36,31 @@
 class FilterSobelDir  : public Filter {
 
 
-	public:
-		FilterSobelDir(int width, int height);
-		FilterSobelDir(ImageSize size);
-		~FilterSobelDir();
-		
-		unsigned char * process(unsigned char * src, unsigned char * mask, std::vector<ROIData> &roiData, int width, int height, int threshold, unsigned char minColor);
-		void process(unsigned char* src, unsigned char*& dst, uint8_t threshold, int16_t size);
+    public:
+        FilterSobelDir(int width, int height);
+        FilterSobelDir(ImageSize size);
+        ~FilterSobelDir();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned char * mask, std::vector<ROIData> &roiData, int width, int height, int threshold, unsigned char minColor);
+        void process(unsigned char* src, unsigned char*& dst, uint8_t threshold, int16_t size);
 
-		int inline sign(int s); 
-		int inline sign2(int s);
-		int inline dir(int gx, int gy, int threshold);
-		int8_t inline dir(int8_t gx, int8_t gy, uint8_t threshold);
+    protected:
 
-		void cleanup();
-		
-		uint16_t width;
-		uint16_t height;
-		
-		unsigned char * box;
-		int *xbox, *ybox;
-		unsigned char * AreaLookup;
-		
-		unsigned char * buffer;
+        int inline sign(int s);
+        int inline sign2(int s);
+        int inline dir(int gx, int gy, int threshold);
+        int8_t inline dir(int8_t gx, int8_t gy, uint8_t threshold);
+
+        void cleanup();
+
+        uint16_t width;
+        uint16_t height;
+
+        unsigned char * box;
+        int *xbox, *ybox;
+        unsigned char * AreaLookup;
+
+        unsigned char * buffer;
 
 };
 

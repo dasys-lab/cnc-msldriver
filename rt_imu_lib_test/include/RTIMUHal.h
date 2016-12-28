@@ -25,7 +25,7 @@
 //  staslock@gmail.com (www.clickdrive.io)
 
 #ifndef _RTIMUHAL_H
-#define	_RTIMUHAL_H
+#define _RTIMUHAL_H
 
 #include <stdio.h>
 #include <math.h>

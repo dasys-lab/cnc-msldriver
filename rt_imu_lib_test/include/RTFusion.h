@@ -22,7 +22,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef _RTFUSION_H
-#define	_RTFUSION_H
+#define _RTFUSION_H
 
 #include "RTIMULibDefs.h"
 
@@ -78,8 +78,8 @@ protected:
     RTVector3 m_accel;                                      // current accel sample
     RTVector3 m_compass;                                    // current compass sample
 
-    RTQuaternion m_measuredQPose;       					// quaternion form of pose from measurement
-    RTVector3 m_measuredPose;								// vector form of pose from measurement
+    RTQuaternion m_measuredQPose;                           // quaternion form of pose from measurement
+    RTVector3 m_measuredPose;                               // vector form of pose from measurement
     RTQuaternion m_fusionQPose;                             // quaternion form of pose from fusion
     RTVector3 m_fusionPose;                                 // vector form of pose from fusion
 

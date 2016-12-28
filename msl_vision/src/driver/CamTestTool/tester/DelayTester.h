@@ -5,7 +5,7 @@
  * info: Delay test in use with delay test board (toggle led light)
  *
  * caution: test is camera resolution dependent. lThreshold und usResolx usResoly
- * 			have to be checked
+ *          have to be checked
  */
 
 #ifndef CAMERATEST_DELAY

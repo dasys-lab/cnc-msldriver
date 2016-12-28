@@ -30,21 +30,21 @@ CameraQuickCam::CameraQuickCam() //: sc()
 
 {
 
-	//this->sc = SystemConfig::getInstance();
+    //this->sc = SystemConfig::getInstance();
 
-	io = IO_METHOD_MMAP;
-	int fd = -1;
-	buffers = NULL;
-	n_buffers  = 0;
-	id = 0;
+    io = IO_METHOD_MMAP;
+    int fd = -1;
+    buffers = NULL;
+    n_buffers  = 0;
+    id = 0;
 
         //dev_name = "/dev/video0";
-	dev_name = "/dev/video1";
+    dev_name = "/dev/video1";
         open_device();
         init_device();
         start_capturing ();
 
-	//captureBuffer = (char *) malloc(640*480*2);
+    //captureBuffer = (char *) malloc(640*480*2);
 
 
 }
@@ -54,7 +54,7 @@ CameraQuickCam::~CameraQuickCam()
 {
         stop_capturing ();
         uninit_device ();
-	close_device ();
+    close_device ();
 
 
 
@@ -89,36 +89,36 @@ int CameraQuickCam::read_frame(){
         struct v4l2_buffer buf;
         unsigned int i;
 
-	CLEAR (buf);
+    CLEAR (buf);
 
-	buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-	buf.memory = V4L2_MEMORY_MMAP;
+    buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    buf.memory = V4L2_MEMORY_MMAP;
 
-	if (-1 == xioctl (fd, VIDIOC_DQBUF, &buf)) {
-		switch (errno) {
-		case EAGAIN:
-			return 0;
+    if (-1 == xioctl (fd, VIDIOC_DQBUF, &buf)) {
+        switch (errno) {
+        case EAGAIN:
+            return 0;
 
-		case EIO:
-			/* Could ignore EIO, see spec. */
+        case EIO:
+            /* Could ignore EIO, see spec. */
 
-			/* fall through */
+            /* fall through */
 
-		default:
-			errno_exit ("VIDIOC_DQBUF");
-		}
-	}
+        default:
+            errno_exit ("VIDIOC_DQBUF");
+        }
+    }
 
-	assert (buf.index < n_buffers);
+    assert (buf.index < n_buffers);
 
-	captureBuffer = (char *) buffers[buf.index].start;
+    captureBuffer = (char *) buffers[buf.index].start;
 
-	//process_image (buffers[buf.index].start);
+    //process_image (buffers[buf.index].start);
 
-	if (-1 == xioctl (fd, VIDIOC_QBUF, &buf))
-		errno_exit ("VIDIOC_QBUF");
+    if (-1 == xioctl (fd, VIDIOC_QBUF, &buf))
+        errno_exit ("VIDIOC_QBUF");
 
- 
+
         return 1;
 
 }
@@ -133,7 +133,7 @@ void CameraQuickCam::mainloop(){
 
 char * CameraQuickCam::getCaptureBuffer(){
 
-	return captureBuffer;
+    return captureBuffer;
 
 }
 
@@ -143,10 +143,10 @@ void CameraQuickCam::stop_capturing(){
 
         enum v4l2_buf_type type;
 
-	type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 
-	if (-1 == xioctl (fd, VIDIOC_STREAMOFF, &type))
-		errno_exit ("VIDIOC_STREAMOFF");
+    if (-1 == xioctl (fd, VIDIOC_STREAMOFF, &type))
+        errno_exit ("VIDIOC_STREAMOFF");
 
 
 }
@@ -158,23 +158,23 @@ void CameraQuickCam::start_capturing(){
         unsigned int i;
         enum v4l2_buf_type type;
 
-	for (i = 0; i < n_buffers; ++i) {
-		struct v4l2_buffer buf;
+    for (i = 0; i < n_buffers; ++i) {
+        struct v4l2_buffer buf;
 
-		CLEAR (buf);
+        CLEAR (buf);
 
-		buf.type        = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-		buf.memory      = V4L2_MEMORY_MMAP;
-		buf.index       = i;
+        buf.type        = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        buf.memory      = V4L2_MEMORY_MMAP;
+        buf.index       = i;
 
-		if (-1 == xioctl (fd, VIDIOC_QBUF, &buf))
-			errno_exit ("VIDIOC_QBUF");
-	}
+        if (-1 == xioctl (fd, VIDIOC_QBUF, &buf))
+            errno_exit ("VIDIOC_QBUF");
+    }
 
-	type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 
-	if (-1 == xioctl (fd, VIDIOC_STREAMON, &type))
-		errno_exit ("VIDIOC_STREAMON");
+    if (-1 == xioctl (fd, VIDIOC_STREAMON, &type))
+        errno_exit ("VIDIOC_STREAMON");
 
 
 }
@@ -184,9 +184,9 @@ void CameraQuickCam::uninit_device(){
 
         unsigned int i;
 
-	for (i = 0; i < n_buffers; ++i)
-		if (-1 == munmap (buffers[i].start, buffers[i].length))
-			errno_exit ("munmap");
+    for (i = 0; i < n_buffers; ++i)
+        if (-1 == munmap (buffers[i].start, buffers[i].length))
+            errno_exit ("munmap");
 
         free (buffers);
 
@@ -276,78 +276,78 @@ void CameraQuickCam::init_mmap(){
 }
 
 int CameraQuickCam::set_gamma(__s32 value) {
-	return set_control(V4L2_CID_GAMMA, value);
+    return set_control(V4L2_CID_GAMMA, value);
 }
 
 int CameraQuickCam::set_gain(__s32 value) {
-	return set_control(V4L2_CID_GAIN, value);
+    return set_control(V4L2_CID_GAIN, value);
 }
 
 int CameraQuickCam::set_hue(__s32 value) {
-	return set_control(V4L2_CID_HUE, value);
+    return set_control(V4L2_CID_HUE, value);
 }
 
 int CameraQuickCam::set_saturation(__s32 value) {
-	return set_control(V4L2_CID_SATURATION, value);
+    return set_control(V4L2_CID_SATURATION, value);
 }
 
 int CameraQuickCam::set_contrast(__s32 value) {
-	return set_control(V4L2_CID_CONTRAST, value);
+    return set_control(V4L2_CID_CONTRAST, value);
 }
 
 int CameraQuickCam::set_brightness(__s32 value) {
-	return set_control(V4L2_CID_BRIGHTNESS, value);
+    return set_control(V4L2_CID_BRIGHTNESS, value);
 }
 
 int CameraQuickCam::set_sharpness(__s32 value) {
-	return set_control(V4L2_CID_SHARPNESS, value);
+    return set_control(V4L2_CID_SHARPNESS, value);
 }
 
 int CameraQuickCam::set_auto_white_balance_on() {
-	 return set_control((V4L2_CID_PRIVATE_BASE+12), 1);
+     return set_control((V4L2_CID_PRIVATE_BASE+12), 1);
 }
 
 int CameraQuickCam::set_auto_white_balance_off() {
-	 return set_control((V4L2_CID_PRIVATE_BASE+12), 0);
+     return set_control((V4L2_CID_PRIVATE_BASE+12), 0);
 }
 
 int CameraQuickCam::set_white_balance(__s32 value) {
-	return set_control((V4L2_CID_PRIVATE_BASE+13), value);
+    return set_control((V4L2_CID_PRIVATE_BASE+13), value);
 }
 
 //bug on / off was exchanged, not my fault :) see luvcview
 int CameraQuickCam::set_auto_exposure_off() {
-	 return set_control((V4L2_CID_PRIVATE_BASE+10), 1);
+     return set_control((V4L2_CID_PRIVATE_BASE+10), 1);
 }
 
 int CameraQuickCam::set_auto_exposure_on() {
-	 return set_control((V4L2_CID_PRIVATE_BASE+10), 8);
+     return set_control((V4L2_CID_PRIVATE_BASE+10), 8);
 }
 
 int CameraQuickCam::set_exposure(__s32 value) {
-	return set_control((V4L2_CID_PRIVATE_BASE+11), value);
+    return set_control((V4L2_CID_PRIVATE_BASE+11), value);
 }
 
 
 int CameraQuickCam::set_control(__u32 id, __s32 value) {
-	struct v4l2_control ctrl; 
-	int err;
-	
-	ctrl.id = id;
-	ctrl.value = value;
-	if ((err = ioctl(fd, VIDIOC_S_CTRL, &ctrl)) < 0) {
-		printf("ioctl control error while set %d to %d\n", ctrl.id, ctrl.value);
-	}
-	return err;
+    struct v4l2_control ctrl;
+    int err;
+
+    ctrl.id = id;
+    ctrl.value = value;
+    if ((err = ioctl(fd, VIDIOC_S_CTRL, &ctrl)) < 0) {
+        printf("ioctl control error while set %d to %d\n", ctrl.id, ctrl.value);
+    }
+    return err;
 }
 
 void CameraQuickCam::init_device(){
- 
+
         struct v4l2_capability cap;
         struct v4l2_cropcap cropcap;
         struct v4l2_crop crop;
         struct v4l2_format fmt;
-        
+
         unsigned int min;
 
         if (-1 == xioctl (fd, VIDIOC_QUERYCAP, &cap)) {
@@ -367,11 +367,11 @@ void CameraQuickCam::init_device(){
         }
 
 
-	if (!(cap.capabilities & V4L2_CAP_STREAMING)) {
-		fprintf (stderr, "%s does not support streaming i/o\n",
-				dev_name);
-		exit (EXIT_FAILURE);
-	}
+    if (!(cap.capabilities & V4L2_CAP_STREAMING)) {
+        fprintf (stderr, "%s does not support streaming i/o\n",
+                dev_name);
+        exit (EXIT_FAILURE);
+    }
 
 
 
@@ -397,7 +397,7 @@ void CameraQuickCam::init_device(){
                                 break;
                         }
                 }
-        } else {        
+        } else {
                 /* Errors ignored. */
         }
 
@@ -405,9 +405,9 @@ void CameraQuickCam::init_device(){
         CLEAR (fmt);
 
         fmt.type                = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-        fmt.fmt.pix.width       = 640; 
+        fmt.fmt.pix.width       = 640;
         fmt.fmt.pix.height      = 480;
-//        fmt.fmt.pix.width       = 320; 
+//        fmt.fmt.pix.width       = 320;
 //        fmt.fmt.pix.height      = 240;
         fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
         fmt.fmt.pix.field       = V4L2_FIELD_ANY;
@@ -415,15 +415,15 @@ void CameraQuickCam::init_device(){
         if (-1 == xioctl (fd, VIDIOC_S_FMT, &fmt))
                 errno_exit ("VIDIOC_S_FMT");
 
-	struct v4l2_streamparm* setfps;
-	setfps = (struct v4l2_streamparm *) calloc(1, sizeof(struct v4l2_streamparm));
-	memset(setfps, 0, sizeof(struct v4l2_streamparm));
-	setfps->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-	setfps->parm.capture.timeperframe.numerator = 1;
-	setfps->parm.capture.timeperframe.denominator = 60;
+    struct v4l2_streamparm* setfps;
+    setfps = (struct v4l2_streamparm *) calloc(1, sizeof(struct v4l2_streamparm));
+    memset(setfps, 0, sizeof(struct v4l2_streamparm));
+    setfps->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    setfps->parm.capture.timeperframe.numerator = 1;
+    setfps->parm.capture.timeperframe.denominator = 60;
 
-	if(-1 == xioctl(fd, VIDIOC_S_PARM, setfps))
-		errno_exit("VIDIOC_S_PARM");
+    if(-1 == xioctl(fd, VIDIOC_S_PARM, setfps))
+        errno_exit("VIDIOC_S_PARM");
 
 
 
@@ -438,10 +438,10 @@ void CameraQuickCam::init_device(){
                 fmt.fmt.pix.sizeimage = min;
 
 
-	
 
 
-	init_mmap ();
+
+    init_mmap ();
 
 
 }
@@ -458,7 +458,7 @@ void CameraQuickCam::close_device(){
 
 void CameraQuickCam::open_device()
 {
-        struct stat st; 
+        struct stat st;
 
         if (-1 == stat (dev_name, &st)) {
                 fprintf (stderr, "Cannot identify '%s': %d, %s\n",
@@ -483,35 +483,35 @@ void CameraQuickCam::open_device()
 void CameraQuickCam::captureBegin(){
 
 
-	for(;;){
-		fd_set fds;
-		struct timeval tv;
-		int r;
-		
-		FD_ZERO (&fds);
-		FD_SET (fd, &fds);
-		
-		/* Timeout. */
-		tv.tv_sec = 5;
-		tv.tv_usec = 0;
-		
-		r = select (fd + 1, &fds, NULL, NULL, &tv);
-		
-		if (-1 == r) {
-			if (EINTR == errno)
-				continue;
-		
-			errno_exit ("select");
-		}
-		
-		if (0 == r) {
-			fprintf (stderr, "select timeout\n");
-			exit (EXIT_FAILURE);
-		}
-		
-		if (read_frame ())
-			break;
-	}
+    for(;;){
+        fd_set fds;
+        struct timeval tv;
+        int r;
+
+        FD_ZERO (&fds);
+        FD_SET (fd, &fds);
+
+        /* Timeout. */
+        tv.tv_sec = 5;
+        tv.tv_usec = 0;
+
+        r = select (fd + 1, &fds, NULL, NULL, &tv);
+
+        if (-1 == r) {
+            if (EINTR == errno)
+                continue;
+
+            errno_exit ("select");
+        }
+
+        if (0 == r) {
+            fprintf (stderr, "select timeout\n");
+            exit (EXIT_FAILURE);
+        }
+
+        if (read_frame ())
+            break;
+    }
 
 }
 

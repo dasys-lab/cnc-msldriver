@@ -29,25 +29,25 @@
 class FilterBox  : public Filter {
 
 
-	public:
-		FilterBox(int width, int height);
-		~FilterBox();
-		
-		unsigned short * process(unsigned char * src, int width, int height);
-		unsigned short * getResult();
-		unsigned char * getResultChar();
+    public:
+        FilterBox(int width, int height);
+        ~FilterBox();
 
-	protected:
+        unsigned short * process(unsigned char * src, int width, int height);
+        unsigned short * getResult();
+        unsigned char * getResultChar();
 
-		void init();
-		void cleanup();
+    protected:
+
+        void init();
+        void cleanup();
 
 
-		unsigned short * boxImage;
-		unsigned char * boxImageChar;
+        unsigned short * boxImage;
+        unsigned char * boxImageChar;
 
-		int imWidth;
-		int imHeight;
+        int imWidth;
+        int imHeight;
 
 
 };

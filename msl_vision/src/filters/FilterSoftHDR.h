@@ -29,19 +29,19 @@
 class FilterSoftHDR  : public Filter {
 
 
-	public:
-		FilterSoftHDR(int width, int height);
-		~FilterSoftHDR();
-		
-		unsigned char * process(unsigned char * curr, unsigned char * prev, int width, int height);
+    public:
+        FilterSoftHDR(int width, int height);
+        ~FilterSoftHDR();
 
-	protected:
+        unsigned char * process(unsigned char * curr, unsigned char * prev, int width, int height);
 
-		void init();
-		void cleanup();
+    protected:
 
-		unsigned char * result;
-		unsigned char * cmpLU;
+        void init();
+        void cleanup();
+
+        unsigned char * result;
+        unsigned char * cmpLU;
 
 };
 

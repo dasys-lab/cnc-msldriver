@@ -36,45 +36,45 @@
 #define HORIZON 20000.0
 #define RANGE 5
 
-#define NSECTORS 60 
+#define NSECTORS 60
 
 using namespace supplementary;
 
 class FilterDistanceProfile  : public Filter {
 
 
-	public:
-		FilterDistanceProfile(int width, int height, bool _calibMode = false);
-		~FilterDistanceProfile();
-		
-		unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, unsigned char color, ScanLineHelper & helper, DistanceLookupHelper & distanceHelper, bool printOutput);
+    public:
+        FilterDistanceProfile(int width, int height, bool _calibMode = false);
+        ~FilterDistanceProfile();
 
-		short * calculateNewNegRanges();
+        unsigned char * process(unsigned char * src, unsigned int width, unsigned int height, unsigned char color, ScanLineHelper & helper, DistanceLookupHelper & distanceHelper, bool printOutput);
 
-		double * getProfile();
+        short * calculateNewNegRanges();
 
-	protected:
+        double * getProfile();
 
-		SystemConfig* sc;
+    protected:
 
-		void init();
-		void cleanup();
+        SystemConfig* sc;
 
-		double * profile;
-		double * tmpProfile;
-		
-		bool calibMode;
-		int * calibProfile;
-		int calibCounter;
+        void init();
+        void cleanup();
 
-		int numberOfLines;
+        double * profile;
+        double * tmpProfile;
 
-		//Anja::Socket * socket;
-		//std::string destAddress;
-		//std::string socketType;
-		//int destPort;
-		//unsigned short msgid;
-		short negRanges[3][2];
+        bool calibMode;
+        int * calibProfile;
+        int calibCounter;
+
+        int numberOfLines;
+
+        //Anja::Socket * socket;
+        //std::string destAddress;
+        //std::string socketType;
+        //int destPort;
+        //unsigned short msgid;
+        short negRanges[3][2];
 
 
 };

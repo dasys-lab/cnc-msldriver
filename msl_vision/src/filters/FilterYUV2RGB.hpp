@@ -27,25 +27,25 @@
 #include "Filter.h"
 
 class FilterYUV2RGB : public Filter {
-	
-	public:
-		FilterYUV2RGB(ImageSize size);
-		~FilterYUV2RGB();
-		
-		void process(unsigned char * src, unsigned char *&dst);
-		
-	protected:
-		void cleanup();
-		
-		unsigned char * buffer;
-		
-		unsigned char t_r[65536];
-		unsigned char t_b[65536];
-		unsigned char t_g1[65536];
-		unsigned char t_g2[65536];
-		
-		uint16_t width;
-		uint16_t height;
+
+    public:
+        FilterYUV2RGB(ImageSize size);
+        ~FilterYUV2RGB();
+
+        void process(unsigned char * src, unsigned char *&dst);
+
+    protected:
+        void cleanup();
+
+        unsigned char * buffer;
+
+        unsigned char t_r[65536];
+        unsigned char t_b[65536];
+        unsigned char t_g1[65536];
+        unsigned char t_g2[65536];
+
+        uint16_t width;
+        uint16_t height;
 };
 
 

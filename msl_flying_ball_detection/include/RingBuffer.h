@@ -68,7 +68,7 @@ template<typename T>
      */
     boost::shared_ptr<T> getLast(int n)
     {
-    	boost::shared_ptr<T> ptr;
+        boost::shared_ptr<T> ptr;
 
       if (this->index < 0 || this->bufferSize <= n || this->identifierCounter <= n)
       {

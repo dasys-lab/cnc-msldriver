@@ -40,32 +40,32 @@
 class Logger{
 
 
-	public:
+    public:
 
-		~Logger();
+        ~Logger();
 
-		void logRawOdometry(Position pos, unsigned long long timestamp);
-		void logCompassValue(int value, unsigned long long timestamp);
-		void logImageInfo(int imageNumber, unsigned long long timestamp);
-		void setWriteCounter(int writeCounter_);
+        void logRawOdometry(Position pos, unsigned long long timestamp);
+        void logCompassValue(int value, unsigned long long timestamp);
+        void logImageInfo(int imageNumber, unsigned long long timestamp);
+        void setWriteCounter(int writeCounter_);
 
-		static Logger * getInstance();
+        static Logger * getInstance();
 
 
-	protected:
+    protected:
 
-		Logger();
+        Logger();
 
-		static Logger * instance_;
+        static Logger * instance_;
 
-		void init();
-		void cleanup();
+        void init();
+        void cleanup();
 
-		int writeCounter;
+        int writeCounter;
 
-		FILE * logfile;
+        FILE * logfile;
 
-		boost::mutex mutex;
+        boost::mutex mutex;
 };
 
 

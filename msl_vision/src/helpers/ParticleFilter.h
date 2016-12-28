@@ -44,74 +44,74 @@ using namespace supplementary;
 
 class ParticleFilter {
 
-	public:
-		ParticleFilter(int nParticles_);
-		~ParticleFilter();
+    public:
+        ParticleFilter(int nParticles_);
+        ~ParticleFilter();
 
-		void iterate(std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, RandomGaussHelper & gaussHelper, std::vector<Goal> yellowGoals, std::vector<Goal> blueGoals, std::vector<CornerPost> cornerPosts, bool sendOdometry = true);
-		void updateParticles(double deltaX, double deltaY, double deltaH); 
-		Particle getMaxParticle();
+        void iterate(std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, RandomGaussHelper & gaussHelper, std::vector<Goal> yellowGoals, std::vector<Goal> blueGoals, std::vector<CornerPost> cornerPosts, bool sendOdometry = true);
+        void updateParticles(double deltaX, double deltaY, double deltaH);
+        Particle getMaxParticle();
 
-		int getNumberParticles();
-		Particle * getParticles();
+        int getNumberParticles();
+        Particle * getParticles();
 
-		WeightedPosition getEstimatedPosition();
-		
-		static double calculateWeightForEstimatedPosition(Position pos, std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, unsigned char * linePointsInvalidity, int invCounter);
-		void writeCoi();
+        WeightedPosition getEstimatedPosition();
 
-	protected:
+        static double calculateWeightForEstimatedPosition(Position pos, std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, unsigned char * linePointsInvalidity, int invCounter);
+        void writeCoi();
 
-		SystemConfig* sc;
+    protected:
 
-		msl_sensor_msgs::CorrectedOdometryInfo coi;
+        SystemConfig* sc;
 
-		int nParticles;
-		void initParticles();
-		void resample(RandomGaussHelper & gaussHelper);
-		void cleanup();
-		void normalizeAngle(double &ang);
+        msl_sensor_msgs::CorrectedOdometryInfo coi;
 
-//		double calculateWeightForEstimatedPosition(Position pos, std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, unsigned char * linePointsInvalidity, int invCounter);
+        int nParticles;
+        void initParticles();
+        void resample(RandomGaussHelper & gaussHelper);
+        void cleanup();
+        void normalizeAngle(double &ang);
 
-		Particle * particles;
-		Particle maxParticle;
+//      double calculateWeightForEstimatedPosition(Position pos, std::vector<LinePoint> & linePoints, LineDistanceHelper & lineDistHelper, unsigned char * linePointsInvalidity, int invCounter);
 
-		RawOdometryHelper * rawOdometryHelper;
-		CompassValueHelper * compassValueHelper;
+        Particle * particles;
+        Particle maxParticle;
 
-//		Anja::Socket * socket;
-//		std::string destAddress;
-//		std::string socketType;
-//		int destPort;
+        RawOdometryHelper * rawOdometryHelper;
+        CompassValueHelper * compassValueHelper;
 
-		Position rawUpdatedPosition;
-		unsigned short msgid;
-		
-		bool isGoalie;
+//      Anja::Socket * socket;
+//      std::string destAddress;
+//      std::string socketType;
+//      int destPort;
 
-		double LocalizationSuccess;
-		double LinePointSigma;
-		bool UseRepParticles;
-		bool UseBlueGoal;
-		bool UseCornerPosts;
-		
-		int yellowGoalDirection;
+        Position rawUpdatedPosition;
+        unsigned short msgid;
 
-		unsigned long long lastIteration;
+        bool isGoalie;
 
-		Position positionBuffer[RAWODOBUFSIZE];
-		unsigned long long timestampBuffer[RAWODOBUFSIZE];
+        double LocalizationSuccess;
+        double LinePointSigma;
+        bool UseRepParticles;
+        bool UseBlueGoal;
+        bool UseCornerPosts;
 
-		int integrationIndex;
-		bool bufferInitialized;
+        int yellowGoalDirection;
 
-		MovingRobot mr;
-		MovingRobot mrOld;
+        unsigned long long lastIteration;
 
-		
+        Position positionBuffer[RAWODOBUFSIZE];
+        unsigned long long timestampBuffer[RAWODOBUFSIZE];
 
-		int initCounter;
+        int integrationIndex;
+        bool bufferInitialized;
+
+        MovingRobot mr;
+        MovingRobot mrOld;
+
+
+
+        int initCounter;
 
 
 };

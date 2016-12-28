@@ -31,36 +31,36 @@ using namespace castor;
 
 class ScanCircleHelper
 {
-	public:
-		ScanCircleHelper();
-		~ScanCircleHelper();
-		
-		uint16_t * getCircles() const;
-		uint32_t * getCircleOffsets() const;
-		uint16_t getNumberCircles() const;
-		uint16_t getMaxPoints() const;
-		
-	protected:
-		
-		SystemConfigPtr sc;
-		
-		void init();
-		
-		uint16_t centerX;
-		uint16_t centerY;
-		uint16_t iRadiusStart;
-		uint16_t iRadiusEnd;
-		uint16_t oRadiusStart;
-		uint16_t oRadiusEnd;
-		uint16_t circleOffset;
-		uint16_t maxPoints;
-		
-		uint16_t * circles;
-		uint32_t * circleOffsets;
-		uint16_t numberOfCircles;
-		
-		uint16_t width;
-		uint16_t height;
+    public:
+        ScanCircleHelper();
+        ~ScanCircleHelper();
+
+        uint16_t * getCircles() const;
+        uint32_t * getCircleOffsets() const;
+        uint16_t getNumberCircles() const;
+        uint16_t getMaxPoints() const;
+
+    protected:
+
+        SystemConfigPtr sc;
+
+        void init();
+
+        uint16_t centerX;
+        uint16_t centerY;
+        uint16_t iRadiusStart;
+        uint16_t iRadiusEnd;
+        uint16_t oRadiusStart;
+        uint16_t oRadiusEnd;
+        uint16_t circleOffset;
+        uint16_t maxPoints;
+
+        uint16_t * circles;
+        uint32_t * circleOffsets;
+        uint16_t numberOfCircles;
+
+        uint16_t width;
+        uint16_t height;
 };
 
 #endif

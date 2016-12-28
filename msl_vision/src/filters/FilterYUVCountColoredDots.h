@@ -29,29 +29,29 @@
 class FilterYUVCountColoredDots : public Filter {
 
 
-	public:
-		FilterYUVCountColoredDots(int width_, int height_, int refx_, int refy_, int areaWidth_, int areaHeight_);
-		~FilterYUVCountColoredDots();
-		
-		long long process(unsigned char * src);
+    public:
+        FilterYUVCountColoredDots(int width_, int height_, int refx_, int refy_, int areaWidth_, int areaHeight_);
+        ~FilterYUVCountColoredDots();
 
-	protected:
+        long long process(unsigned char * src);
 
-		void init();
-		void cleanup();
+    protected:
 
-		int width;
-		int height;
+        void init();
+        void cleanup();
 
-		int refx;
-		int refy;
+        int width;
+        int height;
 
-		int areaWidth;
-		int areaHeight;
+        int refx;
+        int refy;
 
-		unsigned char * lookupTable;
+        int areaWidth;
+        int areaHeight;
 
-		
+        unsigned char * lookupTable;
+
+
 
 };
 

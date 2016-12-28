@@ -16,38 +16,38 @@
 namespace msl_driver
 {
 
-	class CircleTrace
-	{
-	public:
-		CircleTrace();
-		virtual ~CircleTrace();
+    class CircleTrace
+    {
+    public:
+        CircleTrace();
+        virtual ~CircleTrace();
 
-		struct timeval t0;
-		struct timeval t1;
+        struct timeval t0;
+        struct timeval t1;
 
 
-		double getX();
-		double getY();
-		double getAngle();
+        double getX();
+        double getY();
+        double getAngle();
 
-		void setX(double x);
-		void setY(double y);
-		void setAngle(double angle);
-		static double TWO_PI;
+        void setX(double x);
+        void setY(double y);
+        void setAngle(double angle);
+        static double TWO_PI;
 
-		void trace(double movement[]);
+        void trace(double movement[]);
 
-	protected:
-		double x = 0.0;
-		double y = 0.0;
-		double angle = 0.0;
-		double movement[];
-		void initialize();
-		float timedifference_msec(struct timeval t0, struct timeval t1);
-		float elapsed;
+    protected:
+        double x = 0.0;
+        double y = 0.0;
+        double angle = 0.0;
+        double movement[];
+        void initialize();
+        float timedifference_msec(struct timeval t0, struct timeval t1);
+        float elapsed;
 
-		bool isStopwatchStarted = false;
-	};
+        bool isStopwatchStarted = false;
+    };
 
 } /* namespace msl_driver */
 

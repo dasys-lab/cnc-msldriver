@@ -42,10 +42,10 @@
 
 GoalHelperLocalization::GoalHelperLocalization(){
 
-	FootballField::getInstance();
+    FootballField::getInstance();
 
-	msgid = 0;	
-	init();
+    msgid = 0;
+    init();
 
 
 }
@@ -53,7 +53,7 @@ GoalHelperLocalization::GoalHelperLocalization(){
 
 GoalHelperLocalization::~GoalHelperLocalization(){
 
-	cleanup();
+    cleanup();
 
 }
 
@@ -74,97 +74,97 @@ void GoalHelperLocalization::cleanup(){
 void GoalHelperLocalization::getGoalsFromPosition(Position & position){
 
 
-	//YellowGoal
+    //YellowGoal
 /*
-	Goal yellowGoal;
+    Goal yellowGoal;
 
-	Point yLeftPostAllo;
-	yLeftPostAllo.x = FootballField::FieldLength/2.0;
-	yLeftPostAllo.y = FootballField::GoalWidth/2.0;
+    Point yLeftPostAllo;
+    yLeftPostAllo.x = FootballField::FieldLength/2.0;
+    yLeftPostAllo.y = FootballField::GoalWidth/2.0;
 
-	Point yRightPostAllo;
-	yRightPostAllo.x = FootballField::FieldLength/2.0;
-	yRightPostAllo.y = -FootballField::GoalWidth/2.0;
-		
-	yellowGoal.leftPost = getAlloPoint(yLeftPostAllo, position);
-	yellowGoal.rightPost = getAlloPoint(yRightPostAllo, position);
+    Point yRightPostAllo;
+    yRightPostAllo.x = FootballField::FieldLength/2.0;
+    yRightPostAllo.y = -FootballField::GoalWidth/2.0;
 
-
-	if (SpicaHelper::visionCEP) {
-		Point2dInfoPtr leftPost = Point2dInfo::create();
-		Point2dInfoPtr rightPost = Point2dInfo::create();
-	
-		leftPost->setX(yellowGoal.leftPost.x);
-		leftPost->setY(yellowGoal.leftPost.y);
-	
-		rightPost->setX(yellowGoal.rightPost.x);
-		rightPost->setY(yellowGoal.rightPost.y);
-
-		YellowGoalInfoPtr gi = YellowGoalInfo::create();
-
-		gi->setIsYellow(true);
-		gi->setLeftPost(leftPost);
-		gi->setRightPost(rightPost);
-
-		SpicaHelper::wm->getData()->push_back(gi);
-
-		YellowFreeAreaInfoPtr fai = YellowFreeAreaInfo::create();
-		
-		//fai = new CarpeNoctem::Messages::Information::YFreeAreaInfo;
-		fai->setIsYellow(true);
-		fai->setAngle1(atan2(yellowGoal.leftPost.y, yellowGoal.leftPost.x));
-		fai->setAngle2(atan2(yellowGoal.rightPost.y, yellowGoal.rightPost.x));
-
-		SpicaHelper::wm->getData()->push_back(fai);
-
-	}
+    yellowGoal.leftPost = getAlloPoint(yLeftPostAllo, position);
+    yellowGoal.rightPost = getAlloPoint(yRightPostAllo, position);
 
 
-	//BlueGoal
+    if (SpicaHelper::visionCEP) {
+        Point2dInfoPtr leftPost = Point2dInfo::create();
+        Point2dInfoPtr rightPost = Point2dInfo::create();
 
-	Goal blueGoal;
+        leftPost->setX(yellowGoal.leftPost.x);
+        leftPost->setY(yellowGoal.leftPost.y);
+
+        rightPost->setX(yellowGoal.rightPost.x);
+        rightPost->setY(yellowGoal.rightPost.y);
+
+        YellowGoalInfoPtr gi = YellowGoalInfo::create();
+
+        gi->setIsYellow(true);
+        gi->setLeftPost(leftPost);
+        gi->setRightPost(rightPost);
+
+        SpicaHelper::wm->getData()->push_back(gi);
+
+        YellowFreeAreaInfoPtr fai = YellowFreeAreaInfo::create();
+
+        //fai = new CarpeNoctem::Messages::Information::YFreeAreaInfo;
+        fai->setIsYellow(true);
+        fai->setAngle1(atan2(yellowGoal.leftPost.y, yellowGoal.leftPost.x));
+        fai->setAngle2(atan2(yellowGoal.rightPost.y, yellowGoal.rightPost.x));
+
+        SpicaHelper::wm->getData()->push_back(fai);
+
+    }
+
+
+    //BlueGoal
+
+    Goal blueGoal;
 7
-	Point bLeftPostAllo;
-	bLeftPostAllo.x = -FootballField::FieldLength/2.0;
-	bLeftPostAllo.y = -FootballField::GoalWidth/2.0;
+    Point bLeftPostAllo;
+    bLeftPostAllo.x = -FootballField::FieldLength/2.0;
+    bLeftPostAllo.y = -FootballField::GoalWidth/2.0;
 
-	Point bRightPostAllo;
-	bRightPostAllo.x = -FootballField::FieldLength/2.0;
-	bRightPostAllo.y = FootballField::GoalWidth/2.0;
-		
-	blueGoal.leftPost = getAlloPoint(bLeftPostAllo, position);
-	blueGoal.rightPost = getAlloPoint(bRightPostAllo, position);
+    Point bRightPostAllo;
+    bRightPostAllo.x = -FootballField::FieldLength/2.0;
+    bRightPostAllo.y = FootballField::GoalWidth/2.0;
+
+    blueGoal.leftPost = getAlloPoint(bLeftPostAllo, position);
+    blueGoal.rightPost = getAlloPoint(bRightPostAllo, position);
 
 
-	if (SpicaHelper::visionCEP) {
-		Point2dInfoPtr leftPost = Point2dInfo::create();
-		Point2dInfoPtr rightPost = Point2dInfo::create();
-	
-		leftPost->setX(blueGoal.leftPost.x);
-		leftPost->setY(blueGoal.leftPost.y);
-	
-		rightPost->setX(blueGoal.rightPost.x);
-		rightPost->setY(blueGoal.rightPost.y);
+    if (SpicaHelper::visionCEP) {
+        Point2dInfoPtr leftPost = Point2dInfo::create();
+        Point2dInfoPtr rightPost = Point2dInfo::create();
 
-		BlueGoalInfoPtr gi = BlueGoalInfo::create();
+        leftPost->setX(blueGoal.leftPost.x);
+        leftPost->setY(blueGoal.leftPost.y);
 
-		gi->setIsYellow(false);
-		gi->setLeftPost(leftPost);
-		gi->setRightPost(rightPost);
+        rightPost->setX(blueGoal.rightPost.x);
+        rightPost->setY(blueGoal.rightPost.y);
 
-		SpicaHelper::wm->getData()->push_back(gi);
+        BlueGoalInfoPtr gi = BlueGoalInfo::create();
 
-		BlueFreeAreaInfoPtr fai = BlueFreeAreaInfo::create();
+        gi->setIsYellow(false);
+        gi->setLeftPost(leftPost);
+        gi->setRightPost(rightPost);
 
-		
-		//fai = new CarpeNoctem::Messages::Information::YFreeAreaInfo;
-		fai->setIsYellow(false);
-		fai->setAngle1(atan2(blueGoal.leftPost.y, blueGoal.leftPost.x));
-		fai->setAngle2(atan2(blueGoal.rightPost.y, blueGoal.rightPost.x));
+        SpicaHelper::wm->getData()->push_back(gi);
 
-		SpicaHelper::wm->getData()->push_back(fai);
+        BlueFreeAreaInfoPtr fai = BlueFreeAreaInfo::create();
 
-	}
+
+        //fai = new CarpeNoctem::Messages::Information::YFreeAreaInfo;
+        fai->setIsYellow(false);
+        fai->setAngle1(atan2(blueGoal.leftPost.y, blueGoal.leftPost.x));
+        fai->setAngle2(atan2(blueGoal.rightPost.y, blueGoal.rightPost.x));
+
+        SpicaHelper::wm->getData()->push_back(fai);
+
+    }
 
 */
 }
@@ -173,18 +173,18 @@ void GoalHelperLocalization::getGoalsFromPosition(Position & position){
 Point GoalHelperLocalization::getAlloPoint(Point point, Position position){
 
 
-	Point egoPoint;
+    Point egoPoint;
 
-	double x = point.x - position.x;
-	double y = point.y - position.y;
+    double x = point.x - position.x;
+    double y = point.y - position.y;
 
-	double angle = atan2(y,x) - position.heading;
-	double dist = sqrt(x*x + y*y); 
+    double angle = atan2(y,x) - position.heading;
+    double dist = sqrt(x*x + y*y);
 
-	egoPoint.x = cos(angle)*dist;
-	egoPoint.y = sin(angle)*dist;
+    egoPoint.x = cos(angle)*dist;
+    egoPoint.y = sin(angle)*dist;
 
-	return egoPoint;
+    return egoPoint;
 
 
 }

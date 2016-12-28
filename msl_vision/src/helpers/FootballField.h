@@ -29,33 +29,33 @@ using namespace supplementary;
 
 class FootballField{
 
-	public:
+    public:
 
 
-		static FootballField * getInstance();
+        static FootballField * getInstance();
 
-		static double FieldLength;
-		static double FieldWidth;
-		static double GoalAreaWidth;
-		static double GoalAreaLength;
-		static double GoalInnerAreaWidth;
-		static double GoalInnerAreaLength;
-		static double CornerCircleRadius;
-		static double MiddleCircleRadius;
-		static double LineWidth;
-		static double GoalWidth;
-		static bool GoalInnerAreaExists;
-		static bool CornerCircleExists;
+        static double FieldLength;
+        static double FieldWidth;
+        static double GoalAreaWidth;
+        static double GoalAreaLength;
+        static double GoalInnerAreaWidth;
+        static double GoalInnerAreaLength;
+        static double CornerCircleRadius;
+        static double MiddleCircleRadius;
+        static double LineWidth;
+        static double GoalWidth;
+        static bool GoalInnerAreaExists;
+        static bool CornerCircleExists;
 
-	private:
+    private:
 
-		SystemConfig* sc;
+        SystemConfig* sc;
 
-		static FootballField * instance;
-		static string CurrentField;
-		FootballField();
-		~FootballField();
-		
+        static FootballField * instance;
+        static string CurrentField;
+        FootballField();
+        ~FootballField();
+
 
 
 };

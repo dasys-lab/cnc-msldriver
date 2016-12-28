@@ -31,66 +31,66 @@ using namespace std;
 namespace msl_driver
 {
 
-	class Kicker
-	{
-	public:
-		Kicker(int argc, char** argv);
-		virtual ~Kicker();
+    class Kicker
+    {
+    public:
+        Kicker(int argc, char** argv);
+        virtual ~Kicker();
 
-		void initCommunication(int argc, char** argv);
-		void initialize();
-		bool open();
-		void start();
-		void handleKickControl(msl_actuator_msgs::KickControlPtr mc);
-		bool isRunning();
+        void initCommunication(int argc, char** argv);
+        void initialize();
+        bool open();
+        void start();
+        void handleKickControl(msl_actuator_msgs::KickControlPtr mc);
+        bool isRunning();
 
-		static void pmSigintHandler(int sig);
-		static void pmSigTermHandler(int sig);
+        static void pmSigintHandler(int sig);
+        static void pmSigTermHandler(int sig);
 
-		std::mutex motionValueMutex;
+        std::mutex motionValueMutex;
 
-		long pulseWidthLeft;
-		long pulseWidthMiddle;
-		long pulseWidthRight;
+        long pulseWidthLeft;
+        long pulseWidthMiddle;
+        long pulseWidthRight;
 
-		long extensionMaxTime;
-		long extensionMinSleep;
+        long extensionMaxTime;
+        long extensionMinSleep;
 
-		int driverAlivePeriod = 250;
-		int driverOpenAttemptPeriod = 1000;
-		int ownId;
-		int odometryDelay = 0;
+        int driverAlivePeriod = 250;
+        int driverOpenAttemptPeriod = 1000;
+        int ownId;
+        int odometryDelay = 0;
 
-		// ROS STUFF
-		ros::NodeHandle* rosNode;
-		ros::AsyncSpinner* spinner;
-		ros::Subscriber handleKickerControlSub;
+        // ROS STUFF
+        ros::NodeHandle* rosNode;
+        ros::AsyncSpinner* spinner;
+        ros::Subscriber handleKickerControlSub;
 
-		static bool running;
-		thread runThread;
+        static bool running;
+        thread runThread;
 
-		// SERIAL PORT STUFF
-		string device = "";
-		int initReadTimeout = 0; // Initial read timeout (required to read the garbage provided by the VMC after power on
-		int readTimeout = 0; // General read timeout
-		int readTimeoutCount = 0; // Global counter for read timeouts
-		int writeTimeout = 0; // General write timeout
-		int writeTimeoutCount = 0; // Global counter for write timeouts
+        // SERIAL PORT STUFF
+        string device = "";
+        int initReadTimeout = 0; // Initial read timeout (required to read the garbage provided by the VMC after power on
+        int readTimeout = 0; // General read timeout
+        int readTimeoutCount = 0; // Global counter for read timeouts
+        int writeTimeout = 0; // General write timeout
+        int writeTimeoutCount = 0; // Global counter for write timeouts
 
-		serial::Serial* my_serial;
+        serial::Serial* my_serial;
 
-		supplementary::SystemConfig* sc;
-//		MotorConfig mc;
+        supplementary::SystemConfig* sc;
+//      MotorConfig mc;
 
-		chrono::steady_clock::time_point cycleLastTimestamp;
-		chrono::steady_clock::time_point deltaTime;
+        chrono::steady_clock::time_point cycleLastTimestamp;
+        chrono::steady_clock::time_point deltaTime;
 
-		bool controllerIsActive = false;
+        bool controllerIsActive = false;
 
-		bool writeAndCheck(string name);
-		bool checkSuccess(string name, string command, bool display);
-		string readResult(string command);
-	};
+        bool writeAndCheck(string name);
+        bool checkSuccess(string name, string command, bool display);
+        string readResult(string command);
+    };
 
 } /* namespace msl_driver */
 

@@ -23,7 +23,7 @@
 
 
 #ifndef _RTIMULSM9DS0_H
-#define	_RTIMULSM9DS0_H
+#define _RTIMULSM9DS0_H
 
 #include "RTIMU.h"
 

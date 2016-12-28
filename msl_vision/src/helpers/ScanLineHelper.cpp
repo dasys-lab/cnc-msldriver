@@ -31,30 +31,30 @@ ScanLineHelper::ScanLineHelper() : sc()
     this->sc = supplementary::SystemConfig::getInstance();
     this->ownId = this->sc->getOwnRobotID();
 
-	Configuration *vision = (*this->sc)["Vision"];
+    Configuration *vision = (*this->sc)["Vision"];
 
-	//mx = short(atoi(vision->Values["CameraMX"].c_str()));
-	//my = short(atoi(vision->Values["CameraMY"].c_str()));
-	iRadius = vision->get<short>("Vision", "ScanLinesInnerRadius", NULL);
-	oRadius = vision->get<short>("Vision", "ScanLinesOuterRadius", NULL);
-	nLines = vision->get<short>("Vision", "NumberScanLines", NULL);
-	frontScanlineDistance = vision->get<short>("Vision", "FrontScanlineDistance", NULL);
+    //mx = short(atoi(vision->Values["CameraMX"].c_str()));
+    //my = short(atoi(vision->Values["CameraMY"].c_str()));
+    iRadius = vision->get<short>("Vision", "ScanLinesInnerRadius", NULL);
+    oRadius = vision->get<short>("Vision", "ScanLinesOuterRadius", NULL);
+    nLines = vision->get<short>("Vision", "NumberScanLines", NULL);
+    frontScanlineDistance = vision->get<short>("Vision", "FrontScanlineDistance", NULL);
 
-	int imWidth = vision->get<int>("Vision", "ImageArea", NULL);
-	int imHeight = vision->get<int>("Vision", "ImageArea", NULL);
+    int imWidth = vision->get<int>("Vision", "ImageArea", NULL);
+    int imHeight = vision->get<int>("Vision", "ImageArea", NULL);
 
-	printf("ScanLineHelper MX: %d\n", imWidth/2);
-	printf("ScanLineHelper MY: %d\n", imHeight/2);
+    printf("ScanLineHelper MX: %d\n", imWidth/2);
+    printf("ScanLineHelper MY: %d\n", imHeight/2);
 
-	maxPoints = MAXPOINTS;
+    maxPoints = MAXPOINTS;
 
-	mx = (short)imHeight/2;
-	my = (short)imWidth/2;
+    mx = (short)imHeight/2;
+    my = (short)imWidth/2;
 
-	scWIDTH = imWidth;
-	scHEIGHT = imHeight;
+    scWIDTH = imWidth;
+    scHEIGHT = imHeight;
 
-	init();
+    init();
 }
 
 
@@ -62,28 +62,28 @@ ScanLineHelper::ScanLineHelper() : sc()
 
 ScanLineHelper::ScanLineHelper(int imWidth, int imHeight) : sc() {
 
-	Configuration *vision = (*this->sc)["Vision"];
+    Configuration *vision = (*this->sc)["Vision"];
 
-	mx = vision->get<short>("Vision", "CameraMX", NULL);
-	my = vision->get<short>("Vision", "CameraMY", NULL);
+    mx = vision->get<short>("Vision", "CameraMX", NULL);
+    my = vision->get<short>("Vision", "CameraMY", NULL);
 
-	iRadius = vision->get<short>("Vision", "ScanLinesInnerRadius", NULL);
-	oRadius = vision->get<short>("Vision", "ScanLinesOuterRadius", NULL);
-	nLines = vision->get<short>("Vision", "NumberScanLines", NULL);
-	frontScanlineDistance = vision->get<short>("Vision", "FrontScanlineDistance", NULL);
+    iRadius = vision->get<short>("Vision", "ScanLinesInnerRadius", NULL);
+    oRadius = vision->get<short>("Vision", "ScanLinesOuterRadius", NULL);
+    nLines = vision->get<short>("Vision", "NumberScanLines", NULL);
+    frontScanlineDistance = vision->get<short>("Vision", "FrontScanlineDistance", NULL);
 
-	printf("ScanLineHelper MX: %d\n", mx);
-	printf("ScanLineHelper MY: %d\n", my);
+    printf("ScanLineHelper MX: %d\n", mx);
+    printf("ScanLineHelper MY: %d\n", my);
 
-	maxPoints = MAXPOINTS;
+    maxPoints = MAXPOINTS;
 
-	//mx = (short)imHeight/2;
-	//my = (short)imWidth/2;
+    //mx = (short)imHeight/2;
+    //my = (short)imWidth/2;
 
-	scWIDTH = imWidth;
-	scHEIGHT = imHeight;
+    scWIDTH = imWidth;
+    scHEIGHT = imHeight;
 
-	init();
+    init();
 
 
 }
@@ -91,13 +91,13 @@ ScanLineHelper::ScanLineHelper(int imWidth, int imHeight) : sc() {
 
 ScanLineHelper::~ScanLineHelper(){
 
-	printf("Destructor of ScanLineHelper\n");
+    printf("Destructor of ScanLineHelper\n");
 
-	free(innerLines);
-	free(innerLinesN);
-	free(outerLines);
-	free(outerLinesN);
-	free(circles);
+    free(innerLines);
+    free(innerLinesN);
+    free(outerLines);
+    free(outerLinesN);
+    free(circles);
 
 
 
@@ -107,406 +107,406 @@ ScanLineHelper::~ScanLineHelper(){
 
 void ScanLineHelper::init( ){
 
-	short ax = 0;
-	short ay = 0;
-	short ex = 0;
-	short ey = 0;
-    
+    short ax = 0;
+    short ay = 0;
+    short ex = 0;
+    short ey = 0;
+
     // Mops need less scanlines due to his smaler camera resolution
     if( this->ownId == 1)
     {
-	    numberOfCircles = 16;
+        numberOfCircles = 16;
     }
     else
     {
-	    numberOfCircles = 29;
+        numberOfCircles = 29;
     }
 
-	innerLines = (short *) malloc(nLines/2 * maxPoints * 2 * sizeof(short));
-	innerLinesN = (short *) malloc(nLines/2 * sizeof(short));
-	outerLines = (short *) malloc(nLines/2 * maxPoints/2 * 2 * sizeof(short));
-	outerLinesN = (short *) malloc(nLines/2 * sizeof(short));
-	circles = (short *) malloc(1500*numberOfCircles*2*sizeof(short));
-	circleOffsets = (short *) malloc((numberOfCircles + 1)*sizeof(short));
+    innerLines = (short *) malloc(nLines/2 * maxPoints * 2 * sizeof(short));
+    innerLinesN = (short *) malloc(nLines/2 * sizeof(short));
+    outerLines = (short *) malloc(nLines/2 * maxPoints/2 * 2 * sizeof(short));
+    outerLinesN = (short *) malloc(nLines/2 * sizeof(short));
+    circles = (short *) malloc(1500*numberOfCircles*2*sizeof(short));
+    circleOffsets = (short *) malloc((numberOfCircles + 1)*sizeof(short));
 
-	printf("Sizeof short: %d\n", (int)sizeof(short));
+    printf("Sizeof short: %d\n", (int)sizeof(short));
 
-	for(int i = 0; i < nLines; i++){
+    for(int i = 0; i < nLines; i++){
 
-		double angle = i*1.0/nLines *2*M_PI;
-
-
-		if(i % 2 == 0){
-			if(fabs(angle) < 4*M_PI/5 || fabs(angle) > 6*M_PI/5) {
-				ax = (short) (cos(angle)*iRadius + mx);
-				ay = (short) (sin(angle)*iRadius + my);
-			} else {
-				double helpRadius = -frontScanlineDistance / cos(angle);
-				ax = (short) (cos(angle)*helpRadius + mx);
-				ay = (short) (sin(angle)*helpRadius + my);
-			}
-
-			ex = (short) (cos(angle)*(double) oRadius + (double) mx);
-			ey = (short) (sin(angle)*(double) oRadius + (double) my);
-
-			int offset = (i/2)*maxPoints*2;
-			DrawLine(innerLines + offset, innerLinesN + (i/2), ax, ay, ex, ey);
-
-		}
-		else{
-
-			ax = (short) (cos(angle)*(iRadius + (oRadius - iRadius)/4) + mx);
-			ay = (short) (sin(angle)*(iRadius + (oRadius - iRadius)/4) + my);
-
-			ex = (short) (cos(angle)*oRadius + mx);
-			ey = (short) (sin(angle)*oRadius + my);
-			
-			int offset = (i/2)*maxPoints;
-			DrawLine(outerLines + offset, outerLinesN + (i/2), ax, ay, ex, ey);
-		}
+        double angle = i*1.0/nLines *2*M_PI;
 
 
+        if(i % 2 == 0){
+            if(fabs(angle) < 4*M_PI/5 || fabs(angle) > 6*M_PI/5) {
+                ax = (short) (cos(angle)*iRadius + mx);
+                ay = (short) (sin(angle)*iRadius + my);
+            } else {
+                double helpRadius = -frontScanlineDistance / cos(angle);
+                ax = (short) (cos(angle)*helpRadius + mx);
+                ay = (short) (sin(angle)*helpRadius + my);
+            }
 
-	}
+            ex = (short) (cos(angle)*(double) oRadius + (double) mx);
+            ey = (short) (sin(angle)*(double) oRadius + (double) my);
 
-	initCircles();
+            int offset = (i/2)*maxPoints*2;
+            DrawLine(innerLines + offset, innerLinesN + (i/2), ax, ay, ex, ey);
+
+        }
+        else{
+
+            ax = (short) (cos(angle)*(iRadius + (oRadius - iRadius)/4) + mx);
+            ay = (short) (sin(angle)*(iRadius + (oRadius - iRadius)/4) + my);
+
+            ex = (short) (cos(angle)*oRadius + mx);
+            ey = (short) (sin(angle)*oRadius + my);
+
+            int offset = (i/2)*maxPoints;
+            DrawLine(outerLines + offset, outerLinesN + (i/2), ax, ay, ex, ey);
+        }
+
+
+
+    }
+
+    initCircles();
 
 }
 
 void ScanLineHelper::DrawLine(short * line, short * nPoints, short ax, short ay, short ex, short ey){
 
-	short x = ax;
-	short y = ay;
-	short D = 0;
-	short HX = ex - ax;
-	short HY = ey - ay;
-	short xInc = 1;
-	short yInc = 1;
+    short x = ax;
+    short y = ay;
+    short D = 0;
+    short HX = ex - ax;
+    short HY = ey - ay;
+    short xInc = 1;
+    short yInc = 1;
 
-	//printf("ax: %d ay: %d ex: %d ey: %d\n", ax, ay, ex, ey);
+    //printf("ax: %d ay: %d ex: %d ey: %d\n", ax, ay, ex, ey);
 
-	//printf("linePointer: %d\n", line);
-	//printf("nPointer: %d\n", nPoints);
-		
-	if(HX < 0) {
-		xInc = -1; 
-		HX = -HX;
-	}
+    //printf("linePointer: %d\n", line);
+    //printf("nPointer: %d\n", nPoints);
 
-	if(HY < 0) {
-		yInc = -1; 
-		HY = -HY;
-	}
+    if(HX < 0) {
+        xInc = -1;
+        HX = -HX;
+    }
 
-	if(HY <= HX) {
-		short c = 2 * HX; 
-		short M = 2 * HY;
-		short counter = 0;
-		while(1) { 
+    if(HY < 0) {
+        yInc = -1;
+        HY = -HY;
+    }
 
-			if(x >= 0 && x < scHEIGHT && y >= 0 && y < scWIDTH){
-		
-				*line++ = x;
-				*line++ = y;
-				counter = counter + 1;
-			}
-			else{
-				//printf("out of image!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n");
-				break;
-			}
+    if(HY <= HX) {
+        short c = 2 * HX;
+        short M = 2 * HY;
+        short counter = 0;
+        while(1) {
+
+            if(x >= 0 && x < scHEIGHT && y >= 0 && y < scWIDTH){
+
+                *line++ = x;
+                *line++ = y;
+                counter = counter + 1;
+            }
+            else{
+                //printf("out of image!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n");
+                break;
+            }
 
 
-			if(x == ex) 
-				break;
+            if(x == ex)
+                break;
 
-			x = x + xInc;
-			D = D + M;
+            x = x + xInc;
+            D = D + M;
 
-			if(D > HX) {
-				y = y + yInc; 
-				D = D - c;
-			}
-		}
-		*nPoints = counter;
-	}	
-	else {
+            if(D > HX) {
+                y = y + yInc;
+                D = D - c;
+            }
+        }
+        *nPoints = counter;
+    }
+    else {
 
-		short c = 2 * HY; 
-		short M = 2 * HX;
-		short counter = 0;
-		while(1) {
-			
-			if(x >= 0 && x < scHEIGHT && y >= 0 && y < scWIDTH){
+        short c = 2 * HY;
+        short M = 2 * HX;
+        short counter = 0;
+        while(1) {
 
-				*line++ = x;
-				*line++ = y;
+            if(x >= 0 && x < scHEIGHT && y >= 0 && y < scWIDTH){
 
-				counter = counter + 1;
+                *line++ = x;
+                *line++ = y;
 
-			}
-			else{
-				//printf("out of image!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-				break;
-			}
+                counter = counter + 1;
 
-			if(y == ey) 
-				break;
+            }
+            else{
+                //printf("out of image!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+                break;
+            }
 
-			y = y + yInc;
-			D = D + M;
+            if(y == ey)
+                break;
 
-			if(D > HY) {
-				x = x + xInc; 
-				D = D - c;
-			}
-		}
-		*nPoints = counter;
-	}
+            y = y + yInc;
+            D = D + M;
 
-	//printf("Size of line: %d\n", (*nPoints));
+            if(D > HY) {
+                x = x + xInc;
+                D = D - c;
+            }
+        }
+        *nPoints = counter;
+    }
+
+    //printf("Size of line: %d\n", (*nPoints));
 
 }
 
 
 void ScanLineHelper::initCircles( ){
 
-	short currOffset = 0;
+    short currOffset = 0;
 
-	short * circlePtr = circles;
+    short * circlePtr = circles;
 
-	for(short a = 0; a < numberOfCircles; a++){
+    for(short a = 0; a < numberOfCircles; a++){
 
-		circleOffsets[a] = currOffset;
-		
-		short radius = 60 + a*6;
+        circleOffsets[a] = currOffset;
 
-		short currX = 0;
-		short currY = 0;
+        short radius = 60 + a*6;
 
-		currX = mx + radius;
-		currY = my;
+        short currX = 0;
+        short currY = 0;
 
-		//segment 1
-		while(currX >= mx && currY >= my - radius){
+        currX = mx + radius;
+        currY = my;
 
-			double m = 2.0*radius*radius;
-			short indX = -1;
-			short indY = -1;
-			short cX = 0;
-			short cY = 0;
+        //segment 1
+        while(currX >= mx && currY >= my - radius){
 
-			for(short i = -1; i <= 0; i++){
-				for(short j = -1; j <= 0; j++){
+            double m = 2.0*radius*radius;
+            short indX = -1;
+            short indY = -1;
+            short cX = 0;
+            short cY = 0;
 
-					if(i != 0 || j != 0){
-					
-						cX = currX + i;
-						cY = currY + j;
+            for(short i = -1; i <= 0; i++){
+                for(short j = -1; j <= 0; j++){
 
-						double f = fabs((cX - mx)*(cX - mx) + (cY - my)*(cY - my) - radius*radius*1.0);
-		
-						if(f < m){
-							m = f;
-							indX = cX;
-							indY = cY;
-						}
+                    if(i != 0 || j != 0){
 
-					}
-				}
-			}
+                        cX = currX + i;
+                        cY = currY + j;
 
-			currX = indX;
-			currY = indY;
+                        double f = fabs((cX - mx)*(cX - mx) + (cY - my)*(cY - my) - radius*radius*1.0);
 
-			if(currX < 0 || currX >= scHEIGHT || currY < 0 || currY >= scWIDTH){
-				//printf("Circles out of bounds!\n");
-			}
+                        if(f < m){
+                            m = f;
+                            indX = cX;
+                            indY = cY;
+                        }
 
-			*circlePtr++ = currX;
-			*circlePtr++ = currY;
-			currOffset++;
+                    }
+                }
+            }
 
-			//printf("Circles currX : %d currY : %d\n", currX, currY);
+            currX = indX;
+            currY = indY;
 
-		}
+            if(currX < 0 || currX >= scHEIGHT || currY < 0 || currY >= scWIDTH){
+                //printf("Circles out of bounds!\n");
+            }
 
-		//segment 2
-		while(currX >= mx - radius && currY <= my){
+            *circlePtr++ = currX;
+            *circlePtr++ = currY;
+            currOffset++;
 
-			double m = 2.0*radius*radius;
-			short indX = -1;
-			short indY = -1;
-			short cX = 0;
-			short cY = 0;
+            //printf("Circles currX : %d currY : %d\n", currX, currY);
 
-			for(short i = -1; i <= 0; i++){
-				for(short j = 0; j <= 1; j++){
+        }
 
-					if(i != 0 || j != 0){
-					
-						cX = currX + i;
-						cY = currY + j;
+        //segment 2
+        while(currX >= mx - radius && currY <= my){
 
-						double f = fabs((cX - mx)*(cX - mx) + (cY - my)*(cY - my) - radius*radius*1.0);
-		
-						if(f < m){
-							m = f;
-							indX = cX;
-							indY = cY;
-						}
+            double m = 2.0*radius*radius;
+            short indX = -1;
+            short indY = -1;
+            short cX = 0;
+            short cY = 0;
 
-					}
-				}
-			}
+            for(short i = -1; i <= 0; i++){
+                for(short j = 0; j <= 1; j++){
 
-			currX = indX;
-			currY = indY;
+                    if(i != 0 || j != 0){
 
-			*circlePtr++ = currX;
-			*circlePtr++ = currY;
-			currOffset++;
-		}
+                        cX = currX + i;
+                        cY = currY + j;
 
+                        double f = fabs((cX - mx)*(cX - mx) + (cY - my)*(cY - my) - radius*radius*1.0);
 
+                        if(f < m){
+                            m = f;
+                            indX = cX;
+                            indY = cY;
+                        }
 
-		while(currX <= mx && currY <= my + radius){
+                    }
+                }
+            }
 
-			double m = 2.0*radius*radius;
-			short indX = -1;
-			short indY = -1;
-			short cX = 0;
-			short cY = 0;
+            currX = indX;
+            currY = indY;
 
-			for(short i = 0; i <= 1; i++){
-				for(short j = 0; j <= 1; j++){
-
-					if(i != 0 || j != 0){
-					
-						cX = currX + i;
-						cY = currY + j;
-
-						double f = fabs((cX - mx)*(cX - mx) + (cY - my)*(cY - my) - radius*radius*1.0);
-		
-						if(f < m){
-							m = f;
-							indX = cX;
-							indY = cY;
-						}
-
-					}
-				}
-			}
-
-			currX = indX;
-			currY = indY;
-
-			*circlePtr++ = currX;
-			*circlePtr++ = currY;
-			currOffset++;
-		}
+            *circlePtr++ = currX;
+            *circlePtr++ = currY;
+            currOffset++;
+        }
 
 
 
-		while(currX <= mx + radius && currY >= my){
+        while(currX <= mx && currY <= my + radius){
 
-			double m = 2.0*radius*radius;
-			short indX = -1;
-			short indY = -1;
-			short cX = 0;
-			short cY = 0;
+            double m = 2.0*radius*radius;
+            short indX = -1;
+            short indY = -1;
+            short cX = 0;
+            short cY = 0;
 
-			for(short i = 0; i <= 1; i++){
-				for(short j = -1; j <= 0; j++){
+            for(short i = 0; i <= 1; i++){
+                for(short j = 0; j <= 1; j++){
 
-					if(i != 0 || j != 0){
-					
-						cX = currX + i;
-						cY = currY + j;
+                    if(i != 0 || j != 0){
 
-						double f = fabs((cX - mx)*(cX - mx) + (cY - my)*(cY - my) - radius*radius*1.0);
-		
-						if(f < m){
-							m = f;
-							indX = cX;
-							indY = cY;
-						}
+                        cX = currX + i;
+                        cY = currY + j;
 
-					}
-				}
-			}
+                        double f = fabs((cX - mx)*(cX - mx) + (cY - my)*(cY - my) - radius*radius*1.0);
 
-			currX = indX;
-			currY = indY;
+                        if(f < m){
+                            m = f;
+                            indX = cX;
+                            indY = cY;
+                        }
 
-			*circlePtr++ = currX;
-			*circlePtr++ = currY;
-			currOffset++;
-		}
+                    }
+                }
+            }
 
-	}
+            currX = indX;
+            currY = indY;
 
-	printf("Circles currOffset = %d\n", currOffset);
-	circleOffsets[numberOfCircles] = currOffset;
+            *circlePtr++ = currX;
+            *circlePtr++ = currY;
+            currOffset++;
+        }
+
+
+
+        while(currX <= mx + radius && currY >= my){
+
+            double m = 2.0*radius*radius;
+            short indX = -1;
+            short indY = -1;
+            short cX = 0;
+            short cY = 0;
+
+            for(short i = 0; i <= 1; i++){
+                for(short j = -1; j <= 0; j++){
+
+                    if(i != 0 || j != 0){
+
+                        cX = currX + i;
+                        cY = currY + j;
+
+                        double f = fabs((cX - mx)*(cX - mx) + (cY - my)*(cY - my) - radius*radius*1.0);
+
+                        if(f < m){
+                            m = f;
+                            indX = cX;
+                            indY = cY;
+                        }
+
+                    }
+                }
+            }
+
+            currX = indX;
+            currY = indY;
+
+            *circlePtr++ = currX;
+            *circlePtr++ = currY;
+            currOffset++;
+        }
+
+    }
+
+    printf("Circles currOffset = %d\n", currOffset);
+    circleOffsets[numberOfCircles] = currOffset;
 
 }
 
 
 short * ScanLineHelper::getInnerLines(){
 
-	return innerLines;
+    return innerLines;
 
 }
 
 
 short * ScanLineHelper::getInnerLinesN(){
 
-	return innerLinesN;
+    return innerLinesN;
 
 }
 
 
 short * ScanLineHelper::getOuterLines(){
 
-	return outerLines;
+    return outerLines;
 
 }
 
 
 short * ScanLineHelper::getOuterLinesN(){
 
-	return outerLinesN;
+    return outerLinesN;
 
 }
 
 
 short ScanLineHelper::getNumberLines(){
 
-	return nLines;
+    return nLines;
 
 }
 
 
 short ScanLineHelper::getMaxPoints(){
 
-	return maxPoints;
+    return maxPoints;
 
 }
 
 short * ScanLineHelper::getCircles(){
 
-	return circles;
+    return circles;
 
 }
 
 short * ScanLineHelper::getCircleOffsets(){
 
-	return circleOffsets;
+    return circleOffsets;
 
 }
 
 
 short ScanLineHelper::getNumberCircles(){
 
-	return numberOfCircles;
+    return numberOfCircles;
 
 }

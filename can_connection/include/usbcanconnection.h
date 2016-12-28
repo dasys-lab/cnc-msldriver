@@ -25,43 +25,43 @@
 #endif
 
 class UsbCanConnection : public CanConnection {
-	public:
-		UsbCanConnection(const char* strCanIf);
-		int Start();
-		int Stop();
-		void SetReceiver(CanListener* ul);
-		int SendCanMsg(unsigned short canid,unsigned char* data,int len);
-		int SendExCanMsg(unsigned int canid,unsigned char* data,int len);
-		int SendCanRtr(unsigned short canid);
-		int SendExCanRtr(unsigned int canid);
-		int WaitForCanMsg(unsigned int msgid, unsigned char* buffer, int* len, int timeout);
+    public:
+        UsbCanConnection(const char* strCanIf);
+        int Start();
+        int Stop();
+        void SetReceiver(CanListener* ul);
+        int SendCanMsg(unsigned short canid,unsigned char* data,int len);
+        int SendExCanMsg(unsigned int canid,unsigned char* data,int len);
+        int SendCanRtr(unsigned short canid);
+        int SendExCanRtr(unsigned int canid);
+        int WaitForCanMsg(unsigned int msgid, unsigned char* buffer, int* len, int timeout);
 
 
-	protected:
-		void* readLoop();
-		int initSocket();
+    protected:
+        void* readLoop();
+        int initSocket();
 
-		CanListener* listener;
+        CanListener* listener;
 
-		int socketfd;
-		struct sockaddr_can addr;
-		struct can_frame rx_frame;
-		struct can_frame tx_frame;
-		struct ifreq ifr;
-		struct iovec iov;
-		struct msghdr msg;
+        int socketfd;
+        struct sockaddr_can addr;
+        struct can_frame rx_frame;
+        struct can_frame tx_frame;
+        struct ifreq ifr;
+        struct iovec iov;
+        struct msghdr msg;
 
-		int writeOk;
+        int writeOk;
 
-		char ctrlmsg[CMSG_SPACE(sizeof(struct timeval)) + CMSG_SPACE(sizeof(__u32))];
+        char ctrlmsg[CMSG_SPACE(sizeof(struct timeval)) + CMSG_SPACE(sizeof(__u32))];
 
-		pthread_t listenerThread;
+        pthread_t listenerThread;
 
-		unsigned short waitOnId;
-		unsigned char explicitAnswerBuf[64];
-		volatile int stopThread;
+        unsigned short waitOnId;
+        unsigned char explicitAnswerBuf[64];
+        volatile int stopThread;
 
-		static void* _thread(void* This);
+        static void* _thread(void* This);
 };
 
 

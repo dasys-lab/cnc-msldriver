@@ -3,13 +3,13 @@
 
 
 
-#define CAN_MSG_ID_MASK 		0x780
-#define CAN_NODE_ID_MASK 		0x7F
+#define CAN_MSG_ID_MASK         0x780
+#define CAN_NODE_ID_MASK        0x7F
 
 
 
 
-#define CAN_ID_NMT 			0x000
+#define CAN_ID_NMT          0x000
 
 #define CAN_NMT_SET_OPERATIONAL 0x01
 
@@ -22,17 +22,17 @@
 #define CAN_ID_STATUS 0x180
 
 
-#define CAN_ID_ERROR 			0x80
+#define CAN_ID_ERROR            0x80
 
 //----------SDO Communication:
-#define CAN_ID_SDO_REQUEST 		0x600
-#define CAN_ID_SDO_RESPONSE 		0x580
+#define CAN_ID_SDO_REQUEST      0x600
+#define CAN_ID_SDO_RESPONSE         0x580
 
-#define CAN_CMD_UPLOAD_REQUEST 		0x40
-#define CAN_CMD_UPLOAD_RESPONSE 	0x40
-#define CAN_CMD_DOWNLOAD_REQUEST 	0x20
-#define CAN_CMD_DOWNLOAD_RESPONSE 	0x60
-#define CAN_CMD_SDO_TERMINATION 	0x80
+#define CAN_CMD_UPLOAD_REQUEST      0x40
+#define CAN_CMD_UPLOAD_RESPONSE     0x40
+#define CAN_CMD_DOWNLOAD_REQUEST    0x20
+#define CAN_CMD_DOWNLOAD_RESPONSE   0x60
+#define CAN_CMD_SDO_TERMINATION     0x80
 
 #define CAN_SDO_CONTROLWORD 0x6040
 #define CAN_SDO_STATUSWORD 0x6041

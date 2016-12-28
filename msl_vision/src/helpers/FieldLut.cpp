@@ -35,18 +35,18 @@ namespace Cox
 {
 
 
-	time_t getModifyTime(const char * globalsPath)
-	{
-		struct stat file;
-		stat(globalsPath, &file);
-		//File does not exist or Permission Denied or the file has not been modified
-		if( errno == 2 || errno == 13) {
-			return 0;
-		}
-		else {
-			return file.st_mtime;
-		}
-	}
+    time_t getModifyTime(const char * globalsPath)
+    {
+        struct stat file;
+        stat(globalsPath, &file);
+        //File does not exist or Permission Denied or the file has not been modified
+        if( errno == 2 || errno == 13) {
+            return 0;
+        }
+        else {
+            return file.st_mtime;
+        }
+    }
 
   /** @class FieldLut field_lut.h
    * A lookup table for errors for given field position.
@@ -131,46 +131,46 @@ namespace Cox
     std::string globalsfn = sc->getConfigPath() + "/Globals.conf";
     std::string LUfn = sc->getConfigPath() + "/CoxGradientLut.dat";
 
-	if(true || getModifyTime(globalsfn.c_str()) > getModifyTime(LUfn.c_str())) {
-		std::cout << "Regenerating GradientLookUp " << globalsfn.c_str() << " Modificationdates: " << getModifyTime(globalsfn.c_str()) << "\t" << getModifyTime(LUfn.c_str()) << std::endl;
-	    for (float y = __min_y; y <= __max_y; y += __resolution)
-	    {
-	      for (float x = __min_x; x <= __max_x; x += __resolution)
-	      {
-		float min_dist = 1e50;
-		float dist = 0.;
+    if(true || getModifyTime(globalsfn.c_str()) > getModifyTime(LUfn.c_str())) {
+        std::cout << "Regenerating GradientLookUp " << globalsfn.c_str() << " Modificationdates: " << getModifyTime(globalsfn.c_str()) << "\t" << getModifyTime(LUfn.c_str()) << std::endl;
+        for (float y = __min_y; y <= __max_y; y += __resolution)
+        {
+          for (float x = __min_x; x <= __max_x; x += __resolution)
+          {
+        float min_dist = 1e50;
+        float dist = 0.;
 
-		for (field_lines_t::const_iterator it = lines.begin(); it != lines.end(); it++) {
-		  dist = it->p2line_distance(x, y);
+        for (field_lines_t::const_iterator it = lines.begin(); it != lines.end(); it++) {
+          dist = it->p2line_distance(x, y);
 
-		  if (dist < min_dist)
-		  {
-		    min_dist = dist;
-		  }
-		}
+          if (dist < min_dist)
+          {
+            min_dist = dist;
+          }
+        }
 
-		// check distance to circles
-		for (field_circles_t::const_iterator it = circles.begin();
-		        it != circles.end(); ++it)
-		{
-		  dist = it->get_distance(x,y);
+        // check distance to circles
+        for (field_circles_t::const_iterator it = circles.begin();
+                it != circles.end(); ++it)
+        {
+          dist = it->get_distance(x,y);
 
-		  if (dist < min_dist)
-		  {
-		    min_dist = dist;
-		  }
-		}
+          if (dist < min_dist)
+          {
+            min_dist = dist;
+          }
+        }
 
-		__lut[get_index(x,y)].distance = min_dist;
-	      }
-	    }
-	    calculate_gradient();
-	    write_lutBinary(LUfn.c_str());
-	} else {
-		std::cout << "Loading GradientLookUp " << globalsfn.c_str() << " Modificationdates: " << getModifyTime(globalsfn.c_str()) << "\t" << getModifyTime("CoxGradientLut.dat") << std::endl;
-		read_lutBinary(LUfn.c_str());
-	}
-	//read_lutBinary("CoxGradientLut.dat");
+        __lut[get_index(x,y)].distance = min_dist;
+          }
+        }
+        calculate_gradient();
+        write_lutBinary(LUfn.c_str());
+    } else {
+        std::cout << "Loading GradientLookUp " << globalsfn.c_str() << " Modificationdates: " << getModifyTime(globalsfn.c_str()) << "\t" << getModifyTime("CoxGradientLut.dat") << std::endl;
+        read_lutBinary(LUfn.c_str());
+    }
+    //read_lutBinary("CoxGradientLut.dat");
 //    write_lutBinary("CoxGradientLut.dat");
 //    write_lut("CoxGradientLut.txt");
   }
@@ -264,7 +264,7 @@ namespace Cox
       for (int x = 0; x < __entries_x; x++)
       {
         //out_stream << __lut[ y * __entries_x + x ].distance << " " << __lut[ y * __entries_x + x ].dx << " " << __lut[ y * __entries_x + x ].dy << " ";
-	out_stream.write((char*)&(__lut[ y * __entries_x + x ]), sizeof (field_lut_entry_t));
+    out_stream.write((char*)&(__lut[ y * __entries_x + x ]), sizeof (field_lut_entry_t));
       }
     }
 
@@ -283,9 +283,9 @@ namespace Cox
       {
 
         //out_stream << __lut[ y * __entries_x + x ].distance << " " << __lut[ y * __entries_x + x ].dx << " " << __lut[ y * __entries_x + x ].dy << " ";
-	stream.read((char*)&(__lut[ y * __entries_x + x ]), sizeof (field_lut_entry_t));
-	//stream.read((char*)&(tmp), sizeof(field_lut_entry_t));
-	//if((__lut[ y * __entries_x + x ].distance != tmp.distance) || (__lut[ y * __entries_x + x ].dx != tmp.dx) || (__lut[ y * __entries_x + x ].dy != tmp.dy)) if(!shown) {std::cout << y << " "<< x  << " Fehler!!!" << (int)__entries_y-1 << " " << (int) __entries_x-1 << " " << sizeof(field_lut_entry_t) << std::endl; shown=true;}
+    stream.read((char*)&(__lut[ y * __entries_x + x ]), sizeof (field_lut_entry_t));
+    //stream.read((char*)&(tmp), sizeof(field_lut_entry_t));
+    //if((__lut[ y * __entries_x + x ].distance != tmp.distance) || (__lut[ y * __entries_x + x ].dx != tmp.dx) || (__lut[ y * __entries_x + x ].dy != tmp.dy)) if(!shown) {std::cout << y << " "<< x  << " Fehler!!!" << (int)__entries_y-1 << " " << (int) __entries_x-1 << " " << sizeof(field_lut_entry_t) << std::endl; shown=true;}
       }
     }
 

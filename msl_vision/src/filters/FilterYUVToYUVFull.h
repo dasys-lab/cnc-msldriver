@@ -29,16 +29,16 @@
 class FilterYUVToYUVFull  : public Filter {
 
 
-	public:
-		FilterYUVToYUVFull(int width, int height);
-		~FilterYUVToYUVFull();
-		
-		unsigned char * process(unsigned char * src, unsigned int imagesize);
+    public:
+        FilterYUVToYUVFull(int width, int height);
+        ~FilterYUVToYUVFull();
 
-	protected:
+        unsigned char * process(unsigned char * src, unsigned int imagesize);
 
-		void init();
-		void cleanup();
+    protected:
+
+        void init();
+        void cleanup();
 
 
 };

@@ -28,33 +28,33 @@
 
 ScanLineHelperBall::ScanLineHelperBall() : sc() {
 
-	printf("ScanLineHelper Ball Constructor\n");
+    printf("ScanLineHelper Ball Constructor\n");
 
-	this->sc = SystemConfig::getInstance();
+    this->sc = SystemConfig::getInstance();
 
-	Configuration *vision = (*this->sc)["Vision"];
+    Configuration *vision = (*this->sc)["Vision"];
 
-	//mx = short(atoi(vision->Values["CameraMX"].c_str()));
-	//my = short(atoi(vision->Values["CameraMY"].c_str()));
-	iRadius = vision->get<short>("Vision", "ScanLinesInnerRadiusBall", NULL);
-	oRadius = vision->get<short>("Vision", "ScanLinesOuterRadius", NULL);
-	nLines = vision->get<short>("Vision", "NumberScanLinesBall", NULL);
+    //mx = short(atoi(vision->Values["CameraMX"].c_str()));
+    //my = short(atoi(vision->Values["CameraMY"].c_str()));
+    iRadius = vision->get<short>("Vision", "ScanLinesInnerRadiusBall", NULL);
+    oRadius = vision->get<short>("Vision", "ScanLinesOuterRadius", NULL);
+    nLines = vision->get<short>("Vision", "NumberScanLinesBall", NULL);
 
-	int imWidth = vision->get<int>("Vision", "ImageArea", NULL);
-	int imHeight = vision->get<int>("Vision", "ImageArea", NULL);
+    int imWidth = vision->get<int>("Vision", "ImageArea", NULL);
+    int imHeight = vision->get<int>("Vision", "ImageArea", NULL);
 
-	printf("ScanLineHelperBall MX: %d\n", imWidth/2);
-	printf("ScanLineHelperBall MY: %d\n", imHeight/2);
+    printf("ScanLineHelperBall MX: %d\n", imWidth/2);
+    printf("ScanLineHelperBall MY: %d\n", imHeight/2);
 
-	maxPoints = MAXPOINTS;
+    maxPoints = MAXPOINTS;
 
-	mx = (short)imHeight/2;
-	my = (short)imWidth/2;
+    mx = (short)imHeight/2;
+    my = (short)imWidth/2;
 
-	scWIDTH = imWidth;
-	scHEIGHT = imHeight;
+    scWIDTH = imWidth;
+    scHEIGHT = imHeight;
 
-	init();
+    init();
 
 
 }
@@ -64,29 +64,29 @@ ScanLineHelperBall::ScanLineHelperBall() : sc() {
 
 ScanLineHelperBall::ScanLineHelperBall(int imWidth, int imHeight) : sc() {
 
-	printf("ScanLineHelper Ball Constructor\n");
+    printf("ScanLineHelper Ball Constructor\n");
 
-	Configuration *vision = (*this->sc)["Vision"];
+    Configuration *vision = (*this->sc)["Vision"];
 
-	mx = vision->get<short>("Vision", "CameraMX", NULL);
-	my = vision->get<short>("Vision", "CameraMY", NULL);
+    mx = vision->get<short>("Vision", "CameraMX", NULL);
+    my = vision->get<short>("Vision", "CameraMY", NULL);
 
-	iRadius = vision->get<short>("Vision", "ScanLinesInnerRadiusBall", NULL);
-	oRadius = vision->get<short>("Vision", "ScanLinesOuterRadius", NULL);
-	nLines = vision->get<short>("Vision", "NumberScanLinesBall", NULL);
+    iRadius = vision->get<short>("Vision", "ScanLinesInnerRadiusBall", NULL);
+    oRadius = vision->get<short>("Vision", "ScanLinesOuterRadius", NULL);
+    nLines = vision->get<short>("Vision", "NumberScanLinesBall", NULL);
 
-	printf("ScanLineHelperBall MX: %d\n", mx);
-	printf("ScanLineHelperBall MY: %d\n", my);
+    printf("ScanLineHelperBall MX: %d\n", mx);
+    printf("ScanLineHelperBall MY: %d\n", my);
 
-	maxPoints = MAXPOINTS;
+    maxPoints = MAXPOINTS;
 
-	//mx = (short)imHeight/2;
-	//my = (short)imWidth/2;
+    //mx = (short)imHeight/2;
+    //my = (short)imWidth/2;
 
-	scWIDTH = imWidth;
-	scHEIGHT = imHeight;
+    scWIDTH = imWidth;
+    scHEIGHT = imHeight;
 
-	init();
+    init();
 
 
 }
@@ -94,10 +94,10 @@ ScanLineHelperBall::ScanLineHelperBall(int imWidth, int imHeight) : sc() {
 
 ScanLineHelperBall::~ScanLineHelperBall(){
 
-	printf("Destructor of ScanLineHelperBall\n");
+    printf("Destructor of ScanLineHelperBall\n");
 
-	free(lines);
-	free(lineOffsets);
+    free(lines);
+    free(lineOffsets);
 
 }
 
@@ -105,160 +105,160 @@ ScanLineHelperBall::~ScanLineHelperBall(){
 
 void ScanLineHelperBall::init(){
 
-	printf("ScanLineHelper Ball Init\n");
+    printf("ScanLineHelper Ball Init\n");
 
-	short ax = 0;
-	short ay = 0;
-	short ex = 0;
-	short ey = 0;
+    short ax = 0;
+    short ay = 0;
+    short ex = 0;
+    short ey = 0;
 
-	lines = (short *) malloc(nLines * maxPoints * 2 * sizeof(short));
-	lineOffsets = (int *) malloc((nLines + 1) * sizeof(int));
+    lines = (short *) malloc(nLines * maxPoints * 2 * sizeof(short));
+    lineOffsets = (int *) malloc((nLines + 1) * sizeof(int));
 
-	int offsetCounter = 0;
-
-
-	printf("Sizeof short: %d\n", (int)sizeof(short));
-
-	for(int i = 0; i < nLines; i++){
-
-		double angle = i*1.0/nLines *2*M_PI;
-
-		lineOffsets[i] = offsetCounter;
-
-		short * linePointer = lines + offsetCounter;
+    int offsetCounter = 0;
 
 
-		if(i % 2 == 0){
-			
-			ax = (short) (cos(angle)*iRadius + mx);
-			ay = (short) (sin(angle)*iRadius + my);
+    printf("Sizeof short: %d\n", (int)sizeof(short));
 
-			ex = (short) (cos(angle)*(double) oRadius + (double) mx);
-			ey = (short) (sin(angle)*(double) oRadius + (double) my);
+    for(int i = 0; i < nLines; i++){
 
+        double angle = i*1.0/nLines *2*M_PI;
 
-			int offset = DrawLine(linePointer, ax, ay, ex, ey);
-			offsetCounter += 2*offset;
+        lineOffsets[i] = offsetCounter;
 
-		}
-		else{
-
-			ax = (short) (cos(angle)*(iRadius + (oRadius - iRadius)/4) + mx);
-			ay = (short) (sin(angle)*(iRadius + (oRadius - iRadius)/4) + my);
-
-			ex = (short) (cos(angle)*oRadius + mx);
-			ey = (short) (sin(angle)*oRadius + my);
-			
-			int offset = DrawLine(linePointer, ax, ay, ex, ey);
-			offsetCounter += 2*offset;
-		}
+        short * linePointer = lines + offsetCounter;
 
 
+        if(i % 2 == 0){
 
-	}
+            ax = (short) (cos(angle)*iRadius + mx);
+            ay = (short) (sin(angle)*iRadius + my);
 
-	lineOffsets[nLines] = offsetCounter;
+            ex = (short) (cos(angle)*(double) oRadius + (double) mx);
+            ey = (short) (sin(angle)*(double) oRadius + (double) my);
 
-	printf("ScanLineHelper Ball Init End\n");
+
+            int offset = DrawLine(linePointer, ax, ay, ex, ey);
+            offsetCounter += 2*offset;
+
+        }
+        else{
+
+            ax = (short) (cos(angle)*(iRadius + (oRadius - iRadius)/4) + mx);
+            ay = (short) (sin(angle)*(iRadius + (oRadius - iRadius)/4) + my);
+
+            ex = (short) (cos(angle)*oRadius + mx);
+            ey = (short) (sin(angle)*oRadius + my);
+
+            int offset = DrawLine(linePointer, ax, ay, ex, ey);
+            offsetCounter += 2*offset;
+        }
+
+
+
+    }
+
+    lineOffsets[nLines] = offsetCounter;
+
+    printf("ScanLineHelper Ball Init End\n");
 
 }
 
 int ScanLineHelperBall::DrawLine(short * line, short ax, short ay, short ex, short ey){
 
-	short x = ax;
-	short y = ay;
-	short D = 0;
-	short HX = ex - ax;
-	short HY = ey - ay;
-	short xInc = 1;
-	short yInc = 1;
+    short x = ax;
+    short y = ay;
+    short D = 0;
+    short HX = ex - ax;
+    short HY = ey - ay;
+    short xInc = 1;
+    short yInc = 1;
 
-	int pointCounter = 0;
+    int pointCounter = 0;
 
-	//printf(" Scan Line Helper Ball ax: %d ay: %d ex: %d ey: %d\n", ax, ay, ex, ey);
+    //printf(" Scan Line Helper Ball ax: %d ay: %d ex: %d ey: %d\n", ax, ay, ex, ey);
 
-	//printf("linePointer: %d\n", line);
-	//printf("nPointer: %d\n", nPoints);
-		
-	if(HX < 0) {
-		xInc = -1; 
-		HX = -HX;
-	}
+    //printf("linePointer: %d\n", line);
+    //printf("nPointer: %d\n", nPoints);
 
-	if(HY < 0) {
-		yInc = -1; 
-		HY = -HY;
-	}
+    if(HX < 0) {
+        xInc = -1;
+        HX = -HX;
+    }
 
-	if(HY <= HX) {
-		short c = 2 * HX; 
-		short M = 2 * HY;
-		int counter = 0;
-		while(1) { 
+    if(HY < 0) {
+        yInc = -1;
+        HY = -HY;
+    }
 
-			if(x >= 0 && x < scHEIGHT && y >= 0 && y < scWIDTH){
-		
-				*line++ = x;
-				*line++ = y;
-				counter = counter + 1;
-			}
-			else{
-				//printf("out of image!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n");
-				break;
-			}
+    if(HY <= HX) {
+        short c = 2 * HX;
+        short M = 2 * HY;
+        int counter = 0;
+        while(1) {
+
+            if(x >= 0 && x < scHEIGHT && y >= 0 && y < scWIDTH){
+
+                *line++ = x;
+                *line++ = y;
+                counter = counter + 1;
+            }
+            else{
+                //printf("out of image!!!!!!!!!!!!!!!!!!!!!!!!!!!!1\n");
+                break;
+            }
 
 
-			if(x == ex) 
-				break;
+            if(x == ex)
+                break;
 
-			x = x + xInc;
-			D = D + M;
+            x = x + xInc;
+            D = D + M;
 
-			if(D > HX) {
-				y = y + yInc; 
-				D = D - c;
-			}
-		}
-		pointCounter = counter;
-	}	
-	else {
+            if(D > HX) {
+                y = y + yInc;
+                D = D - c;
+            }
+        }
+        pointCounter = counter;
+    }
+    else {
 
-		short c = 2 * HY; 
-		short M = 2 * HX;
-		int counter = 0;
-		while(1) {
-			
-			if(x >= 0 && x < scHEIGHT && y >= 0 && y < scWIDTH){
+        short c = 2 * HY;
+        short M = 2 * HX;
+        int counter = 0;
+        while(1) {
 
-				*line++ = x;
-				*line++ = y;
+            if(x >= 0 && x < scHEIGHT && y >= 0 && y < scWIDTH){
 
-				counter = counter + 1;
+                *line++ = x;
+                *line++ = y;
 
-			}
-			else{
-				//printf("out of image!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
-				break;
-			}
+                counter = counter + 1;
 
-			if(y == ey) 
-				break;
+            }
+            else{
+                //printf("out of image!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
+                break;
+            }
 
-			y = y + yInc;
-			D = D + M;
+            if(y == ey)
+                break;
 
-			if(D > HY) {
-				x = x + xInc; 
-				D = D - c;
-			}
-		}
-		pointCounter = counter;
-	}
+            y = y + yInc;
+            D = D + M;
 
-	//printf("Size of line: %d\n", pointCounter);
+            if(D > HY) {
+                x = x + xInc;
+                D = D - c;
+            }
+        }
+        pointCounter = counter;
+    }
 
-	return pointCounter;
+    //printf("Size of line: %d\n", pointCounter);
+
+    return pointCounter;
 
 }
 
@@ -266,14 +266,14 @@ int ScanLineHelperBall::DrawLine(short * line, short ax, short ay, short ex, sho
 
 short * ScanLineHelperBall::getLines(){
 
-	return lines;
+    return lines;
 
 }
 
 
 int * ScanLineHelperBall::getLineOffsets(){
 
-	return lineOffsets;
+    return lineOffsets;
 
 }
 
@@ -281,14 +281,14 @@ int * ScanLineHelperBall::getLineOffsets(){
 
 short ScanLineHelperBall::getNumberLines(){
 
-	return nLines;
+    return nLines;
 
 }
 
 
 short ScanLineHelperBall::getMaxPoints(){
 
-	return maxPoints;
+    return maxPoints;
 
 }
 

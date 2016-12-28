@@ -29,10 +29,10 @@ Environment *  Environment::instance = NULL;
 
 Environment::Environment() : sc() {
 
-	this->sc = SystemConfig::getInstance();
-	logFileName = std::string("/tmp/logging.dat");
-	loggingMode = false;
-	
+    this->sc = SystemConfig::getInstance();
+    logFileName = std::string("/tmp/logging.dat");
+    loggingMode = false;
+
 }
 
 
@@ -43,36 +43,36 @@ Environment::~Environment(){
 
 
 Environment * Environment::getInstance(){
-	
-	if(instance == NULL){
-		instance = new Environment();
-	}
-	
-	return instance;
+
+    if(instance == NULL){
+        instance = new Environment();
+    }
+
+    return instance;
 
 }
 
 void Environment::setLogFileName(std::string filename){
 
-	logFileName = filename;
+    logFileName = filename;
 
 }
 
 void Environment::setLoggingMode(bool mode){
 
-	loggingMode = mode;
+    loggingMode = mode;
 
 }
 
 std::string Environment::getLogFileName(){
 
-	return logFileName;
+    return logFileName;
 
 }
 
 bool Environment::getLoggingMode(){
 
-	return loggingMode;
+    return loggingMode;
 
 }
 

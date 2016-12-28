@@ -35,27 +35,27 @@ using namespace msl_sensor_msgs;
 
 class SharedBallDirectedHelper{
 
-	public:
-		SharedBallDirectedHelper();
-		~SharedBallDirectedHelper();
+    public:
+        SharedBallDirectedHelper();
+        ~SharedBallDirectedHelper();
 
-		static SharedBallDirectedHelper *getInstance();
-		SharedBall getBall();
+        static SharedBallDirectedHelper *getInstance();
+        SharedBall getBall();
 
-	protected:
+    protected:
 
-		void init();
-		void cleanup();
+        void init();
+        void cleanup();
 
-		boost::mutex mutex;
-		SharedBall ball;
-		ros::Subscriber sub;
+        boost::mutex mutex;
+        SharedBall ball;
+        ros::Subscriber sub;
 
-		void handleSharedBallInfo(const SharedBallInfo::ConstPtr& message);
+        void handleSharedBallInfo(const SharedBallInfo::ConstPtr& message);
 
-		bool initialized;
+        bool initialized;
 
-		static SharedBallDirectedHelper *instance;
+        static SharedBallDirectedHelper *instance;
 };
 
 

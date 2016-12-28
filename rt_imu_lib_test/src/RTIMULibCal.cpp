@@ -90,7 +90,7 @@ int main(int argc, char **argv)
 
     //  set up console io
 
-    struct termios	ctty;
+    struct termios  ctty;
 
     tcgetattr(fileno(stdout), &ctty);
     ctty.c_lflag &= ~(ICANON);

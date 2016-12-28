@@ -25,15 +25,15 @@ extern Controlling::EposCan *ep;
 extern controller_settings current_settings;
 
 typedef struct  {
-	double angle; //in rad/1024
-	double velocity; //in mm or mm/s
-	double rotation; //in rad/s/1024
+    double angle; //in rad/1024
+    double velocity; //in mm or mm/s
+    double rotation; //in rad/s/1024
 } polarMotion;
 
 typedef struct  {
-	double x; //in mm or mm/s
-	double y; //in mm or mm/s
-	double rotation; //in rad/s/1024
+    double x; //in mm or mm/s
+    double y; //in mm or mm/s
+    double rotation; //in rad/s/1024
 } cartMotion;
 typedef double wheelMotion[4];
 
@@ -44,20 +44,20 @@ typedef struct {
 } position;
 
 typedef struct {
-	int state;
-	int autorecover;
-	int recover_timer;
-	int newOdometryAvailable;
-	cartMotion currentMotionGoal;
-	wheelMotion currentMotorGoal;
-	cartMotion actualMotion;
-	position currentPosition;
-	double currentSlip;
-	double slipI;
-	double currentRotationError;
-	double lastRotationError;
-	double rotationErrorInt;
-	
+    int state;
+    int autorecover;
+    int recover_timer;
+    int newOdometryAvailable;
+    cartMotion currentMotionGoal;
+    wheelMotion currentMotorGoal;
+    cartMotion actualMotion;
+    position currentPosition;
+    double currentSlip;
+    double slipI;
+    double currentRotationError;
+    double lastRotationError;
+    double rotationErrorInt;
+
 } gonzales_state;
 
 

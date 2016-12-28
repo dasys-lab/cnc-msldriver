@@ -23,7 +23,7 @@
 
 
 #ifndef _RTIMUACCELCAL_H
-#define	_RTIMUACCELCAL_H
+#define _RTIMUACCELCAL_H
 
 #include "RTIMUCalDefs.h"
 #include "RTIMULib.h"

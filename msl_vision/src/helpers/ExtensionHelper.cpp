@@ -9,14 +9,14 @@ using namespace msl_actuator_msgs;
 ros::Publisher ExtensionHelper::kcpub;
 
 void ExtensionHelper::initialize() {
-	kcpub = SpicaHelper::visionNode->advertise<KickControl>("KickControl", 1);
+    kcpub = SpicaHelper::visionNode->advertise<KickControl>("KickControl", 1);
 }
 
 //Not Testet
 int ExtensionHelper::extendUpperExtension()
 {
-		KickControl kick;
-		kick.extension = (1);
-		kick.extTime = (1000);
-		kcpub.publish(kick);
+        KickControl kick;
+        kick.extension = (1);
+        kick.extTime = (1000);
+        kcpub.publish(kick);
 }

@@ -46,7 +46,7 @@
 
 #define CLEAR(x) memset (&(x), 0, sizeof (x))
 
-#define V4L2_CID_SHARPNESS			(V4L2_CID_PRIVATE_BASE+2)
+#define V4L2_CID_SHARPNESS          (V4L2_CID_PRIVATE_BASE+2)
 
 using namespace supplementary;
 
@@ -84,57 +84,57 @@ class CameraQuickCamException : public std::exception {
 
 class CameraQuickCam
 {
-	public:
+    public:
 
-		CameraQuickCam();
-		~CameraQuickCam();
-		char * getCaptureBuffer();
-		void captureBegin();
-		void captureEnd();
-		int set_control(__u32 id, __s32 value);
-		int set_gamma(__s32 value); 
-		int set_gain(__s32 value);
-		int set_hue(__s32 value);
-		int set_exposure(__s32 value);
-		int set_saturation(__s32 value);
+        CameraQuickCam();
+        ~CameraQuickCam();
+        char * getCaptureBuffer();
+        void captureBegin();
+        void captureEnd();
+        int set_control(__u32 id, __s32 value);
+        int set_gamma(__s32 value);
+        int set_gain(__s32 value);
+        int set_hue(__s32 value);
+        int set_exposure(__s32 value);
+        int set_saturation(__s32 value);
 
-		int set_contrast(__s32 value);
-		int set_brightness(__s32 value);
-		int set_sharpness(__s32 value);
+        int set_contrast(__s32 value);
+        int set_brightness(__s32 value);
+        int set_sharpness(__s32 value);
 
-		int set_auto_white_balance_on(); 
-		int set_auto_white_balance_off(); 
-		int set_white_balance(__s32 value);
-		int set_auto_exposure_on();
-		int set_auto_exposure_off();
+        int set_auto_white_balance_on();
+        int set_auto_white_balance_off();
+        int set_white_balance(__s32 value);
+        int set_auto_exposure_on();
+        int set_auto_exposure_off();
 
 
-	protected:
+    protected:
 
-		SystemConfig* sc;
+        SystemConfig* sc;
 
-		void errno_exit(const char * s);
-		int xioctl(int fd, int request, void * arg);
-		int read_frame();
-		void mainloop();
-		void stop_capturing();
-		void start_capturing();
-		void uninit_device();
-		void init_read(unsigned int buffer_size);
-		void init_mmap();
-		void init_device();
-		void close_device();
-		void open_device();
+        void errno_exit(const char * s);
+        int xioctl(int fd, int request, void * arg);
+        int read_frame();
+        void mainloop();
+        void stop_capturing();
+        void start_capturing();
+        void uninit_device();
+        void init_read(unsigned int buffer_size);
+        void init_mmap();
+        void init_device();
+        void close_device();
+        void open_device();
 
-		char * dev_name;
-		io_method io;
-		int fd;
-		struct buffer * buffers;
-		unsigned int n_buffers;
-		int id;
+        char * dev_name;
+        io_method io;
+        int fd;
+        struct buffer * buffers;
+        unsigned int n_buffers;
+        int id;
 
-		char * captureBuffer;
-		
+        char * captureBuffer;
+
 };
 
 

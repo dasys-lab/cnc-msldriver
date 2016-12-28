@@ -30,42 +30,42 @@
 
 class PositionHelperDirected2 {
 
-	private:
-		double abs_double(double d);
+    private:
+        double abs_double(double d);
 
-		double MX; //images size
-		double MY;
+        double MX; //images size
+        double MY;
 
-		double fieldLength; //mm
-		double fieldWidth; //mm
+        double fieldLength; //mm
+        double fieldWidth; //mm
 
-		double camProjDistX; //px
-		double camProjDistY; //px
-		double camZ; //mm
-		double camX; //mm
+        double camProjDistX; //px
+        double camProjDistY; //px
+        double camZ; //mm
+        double camX; //mm
 
-		double dist2center; //px
+        double dist2center; //px
 
-		double ball_r; //mm
+        double ball_r; //mm
 
-		double camAngle;
+        double camAngle;
 
 
 
-	public:
-		static PositionHelperDirected2 * getInstance();
-		static PositionHelperDirected2 * instance;
-		PositionHelperDirected2();
-		Point3D getPointCam2Point3D(double x, double y, double r, double ball_r);
-		Point3D getPointCam2Point3D(double x, double y, double r);
+    public:
+        static PositionHelperDirected2 * getInstance();
+        static PositionHelperDirected2 * instance;
+        PositionHelperDirected2();
+        Point3D getPointCam2Point3D(double x, double y, double r, double ball_r);
+        Point3D getPointCam2Point3D(double x, double y, double r);
 
-		Point getPointCam2Field(double x, double y);
-		Point getPointCam2Angle(double x, double y);
-		Point getPointField2Cam(double x, double y);
-		Point getAngle2Cam(double x, double y);
-		Point getPoint3D2Cam(double x, double y, double z);
-		double getPoint3D2Radius(double x, double y, double z);
-		double getPointCam2Dist(double x, double y);
+        Point getPointCam2Field(double x, double y);
+        Point getPointCam2Angle(double x, double y);
+        Point getPointField2Cam(double x, double y);
+        Point getAngle2Cam(double x, double y);
+        Point getPoint3D2Cam(double x, double y, double z);
+        double getPoint3D2Radius(double x, double y, double z);
+        double getPointCam2Dist(double x, double y);
 };
 
 

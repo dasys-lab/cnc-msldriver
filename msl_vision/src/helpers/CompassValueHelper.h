@@ -35,34 +35,34 @@
 class CompassValueHelper{
 
 
-	public:
-		CompassValueHelper();
-		~CompassValueHelper();
+    public:
+        CompassValueHelper();
+        ~CompassValueHelper();
 
-		void integrateData(int value);
-		int getCompassData();
-		int getCompassData2();
-		
-		static CompassValueHelper * getInstance();
+        void integrateData(int value);
+        int getCompassData();
+        int getCompassData2();
 
-	protected:
-		
-		static CompassValueHelper * instance_;
+        static CompassValueHelper * getInstance();
 
-		ros::Subscriber sub;
-		void init();
-		void cleanup();
+    protected:
 
-		int compassValue;
-		int updateCycles;
-		
-		ros::AsyncSpinner* spinner;
+        static CompassValueHelper * instance_;
 
-		void handleCompassInfo(const msl_sensor_msgs::CompassInfo::ConstPtr& message);
+        ros::Subscriber sub;
+        void init();
+        void cleanup();
 
-		boost::mutex mutex;
+        int compassValue;
+        int updateCycles;
 
-		bool workWithoutCompass;		
+        ros::AsyncSpinner* spinner;
+
+        void handleCompassInfo(const msl_sensor_msgs::CompassInfo::ConstPtr& message);
+
+        boost::mutex mutex;
+
+        bool workWithoutCompass;
 };
 
 #endif

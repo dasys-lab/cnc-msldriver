@@ -23,7 +23,7 @@
 
 
 #ifndef _RTIMULIB_H
-#define	_RTIMULIB_H
+#define _RTIMULIB_H
 
 #include "RTIMULibDefs.h"
 

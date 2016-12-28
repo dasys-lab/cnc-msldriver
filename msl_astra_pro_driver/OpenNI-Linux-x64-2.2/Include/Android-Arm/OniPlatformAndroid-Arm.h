@@ -34,10 +34,10 @@
 #define ONI_PLATFORM_STRING "Android-Arm"
 
 #ifdef HAVE_ANDROID_OS
-	#define ONI_PLATFORM_ANDROID_OS
-	
-	#undef ONI_PLATFORM_STRING
-	#define ONI_PLATFORM_STRING "AndroidOS-Arm"
+    #define ONI_PLATFORM_ANDROID_OS
+
+    #undef ONI_PLATFORM_STRING
+    #define ONI_PLATFORM_STRING "AndroidOS-Arm"
 #endif
 
 #endif //_ONI_PLATFORM_LINUX_ARM_H_

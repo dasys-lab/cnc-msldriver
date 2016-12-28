@@ -14,13 +14,13 @@
 void test_inline_img()
 {
     const  char *_img = {
-	"              "
-	"    *  0  *   "
-	"   **  0  *   "
-	"    *******   "
-	"      *       "
-	"   *          "
-	"  ***         "
+    "              "
+    "    *  0  *   "
+    "   **  0  *   "
+    "    *******   "
+    "      *       "
+    "   *          "
+    "  ***         "
     };
     const unsigned char *img = (const unsigned char *)_img;
     int width = 14, height = 7;
@@ -29,13 +29,13 @@ void test_inline_img()
 
     ConnectedComponents cc(30);
     cc.connected(img, out_uc, width, height,
-		 std::equal_to<unsigned char>(),
-		 false);
+         std::equal_to<unsigned char>(),
+         false);
 
     for(int r=0; r<height; ++r) {
-	for(int c=0; c<width; ++c)
-	    putchar('0'+out_uc[r*width+c]);
-	putchar('\n');
+    for(int c=0; c<width; ++c)
+        putchar('0'+out_uc[r*width+c]);
+    putchar('\n');
     }
 
     free(out_uc);
@@ -44,12 +44,12 @@ void test_inline_img()
 
 
 void ConnectedComponents::bwlabel(unsigned char *img, unsigned int *out, int width, int height)
-{          
+{
 
     ConnectedComponents cc(255);
     cc.connected(img, out, width, height,
-		 std::equal_to<unsigned char>(),
-		 constant<bool,true>());
+         std::equal_to<unsigned char>(),
+         constant<bool,true>());
 }
 
 

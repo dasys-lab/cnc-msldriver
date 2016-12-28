@@ -38,7 +38,7 @@ namespace Cox
     public:
       FieldLut(const field_lines_t &lines, const field_circles_t &circles, float resolution, float border);
       ~FieldLut();
-      
+
       inline bool outside_field(float x, float y)
       {
         if((x < __min_x) || (x > __max_x) ||

@@ -27,8 +27,8 @@ TimeHelper *  TimeHelper::instance = NULL;
 
 TimeHelper::TimeHelper() : sc() {
 
-	this->sc = SystemConfig::getInstance();
-	
+    this->sc = SystemConfig::getInstance();
+
 }
 
 
@@ -39,48 +39,48 @@ TimeHelper::~TimeHelper(){
 
 
 TimeHelper * TimeHelper::getInstance(){
-	
-	if(instance == NULL){
-		instance = new TimeHelper();
-	}
-	
-	return instance;
+
+    if(instance == NULL){
+        instance = new TimeHelper();
+    }
+
+    return instance;
 
 }
 
 
 void TimeHelper::setVisionTimeOmniCam(unsigned long long time_){
-	visionTimeOmniCam = time_;
+    visionTimeOmniCam = time_;
 }
 
 void TimeHelper::setVisionTimeDirected(unsigned long long time_){
-	visionTimeDirected = time_;
+    visionTimeDirected = time_;
 }
 
 unsigned long long TimeHelper::getVisionTimeOmniCam(){
-	return visionTimeOmniCam;
+    return visionTimeOmniCam;
 }
 
 unsigned long long TimeHelper::getVisionTimeDirected(){
-	return visionTimeDirected;
+    return visionTimeDirected;
 }
 
 
 unsigned long long TimeHelper::getTimeDiffToOmniCam(unsigned long long time_){
 
-	if(time_ > visionTimeOmniCam)
-		return (time_ - visionTimeOmniCam);
-	else
-		return (visionTimeOmniCam - time_);
+    if(time_ > visionTimeOmniCam)
+        return (time_ - visionTimeOmniCam);
+    else
+        return (visionTimeOmniCam - time_);
 
 }
 
 
 unsigned long long TimeHelper::getTimeDiff(unsigned long long time1, unsigned long long time2){
 
-	if(time2 > time1)
-		return (time2 - time1);
-	else
-		return (time1 - time2);
+    if(time2 > time1)
+        return (time2 - time1);
+    else
+        return (time1 - time2);
 
 }

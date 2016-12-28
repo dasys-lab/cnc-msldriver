@@ -26,8 +26,8 @@
 
 struct LinePoint{
 
-	double x;
-	double y;
+    double x;
+    double y;
 
 };
 

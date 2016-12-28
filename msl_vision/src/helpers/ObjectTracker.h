@@ -30,23 +30,23 @@
 
 class ObjectTracker {
 
-	public:
+    public:
 
-		ObjectTracker();
-		~ObjectTracker();
+        ObjectTracker();
+        ~ObjectTracker();
 
-		static ObjectTracker * getInstance();
+        static ObjectTracker * getInstance();
 
-		MovingObject trackObject(ObservedPoint * points, int length, int startIndex, int lastIndex, double rotVelocity);
+        MovingObject trackObject(ObservedPoint * points, int length, int startIndex, int lastIndex, double rotVelocity);
 
-	private:
+    private:
 
-		static ObjectTracker * instance_;
+        static ObjectTracker * instance_;
 
-		void init();
-		void cleanup();
+        void init();
+        void cleanup();
 
-		RawOdometryHelper * rawHelper;
+        RawOdometryHelper * rawHelper;
 
 };
 

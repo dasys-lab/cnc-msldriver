@@ -29,32 +29,32 @@ using namespace supplementary;
 
 class TimeHelper{
 
-	public:
+    public:
 
 
-		static TimeHelper * getInstance();
+        static TimeHelper * getInstance();
 
-		unsigned long long getVisionTimeOmniCam();
-		unsigned long long getVisionTimeDirected();
+        unsigned long long getVisionTimeOmniCam();
+        unsigned long long getVisionTimeDirected();
 
-		void setVisionTimeOmniCam(unsigned long long time_);
-		void setVisionTimeDirected(unsigned long long time_);
+        void setVisionTimeOmniCam(unsigned long long time_);
+        void setVisionTimeDirected(unsigned long long time_);
 
-		unsigned long long getTimeDiffToOmniCam(unsigned long long time_); 
+        unsigned long long getTimeDiffToOmniCam(unsigned long long time_);
 
-		static unsigned long long getTimeDiff(unsigned long long time1, unsigned long long time2);
+        static unsigned long long getTimeDiff(unsigned long long time1, unsigned long long time2);
 
-	private:
+    private:
 
-		SystemConfig* sc;
+        SystemConfig* sc;
 
-		static TimeHelper * instance;
-		TimeHelper();
-		~TimeHelper();
+        static TimeHelper * instance;
+        TimeHelper();
+        ~TimeHelper();
 
-		unsigned long long visionTimeOmniCam;
-		unsigned long long visionTimeDirected;
-		
+        unsigned long long visionTimeOmniCam;
+        unsigned long long visionTimeDirected;
+
 
 
 };

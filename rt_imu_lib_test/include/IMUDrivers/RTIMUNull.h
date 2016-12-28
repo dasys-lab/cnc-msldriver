@@ -22,7 +22,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef _RTIMUNULL_H
-#define	_RTIMUNULL_H
+#define _RTIMUNULL_H
 
 //  IMUNull is a dummy IMU that assumes sensor data is coming from elsewhere,
 //  for example, across a network.

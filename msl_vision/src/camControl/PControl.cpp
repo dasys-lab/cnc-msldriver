@@ -26,16 +26,16 @@
 #include <stdlib.h>
 
 PControl::PControl(string file, string confName):BasisControl(file, confName){
-	SystemConfig* sCon = SystemConfig::getInstance();
-	Configuration *camParam = (*sCon)[file.c_str()];
-	m=camParam->get<double>(file.c_str(), confName.c_str(), "m", NULL);
-b=camParam->get<double>(file.c_str(), confName.c_str(), "b", NULL);	
+    SystemConfig* sCon = SystemConfig::getInstance();
+    Configuration *camParam = (*sCon)[file.c_str()];
+    m=camParam->get<double>(file.c_str(), confName.c_str(), "m", NULL);
+b=camParam->get<double>(file.c_str(), confName.c_str(), "b", NULL);
 }
 
 double PControl::computeManipulateVariable(double measuredValue){
-	double ret=(tCV-measuredValue)*m;
-	if (tCV-measuredValue>0){ret+=b;}
-	else {ret-=b;}
-	return protectComputeVariable(ret);
+    double ret=(tCV-measuredValue)*m;
+    if (tCV-measuredValue>0){ret+=b;}
+    else {ret-=b;}
+    return protectComputeVariable(ret);
 }
 

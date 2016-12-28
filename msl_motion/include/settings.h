@@ -40,30 +40,30 @@ typedef struct {
     int wheelRadius;
     double robotRadius;
 
-	int odometrySamplingTime;
-	int controllerLoopTime;
+    int odometrySamplingTime;
+    int controllerLoopTime;
 
-	int nodeGuardTime;
-	int errorRestTime;
-	int commandTimeout;
+    int nodeGuardTime;
+    int errorRestTime;
+    int commandTimeout;
 
-	double maxTranslation;
-	double maxRotation;
+    double maxTranslation;
+    double maxRotation;
 
-	int slipControlEnabled;
-	double slipControlP;
-	double slipControlI;
-	double slipControlDecay;
+    int slipControlEnabled;
+    double slipControlP;
+    double slipControlI;
+    double slipControlDecay;
 
-	int rotationControlEnabled;
-	double rotationControlP;
-	double rotationControlI;
-	double rotationControlD;
-	double maxRotationErrorInt;
-	double rotationControlByVeloP;
-	
-	
-	int newGearHack;
+    int rotationControlEnabled;
+    double rotationControlP;
+    double rotationControlI;
+    double rotationControlD;
+    double maxRotationErrorInt;
+    double rotationControlByVeloP;
+
+
+    int newGearHack;
 
 } controller_settings;
 

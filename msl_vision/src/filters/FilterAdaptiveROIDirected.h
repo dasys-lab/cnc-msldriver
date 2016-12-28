@@ -29,29 +29,29 @@
 class FilterAdaptiveROIDirected  : public Filter {
 
 
-	public:
-		FilterAdaptiveROIDirected(int width, int height, int areaWidth_, int areaHeight_);
-		~FilterAdaptiveROIDirected();
-		
-		unsigned char * process(unsigned short * src);
-		unsigned char * getResult();
+    public:
+        FilterAdaptiveROIDirected(int width, int height, int areaWidth_, int areaHeight_);
+        ~FilterAdaptiveROIDirected();
 
-	protected:
+        unsigned char * process(unsigned short * src);
+        unsigned char * getResult();
 
-		void init();
-		void cleanup();
+    protected:
 
-		unsigned short * histogram;
-		unsigned short * maxIndexX;
-		unsigned short * maxIndexY;
-		unsigned short * maxValues;
+        void init();
+        void cleanup();
 
-		unsigned char * segImage;
+        unsigned short * histogram;
+        unsigned short * maxIndexX;
+        unsigned short * maxIndexY;
+        unsigned short * maxValues;
 
-		int areaWidth;
-		int areaHeight;
-		int rangeWidth;
-		int rangeHeight;
+        unsigned char * segImage;
+
+        int areaWidth;
+        int areaHeight;
+        int rangeWidth;
+        int rangeHeight;
 
 };
 

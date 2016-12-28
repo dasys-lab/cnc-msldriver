@@ -39,14 +39,14 @@ using namespace std;
 class FilterYUVExtractSubImages  : public Filter {
 
 
-	public:
-		FilterYUVExtractSubImages(int width, int height, int area_);
-		~FilterYUVExtractSubImages();
+    public:
+        FilterYUVExtractSubImages(int width, int height, int area_);
+        ~FilterYUVExtractSubImages();
         void loadAllLookupTables();
-		void loadLookupTable(string filename, unsigned char* lookup);
-		void loadLookupTable(string filename, unsigned char* lookup, int &min, int &max);
-		
-		void process(unsigned char * src, unsigned int width, unsigned int height, unsigned int mx, unsigned int my, unsigned char* & gray_image_, unsigned char* & uv_image_, unsigned char* & roi_image_, unsigned char* & roi_image_Roland_, unsigned char* &shadowlessGrey_);
+        void loadLookupTable(string filename, unsigned char* lookup);
+        void loadLookupTable(string filename, unsigned char* lookup, int &min, int &max);
+
+        void process(unsigned char * src, unsigned int width, unsigned int height, unsigned int mx, unsigned int my, unsigned char* & gray_image_, unsigned char* & uv_image_, unsigned char* & roi_image_, unsigned char* & roi_image_Roland_, unsigned char* &shadowlessGrey_);
         void process(unsigned char * src, unsigned int width, unsigned int height, unsigned int mx, unsigned int my, unsigned char*  & gray_image_, unsigned char* & uv_image_, unsigned char* & roi_image_);
 
         void setLookupTableValue(int index, int value);
@@ -58,24 +58,24 @@ class FilterYUVExtractSubImages  : public Filter {
         int getLookupTableROIValue(int index);
         int getLookupTableROIRolandValue(int index);
         int getLookupTableUVYValue(int index);
-	protected:
+    protected:
 
-		void init();
-		void initROI();
-		void initRoland();
-		void cleanup();
+        void init();
+        void initROI();
+        void initRoland();
+        void cleanup();
 
-		int UVYMIN, UVYMAX;
-		int area;
-		unsigned char * uv_image;
-		unsigned char * gray_image;
-		unsigned char * roi_image;
-		unsigned char * roi_image_Roland;
-		unsigned char * shadowlessGrey;
-		unsigned char * lookupTable;
-		unsigned char * lookupTableROI;
-		unsigned char * lookupTableROIRoland;
-		unsigned char * lookupTableUVY;
+        int UVYMIN, UVYMAX;
+        int area;
+        unsigned char * uv_image;
+        unsigned char * gray_image;
+        unsigned char * roi_image;
+        unsigned char * roi_image_Roland;
+        unsigned char * shadowlessGrey;
+        unsigned char * lookupTable;
+        unsigned char * lookupTableROI;
+        unsigned char * lookupTableROIRoland;
+        unsigned char * lookupTableUVY;
         unsigned char * lookupTableGreen;
 
 };

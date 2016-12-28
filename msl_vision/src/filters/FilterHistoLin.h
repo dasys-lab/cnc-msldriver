@@ -29,18 +29,18 @@
 class FilterHistoLin  : public Filter {
 
 
-	public:
-		FilterHistoLin(int width, int height);
-		~FilterHistoLin();
-		
-		unsigned char * process(unsigned char * src, int width, int height, int threshold);
+    public:
+        FilterHistoLin(int width, int height);
+        ~FilterHistoLin();
 
-	protected:
+        unsigned char * process(unsigned char * src, int width, int height, int threshold);
 
-		void init();
-		void cleanup();
+    protected:
 
-		unsigned char * AreaLookup;
+        void init();
+        void cleanup();
+
+        unsigned char * AreaLookup;
 
 };
 

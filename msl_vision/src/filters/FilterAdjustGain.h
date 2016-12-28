@@ -18,28 +18,28 @@
 
 class FilterAdjustGain  : public Filter {
 
-	public:
-		FilterAdjustGain(int width, int height);
-		~FilterAdjustGain();
+    public:
+        FilterAdjustGain(int width, int height);
+        ~FilterAdjustGain();
 #ifdef OLDLIBDC
-		int process(Camera1394 &camera, FilterDistanceProfileNew &distProfile, std::vector<LinePoint> &linePoints, Particle &particle );
-#else		
-		int process(camera::ImagingSource &camera, FilterDistanceProfileNew &distProfile, std::vector<LinePoint> &linePoints, Particle &particle );
+        int process(Camera1394 &camera, FilterDistanceProfileNew &distProfile, std::vector<LinePoint> &linePoints, Particle &particle );
+#else
+        int process(camera::ImagingSource &camera, FilterDistanceProfileNew &distProfile, std::vector<LinePoint> &linePoints, Particle &particle );
 #endif
 
-	protected:
-		SystemConfig* sc;
+    protected:
+        SystemConfig* sc;
 
-		int gain;
+        int gain;
 
-		int frame_count;
-		int nextUpdate;
-		bool adjustGain;
-		bool initStep;
-		int count;
-		double lastThreshold;
-		double fixedThreshold;
-		void init();
+        int frame_count;
+        int nextUpdate;
+        bool adjustGain;
+        bool initStep;
+        int count;
+        double lastThreshold;
+        double fixedThreshold;
+        void init();
 
 
 };

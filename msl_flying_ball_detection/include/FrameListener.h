@@ -15,36 +15,36 @@
 #include <RingBuffer.h>
 
 namespace msl_msgs{
-	ROS_DECLARE_MESSAGE(RefBoxCommand)
+    ROS_DECLARE_MESSAGE(RefBoxCommand)
 }
 
 namespace msl
 {
 
-	class FrameListener : public openni::VideoStream::NewFrameListener
-	{
-	public:
-		FrameListener();
-		virtual ~FrameListener();
-		void onNewFrame(openni::VideoStream&);
+    class FrameListener : public openni::VideoStream::NewFrameListener
+    {
+    public:
+        FrameListener();
+        virtual ~FrameListener();
+        void onNewFrame(openni::VideoStream&);
 
-	private:
-		ros::NodeHandle rosNode;
-		ros::Publisher pub;
-		ros::Publisher pubBall;
-		ros::Publisher kickControlPub;
-		ros::Subscriber refBoxCommandSub;
-		RingBuffer<InformationElement<Eigen::Vector4d> > flyingBallPositions;
-		bool mayKick;
+    private:
+        ros::NodeHandle rosNode;
+        ros::Publisher pub;
+        ros::Publisher pubBall;
+        ros::Publisher kickControlPub;
+        ros::Subscriber refBoxCommandSub;
+        RingBuffer<InformationElement<Eigen::Vector4d> > flyingBallPositions;
+        bool mayKick;
 
-		void publishCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud, ros::Publisher pub);
-		void checkBallTrajectory(unsigned long  time);
-		bool fillCloudFromDepth(openni::VideoStream& vidStream, pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud);
-		void createVoxelCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float leafSize, pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud);
-		void onRefBoxCommand(msl_msgs::RefBoxCommandPtr msg);
-		void kick();
+        void publishCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud, ros::Publisher pub);
+        void checkBallTrajectory(unsigned long  time);
+        bool fillCloudFromDepth(openni::VideoStream& vidStream, pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud);
+        void createVoxelCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float leafSize, pcl::PointCloud<pcl::PointXYZ>::Ptr voxelCloud);
+        void onRefBoxCommand(msl_msgs::RefBoxCommandPtr msg);
+        void kick();
 
-	};
+    };
 
 } /* namespace msl */
 

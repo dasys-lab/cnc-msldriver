@@ -29,27 +29,27 @@
 class FilterAdaptiveROI  : public Filter {
 
 
-	public:
-		FilterAdaptiveROI(int width, int height, int area_);
-		~FilterAdaptiveROI();
-		
-		unsigned char * process(unsigned short * src);
-		unsigned char * getResult();
+    public:
+        FilterAdaptiveROI(int width, int height, int area_);
+        ~FilterAdaptiveROI();
 
-	protected:
+        unsigned char * process(unsigned short * src);
+        unsigned char * getResult();
 
-		void init();
-		void cleanup();
+    protected:
 
-		unsigned short * histogram;
-		unsigned short * maxIndexX;
-		unsigned short * maxIndexY;
-		unsigned short * maxValues;
+        void init();
+        void cleanup();
 
-		unsigned char * segImage;
+        unsigned short * histogram;
+        unsigned short * maxIndexX;
+        unsigned short * maxIndexY;
+        unsigned short * maxValues;
 
-		int area;
-		int range;
+        unsigned char * segImage;
+
+        int area;
+        int range;
 
 };
 
