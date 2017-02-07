@@ -11,7 +11,7 @@
 #include <sys/time.h>
 #include <math.h>
 #include <cmath>
-#include <GeometryCalculator.h>
+#include <cnc_geometry/Calculator.h>
 
 namespace msl_driver
 {

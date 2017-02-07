@@ -46,7 +46,7 @@ include_directories(include
     ${PCL_INCLUDE_DIRS}
     ${MRPT_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/OpenNI-Linux-x64-2.2/Include
-	${CMAKE_CURRENT_SOURCE_DIR}/OpenNI-Linux-x64-2.2/Samples/Common
+    ${CMAKE_CURRENT_SOURCE_DIR}/OpenNI-Linux-x64-2.2/Samples/Common
 )
 
 
