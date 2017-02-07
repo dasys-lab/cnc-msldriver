@@ -8,46 +8,45 @@
 #ifndef CNC_MSLDRIVER_MSL_TMC_MOTION_SRC_CIRCLETRACE_H_
 #define CNC_MSLDRIVER_MSL_TMC_MOTION_SRC_CIRCLETRACE_H_
 
-#include <sys/time.h>
-#include <math.h>
 #include <cmath>
 #include <cnc_geometry/Calculator.h>
+#include <math.h>
+#include <sys/time.h>
 
 namespace msl_driver
 {
 
-	class CircleTrace
-	{
-	public:
-		CircleTrace();
-		virtual ~CircleTrace();
+class CircleTrace
+{
+  public:
+    CircleTrace();
+    virtual ~CircleTrace();
 
-		struct timeval t0;
-		struct timeval t1;
+    struct timeval t0;
+    struct timeval t1;
 
+    double getX();
+    double getY();
+    double getAngle();
 
-		double getX();
-		double getY();
-		double getAngle();
+    void setX(double x);
+    void setY(double y);
+    void setAngle(double angle);
+    static double TWO_PI;
 
-		void setX(double x);
-		void setY(double y);
-		void setAngle(double angle);
-		static double TWO_PI;
+    void trace(double movement[]);
 
-		void trace(double movement[]);
+  protected:
+    double x = 0.0;
+    double y = 0.0;
+    double angle = 0.0;
+    double movement[];
+    void initialize();
+    float timedifference_msec(struct timeval t0, struct timeval t1);
+    float elapsed;
 
-	protected:
-		double x = 0.0;
-		double y = 0.0;
-		double angle = 0.0;
-		double movement[];
-		void initialize();
-		float timedifference_msec(struct timeval t0, struct timeval t1);
-		float elapsed;
-
-		bool isStopwatchStarted = false;
-	};
+    bool isStopwatchStarted = false;
+};
 
 } /* namespace msl_driver */
 
