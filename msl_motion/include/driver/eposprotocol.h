@@ -33,6 +33,7 @@
 #define CAN_PDO_1_Tx 				0x180
 #define CAN_PDO_1_Rx 				0x200
 #define CAN_PDO_2_Tx 				0x280
+#define CAN_PDO_2_Rx                            0x300
 
 //---------------EMCY
 
@@ -65,14 +66,12 @@
 //Adresses for mapping pdos:
 #define EPOS_ADDR_VELOCITY_ACTUAL 	0x606c0020 //32bit value
 #define EPOS_ADDR_CURRENT_ACTUAL 	0x60780010 //16bit
-#define EPOS_ADDR_STATUS		 	0x60410010 //16bit
+#define EPOS_ADDR_STATUS		0x60410010 //16bit
 #define EPOS_ADDR_VELOCITY_AVG		0x20270020 //32bit
 
 #define EPOS_ADDR_TARGET_VELOCITY	0x60FF0020 //32bit
-#define EPOS_ADDR_CONTROLWORD		0x60400010 //32bit
-
-
-
+#define EPOS_ADDR_CONTROLWORD		0x60400010 //32bit //TODO is it 16 bit?
+#define EPOS_ADDR_CURRENT_DEMAND_VALUE  0x20310020 //32bit //TODO add 20 for 32 bit?
 
 
 //VALUES:

@@ -327,6 +327,28 @@ int EposCan::InitNode(int nodeid)
 	can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,6);
 	if(SdoDownloadConfirmation(nodeid,buf)<=0)	return 0;
 	
+	//CONFIGURE PDO RxPDO 2 for velocity setting:
+	        //Type to 0xFF (asynchronous).
+	        buf[0] = 0x2F; buf[1] = 0x01; buf[2] = 0x14; buf[3] = 0x02; buf[4]=0xFF; buf[5]=0x00;
+	        can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,6);
+	        if(SdoDownloadConfirmation(nodeid,buf)<=0)      return 0;
+
+	        //Clear Objects:
+	        buf[0] = 0x2F; buf[1] = 0x01; buf[2] = 0x16; buf[3] = 0x00; buf[4]=0x00; buf[5]=0x00;
+	        can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,6);
+	        if(SdoDownloadConfirmation(nodeid,buf)<=0)      return 0;
+
+	        //write new objects to RxPDO 1:
+	        //first object is target velocity
+	        buf[0] = 0x22; buf[1] = 0x01; buf[2] = 0x16; buf[3] = 0x01; INT2BYTEPOS(EPOS_ADDR_CURRENT_DEMAND_VALUE,buf,4);
+	        can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,8);
+	        if(SdoDownloadConfirmation(nodeid,buf)<=0)      return 0;
+
+	        //activate:
+	        buf[0] = 0x2F; buf[1] = 0x01; buf[2] = 0x16; buf[3] = 0x00; buf[4]=0x02; buf[5]=0x00;
+	        can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,6);
+	        if(SdoDownloadConfirmation(nodeid,buf)<=0)      return 0;
+
 	// MISC Settings:
 	// sensor supervision by hardware and software (0,0)
 	// motor resistance measurement at first change (0),
