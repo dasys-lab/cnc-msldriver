@@ -186,6 +186,11 @@ int EposCan::InitNode(int nodeid)
 	can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,6);
 	if(SdoDownloadConfirmation(nodeid,buf)<=0)	return 0;
 	
+//	//MODE CURRENT:
+//	buf[0] = 0x2F; buf[1] = 0x60; buf[2]=0x60; buf[3]=0x00; buf[4]=0xFD; buf[5]=0x0; //one byte to 6060 00
+//	can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,6);
+//	if(SdoDownloadConfirmation(nodeid,buf)<=0)	return 0;
+
 	//MAX VELOCITY
 	printf("MaxRPM: %d\n",current_settings.maxRPM); //With Gear
 	buf[0] = 0x22; buf[1] = 0x7F; buf[2]=0x60; buf[3]=0x00; INT2BYTEPOS(current_settings.maxRPM,buf,4);
@@ -338,11 +343,16 @@ int EposCan::InitNode(int nodeid)
 	        can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,6);
 	        if(SdoDownloadConfirmation(nodeid,buf)<=0)      return 0;
 
-	        //write new objects to RxPDO 1:
+	        //write new objects to RxPDO 2:
 	        //first object is target velocity
-	        buf[0] = 0x22; buf[1] = 0x01; buf[2] = 0x16; buf[3] = 0x01; INT2BYTEPOS(EPOS_ADDR_CURRENT_DEMAND_VALUE,buf,4);
+	        buf[0] = 0x22; buf[1] = 0x01; buf[2] = 0x16; buf[3] = 0x01; INT2BYTEPOS(EPOS_ADDR_CURRENT_SETTING_VALUE,buf,4);
 	        can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,8);
 	        if(SdoDownloadConfirmation(nodeid,buf)<=0)      return 0;
+
+	    	//second object is controlword
+	    	buf[0] = 0x22; buf[1] = 0x01; buf[2] = 0x16; buf[3] = 0x02; INT2BYTEPOS(EPOS_ADDR_CONTROLWORD,buf,4);
+	    	can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,8);
+	    	if(SdoDownloadConfirmation(nodeid,buf)<=0)	return 0;
 
 	        //activate:
 	        buf[0] = 0x2F; buf[1] = 0x01; buf[2] = 0x16; buf[3] = 0x00; buf[4]=0x02; buf[5]=0x00;
@@ -588,6 +598,16 @@ int EposCan::DemandRPM(int which)
 }
 
 
+int EposCan::DemandCurrent(int which)
+{
+	if (which >= 0 && which < controllerCount)
+	{
+		return (epos+which)->demandCurrent;
+	}
+	return 0;
+}
+
+
 int EposCan::ActualCurrent(int which)
 {
 	if (which >= 0 && which < controllerCount)
@@ -609,6 +629,15 @@ void EposCan::SetDemandRPM(int which, int rpm)
 			(epos+which)->demandRPM = (int)((23.0/18.0)*rpm+0.5);
 		}
 		//END DO2012 HACK
+	}
+}
+
+void EposCan::SetDemandCurrent(int which, int current)
+{
+	if (which >= 0 && which < controllerCount)
+	{
+		(epos+which)->demandCurrent = current;
+
 	}
 }
 
@@ -907,6 +936,16 @@ void EposCan::SetVelocityDirect(int which, int rpm)
 }
 
 
+void EposCan::SetCurrentDirect(int which, int current)
+{
+	unsigned char buf[4];
+	(epos+which-1)->demandCurrent = current;
+	INT2BYTEPOS(current,buf,0);
+	buf[2] = 0xF; buf[3] = 0x0;
+	can->SendCanMsg(CAN_PDO_2_Rx|which,buf,4);
+}
+
+
 void EposCan::SendVelocity()
 {
 	unsigned char buf[6];
@@ -929,6 +968,17 @@ void EposCan::SendVelocity()
 */	
 }
 
+void EposCan::SendCurrent()
+{
+	unsigned char buf[4];
+
+	for(unsigned char i=0; i<controllerCount; i++)
+	{
+		INT2BYTEPOS((epos+i)->demandRPM,buf,0);
+		buf[2] = 0xF; buf[3] = 0x0;
+		can->SendCanMsg(CAN_PDO_2_Rx|(i+1),buf,4);
+	}
+}
 
 void EposCan::ResetData()
 {
@@ -949,18 +999,18 @@ int EposCan::IsEnabled(int node)
 {
 	//shoulb be: 0x0x1x11x
 	char lstatus = (epos+node)->statusword & 0xFF;
-	if (lstatus & 0x40) 
+	if (lstatus & 0x40) //switch on disable
 	{
 		return 0;
 	}
-	return ((lstatus & 0x16) == 0x16);
+	return ((lstatus & 0x16) == 0x16); //Voltage enabled & Operation enable & Switched on
 }
 
 
 int EposCan::HasStatusError(int node)
 {
 	//fault bits: 0x1000
-	char lstatus = (epos+node)->statusword & 0x08;
+	char lstatus = (epos+node)->statusword & 0x08; //Fault
 	if (lstatus)
 	{
 		return 1;

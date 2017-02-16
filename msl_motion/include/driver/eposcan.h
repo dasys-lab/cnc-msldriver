@@ -35,6 +35,7 @@ typedef struct {
   int actualCurrent; //mA
 
   int demandRPM;
+  int demandCurrent;
   timeval lastReceivedUpdate;
 
 
@@ -73,10 +74,13 @@ class EposCan : public Controller, public CanListener {
 		int IsFunctional();
 		int ActualRPM(int which);
 		int DemandRPM(int which);
+		int DemandCurrent(int which);
 		int ActualCurrent(int which);
 		void SetDemandRPM(int which, int rpm);
+		void SetDemandCurrent(int which, int current);
 		void PrintStatus();
 		void SetVelocityDirect(int which, int rpm);
+		void SetCurrentDirect(int which, int current);
 		void EmergencyShutdown();
 		void Trigger(int enabled);
 		void ReadErrorRegister();
@@ -91,6 +95,7 @@ class EposCan : public Controller, public CanListener {
 		int SdoDownloadConfirmation(unsigned char nodeid, unsigned char* toconfirm);
 		void HandleEposError(unsigned char nodeid,unsigned int errorCode);
 		void SendVelocity();
+		void SendCurrent();
 		int IsEnabled(int node);
 		int HasStatusError(int node);
 

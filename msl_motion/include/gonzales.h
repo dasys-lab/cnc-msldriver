@@ -73,6 +73,7 @@ void gonz_set_error_state(int mayrecover,int timetorecover);
 void gonz_reset();
 void gonz_update_derived_settings();
 void gonz_send_cmd();
+void gonz_send_current_cmd();
 void gonz_calc_odometry();
 void gonz_send_odometry();
 void gonz_notify_odometry();

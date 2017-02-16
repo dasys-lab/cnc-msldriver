@@ -94,62 +94,71 @@ void gonz_main() { //main loop
         }
         gonz_last_calltime = gonz_cur_calltime;
 }
-void gonz_control() { //controller comes in here
+//void gonz_control() { //controller comes in here
+//
+//    ep->Trigger(1);
+//
+//    if(!gonz_check_status()) {
+//        gonz_emergency_stop();
+//        return;
+//    }
+//    //Calculate Wheel Goal from Motion Goal:
+//
+//        unsigned char i;
+//
+//    gonz_state.currentMotorGoal[0] = -cosphi * gonz_state.currentMotionGoal.x;
+//    gonz_state.currentMotorGoal[0] += sinphi * gonz_state.currentMotionGoal.y;
+//
+//    gonz_state.currentMotorGoal[1] = -cosphi * gonz_state.currentMotionGoal.x;
+//    gonz_state.currentMotorGoal[1] += -sinphi * gonz_state.currentMotionGoal.y;
+//
+//    gonz_state.currentMotorGoal[2] = cosphi * gonz_state.currentMotionGoal.x;
+//    gonz_state.currentMotorGoal[2] += -sinphi * gonz_state.currentMotionGoal.y;
+//
+//    gonz_state.currentMotorGoal[3] = cosphi * gonz_state.currentMotionGoal.x;
+//    gonz_state.currentMotorGoal[3] += sinphi * gonz_state.currentMotionGoal.y;
+//
+////printf("Vx: %d\t cospi %f\t finfactor: %f\n",gonz_state.currentMotionGoal.x,cosphi,finfactor);
+//
+//    for (i=0; i < 4; i++) {
+//        gonz_state.currentMotorGoal[i] += (gonz_state.currentMotionGoal.rotation*current_settings.robotRadius)/1024.0;
+//        gonz_state.currentMotorGoal[i] *= finfactor;
+//    }
+//	if (current_settings.slipControlEnabled > 0  && fabs(gonz_state.currentSlip) > 1.0) {
+//		double setSlip = current_settings.slipControlP*gonz_state.currentSlip + current_settings.slipControlI*gonz_state.slipI;
+//		gonz_state.currentMotorGoal[0] -= setSlip;
+//		gonz_state.currentMotorGoal[1] += setSlip;
+//		gonz_state.currentMotorGoal[2] -= setSlip;
+//		gonz_state.currentMotorGoal[3] += setSlip;
+////		printf("Reacting: p: %f\ti: %f\tt: %f\n",gonz_state.currentSlip,gonz_state.slipI,setSlip);
+////		gonz_state.currentSlip = (ep->ActualRPM(0)-ep->ActualRPM(1)+ep->ActualRPM(2)-ep->ActualRPM(3));
+//	}
+//	if (current_settings.rotationControlEnabled > 0) {
+//		double setRot = current_settings.rotationControlP*gonz_state.currentRotationError + current_settings.rotationControlI*gonz_state.rotationErrorInt +
+//				current_settings.rotationControlD*(gonz_state.currentRotationError - gonz_state.lastRotationError);
+//
+//
+//		double velo = sqrt(gonz_state.currentMotionGoal.x*gonz_state.currentMotionGoal.x+gonz_state.currentMotionGoal.y*gonz_state.currentMotionGoal.y);
+//		setRot += current_settings.rotationControlByVeloP*gonz_state.currentRotationError*velo;
+//
+//
+//		setRot = setRot*current_settings.robotRadius*finfactor/1024.0;
+//	        for (i=0; i < 4; i++) {
+//			gonz_state.currentMotorGoal[i] += setRot;
+//		}
+//	}
+//    //printf("RPM: %f\n",gonz_state.currentMotorGoal[0]);
+//    gonz_send_cmd();
+//}
 
-    ep->Trigger(1);
-
-    if(!gonz_check_status()) {
-        gonz_emergency_stop();
-        return;
-    }
-    //Calculate Wheel Goal from Motion Goal:
-
-        unsigned char i;
-
-    gonz_state.currentMotorGoal[0] = -cosphi * gonz_state.currentMotionGoal.x;
-    gonz_state.currentMotorGoal[0] += sinphi * gonz_state.currentMotionGoal.y;
-
-    gonz_state.currentMotorGoal[1] = -cosphi * gonz_state.currentMotionGoal.x;
-    gonz_state.currentMotorGoal[1] += -sinphi * gonz_state.currentMotionGoal.y;
-
-    gonz_state.currentMotorGoal[2] = cosphi * gonz_state.currentMotionGoal.x;
-    gonz_state.currentMotorGoal[2] += -sinphi * gonz_state.currentMotionGoal.y;
-
-    gonz_state.currentMotorGoal[3] = cosphi * gonz_state.currentMotionGoal.x;
-    gonz_state.currentMotorGoal[3] += sinphi * gonz_state.currentMotionGoal.y;
-
-//printf("Vx: %d\t cospi %f\t finfactor: %f\n",gonz_state.currentMotionGoal.x,cosphi,finfactor);
-
-    for (i=0; i < 4; i++) {
-        gonz_state.currentMotorGoal[i] += (gonz_state.currentMotionGoal.rotation*current_settings.robotRadius)/1024.0;
-        gonz_state.currentMotorGoal[i] *= finfactor;
-    }
-	if (current_settings.slipControlEnabled > 0  && fabs(gonz_state.currentSlip) > 1.0) {
-		double setSlip = current_settings.slipControlP*gonz_state.currentSlip + current_settings.slipControlI*gonz_state.slipI;
-		gonz_state.currentMotorGoal[0] -= setSlip;
-		gonz_state.currentMotorGoal[1] += setSlip;
-		gonz_state.currentMotorGoal[2] -= setSlip;
-		gonz_state.currentMotorGoal[3] += setSlip;
-//		printf("Reacting: p: %f\ti: %f\tt: %f\n",gonz_state.currentSlip,gonz_state.slipI,setSlip);
-//		gonz_state.currentSlip = (ep->ActualRPM(0)-ep->ActualRPM(1)+ep->ActualRPM(2)-ep->ActualRPM(3));		
-	}
-	if (current_settings.rotationControlEnabled > 0) {
-		double setRot = current_settings.rotationControlP*gonz_state.currentRotationError + current_settings.rotationControlI*gonz_state.rotationErrorInt +
-				current_settings.rotationControlD*(gonz_state.currentRotationError - gonz_state.lastRotationError);
-
-
-		double velo = sqrt(gonz_state.currentMotionGoal.x*gonz_state.currentMotionGoal.x+gonz_state.currentMotionGoal.y*gonz_state.currentMotionGoal.y);
-		setRot += current_settings.rotationControlByVeloP*gonz_state.currentRotationError*velo;
-
-
-		setRot = setRot*current_settings.robotRadius*finfactor/1024.0;
-	        for (i=0; i < 4; i++) {
-			gonz_state.currentMotorGoal[i] += setRot;
-		}					
-	}
-    //printf("RPM: %f\n",gonz_state.currentMotorGoal[0]);
-    gonz_send_cmd();
+void gonz_control(){
+	gonz_state.currentMotorGoal[0] = gonz_state.currentMotionGoal.x;
+	gonz_state.currentMotorGoal[1] = gonz_state.currentMotionGoal.x;
+	gonz_state.currentMotorGoal[2] = -gonz_state.currentMotionGoal.x;
+	gonz_state.currentMotorGoal[3] = -gonz_state.currentMotionGoal.x;
+	gonz_send_current_cmd();
 }
+
 void gonz_calc_odometry() { //TODO: Optimise!
     unsigned char i;
     gonz_state.actualMotion.rotation = 0;
@@ -257,6 +266,12 @@ void gonz_send_cmd() {
 	unsigned char i;
 	for(i=0; i<CONTROLLER_COUNT; i++) {
 		ep->SetDemandRPM(i,gonz_state.currentMotorGoal[i]);
+	}
+}
+void gonz_send_current_cmd() {
+	unsigned char i;
+	for(i=0; i<CONTROLLER_COUNT; i++) {
+		ep->SetDemandCurrent(i,gonz_state.currentMotorGoal[i]);
 	}
 }
 
