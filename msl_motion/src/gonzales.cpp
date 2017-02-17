@@ -65,6 +65,7 @@ void gonz_update_derived_settings() {
     finfactor = (double)current_settings.gear_ratio_denominator/(wheelcirc*(double)current_settings.gear_ratio_nominator)*60.0;
 }
 void gonz_main() { //main loop
+	cout << "MAIN LOOP TRIGGERED" << endl;
         gettimeofday(&gonz_cur_calltime,NULL);
         gonz_calc_odometry();
         switch(gonz_state.state) {
@@ -156,6 +157,8 @@ void gonz_control(){
 	gonz_state.currentMotorGoal[1] = gonz_state.currentMotionGoal.x;
 	gonz_state.currentMotorGoal[2] = -gonz_state.currentMotionGoal.x;
 	gonz_state.currentMotorGoal[3] = -gonz_state.currentMotionGoal.x;
+	
+cout << "currentMotionGoal " << gonz_state.currentMotionGoal.x << endl;
 	gonz_send_current_cmd();
 }
 
@@ -269,8 +272,10 @@ void gonz_send_cmd() {
 	}
 }
 void gonz_send_current_cmd() {
+cout << "SENDING: ";
 	unsigned char i;
 	for(i=0; i<CONTROLLER_COUNT; i++) {
+	cout << i << " " << gonz_state.currentMotorGoal[i] << endl;
 		ep->SetDemandCurrent(i,gonz_state.currentMotorGoal[i]);
 	}
 }

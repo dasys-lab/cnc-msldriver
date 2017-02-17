@@ -47,7 +47,7 @@ struct timeval time_cur;
 int main(int argc, char** argv) {
 	MotionInfo* cmd;
 	settings_init();
-
+	
     SystemConfig* sc = SystemConfig::getInstance();
 
 	Configuration *motion = (*sc)["Motion"];
