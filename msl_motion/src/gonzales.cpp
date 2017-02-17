@@ -153,10 +153,23 @@ void gonz_main() { //main loop
 //}
 
 void gonz_control(){
+
+    ep->Trigger(1);
+
+    if(!gonz_check_status()) {
+        gonz_emergency_stop();
+        return;
+    }
+	// TODO remove just for debug purpose
+	//gonz_state.currentMotorGoal[0] = gonz_state.currentMotionGoal.x + 100;
+	//gonz_state.currentMotorGoal[1] = gonz_state.currentMotionGoal.x + 100;
+	//gonz_state.currentMotorGoal[2] = -(gonz_state.currentMotionGoal.x + 100);
+	//gonz_state.currentMotorGoal[3] = -(gonz_state.currentMotionGoal.x + 100);
+
 	gonz_state.currentMotorGoal[0] = gonz_state.currentMotionGoal.x;
 	gonz_state.currentMotorGoal[1] = gonz_state.currentMotionGoal.x;
-	gonz_state.currentMotorGoal[2] = -gonz_state.currentMotionGoal.x;
-	gonz_state.currentMotorGoal[3] = -gonz_state.currentMotionGoal.x;
+	gonz_state.currentMotorGoal[2] = -(gonz_state.currentMotionGoal.x);
+	gonz_state.currentMotorGoal[3] = -(gonz_state.currentMotionGoal.x);
 	
 cout << "currentMotionGoal " << gonz_state.currentMotionGoal.x << endl;
 	gonz_send_current_cmd();

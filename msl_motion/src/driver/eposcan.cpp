@@ -12,7 +12,6 @@ using namespace Controlling;
 
 void EposCan::Trigger(int enabled)
 {
-cout << "TRIGGER" << endl;
 	gettimeofday(&cur_triggertime,NULL);
 	//epos->demandRPM = 0;
 	lifeguardcounter +=TIMEDIFFMS(cur_triggertime,last_triggertime);
