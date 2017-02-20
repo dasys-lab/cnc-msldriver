@@ -124,6 +124,10 @@ void gonz_control() { //controller comes in here
         gonz_state.currentMotorGoal[i] += (gonz_state.currentMotionGoal.rotation*current_settings.robotRadius)/1024.0;
         gonz_state.currentMotorGoal[i] *= finfactor;
     }
+    /*
+    Bad Motion Vector B=(1,-1,1,-1)^T
+    Odometry Correction: V = V - ((v1-v2+v3-v4)/4)*B
+    */
 	if (current_settings.slipControlEnabled > 0  && fabs(gonz_state.currentSlip) > 1.0) {
 		double setSlip = current_settings.slipControlP*gonz_state.currentSlip + current_settings.slipControlI*gonz_state.slipI;
 		gonz_state.currentMotorGoal[0] -= setSlip;
@@ -173,7 +177,7 @@ void gonz_calc_odometry() { //TODO: Optimise!
     //printf("ODO: x: %f\ty: %f\tr: %f\trpm:%d\n",gonz_state.actualMotion.x,gonz_state.actualMotion.y,gonz_state.actualMotion.rotation,ep->ActualRPM(0));
 
 
-	gonz_state.currentSlip = (ep->ActualRPM(0)-ep->ActualRPM(1)+ep->ActualRPM(2)-ep->ActualRPM(3));
+	gonz_state.currentSlip = (ep->ActualRPM(0)-ep->ActualRPM(1)+ep->ActualRPM(2)-ep->ActualRPM(3)); //(v1-v2+v3-v4)/4 corresponds to the magnitude of the deviation
 	gonz_state.currentSlip /= 4.0;
 	gonz_state.slipI *= fabs(1.0-current_settings.slipControlDecay);
 	gonz_state.slipI += gonz_state.currentSlip;
