@@ -167,10 +167,10 @@ void gonz_control(){
 	//gonz_state.currentMotorGoal[3] = -(gonz_state.currentMotionGoal.x + 100);
 
     //drive in negative x
-	gonz_state.currentMotorGoal[0] = gonz_state.currentMotionGoal.x;
-	gonz_state.currentMotorGoal[1] = gonz_state.currentMotionGoal.x;
-	gonz_state.currentMotorGoal[2] = -(gonz_state.currentMotionGoal.x);
-	gonz_state.currentMotorGoal[3] = -(gonz_state.currentMotionGoal.x);
+//	gonz_state.currentMotorGoal[0] = gonz_state.currentMotionGoal.x;
+//	gonz_state.currentMotorGoal[1] = gonz_state.currentMotionGoal.x;
+//	gonz_state.currentMotorGoal[2] = -(gonz_state.currentMotionGoal.x);
+//	gonz_state.currentMotorGoal[3] = -(gonz_state.currentMotionGoal.x);
 	
 	//drive in y
 //	gonz_state.currentMotorGoal[0] = gonz_state.currentMotionGoal.x;
@@ -185,10 +185,10 @@ void gonz_control(){
 //	gonz_state.currentMotorGoal[3] = 0;
 
  // rotate
-//	gonz_state.currentMotorGoal[0] = gonz_state.currentMotionGoal.x;
-//	gonz_state.currentMotorGoal[1] = gonz_state.currentMotionGoal.x;
-//	gonz_state.currentMotorGoal[2] = (gonz_state.currentMotionGoal.x);
-//	gonz_state.currentMotorGoal[3] = (gonz_state.currentMotionGoal.x);
+	gonz_state.currentMotorGoal[0] = gonz_state.currentMotionGoal.x;
+	gonz_state.currentMotorGoal[1] = gonz_state.currentMotionGoal.x;
+	gonz_state.currentMotorGoal[2] = (gonz_state.currentMotionGoal.x);
+	gonz_state.currentMotorGoal[3] = (gonz_state.currentMotionGoal.x);
 
 cout << "currentMotionGoal " << gonz_state.currentMotionGoal.x << endl;
 	gonz_send_current_cmd();
