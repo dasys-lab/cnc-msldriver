@@ -42,7 +42,7 @@ namespace msl
 		reduction_factor = (*sc)["GoalDetection"]->get<double>("GoalDetection.reduction_factor", NULL);
 
 		loggingEnabled = (*sc)["GoalDetection"]->get<bool>("GoalDetection.Logging.loggingEnabled", NULL);
-		probeNum = (*sc)["GoalDetection"]->get<bool>("GoalDetection.Logging.probeNum", NULL);
+		probeNum = (*sc)["GoalDetection"]->get<int>("GoalDetection.Logging.probeNum", NULL);
 
 		scanner_offset = tf::Vector3(0.2, 0.0, 0);
 		z_axis = tf::Vector3(0, 0, 1);
