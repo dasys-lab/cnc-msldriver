@@ -30,6 +30,7 @@ namespace msl
 		publisher_topic = (*sc)["GoalDetection"]->get<string>("GoalDetection.Topics.publisher_topic", NULL);
 		filter_topic = (*sc)["GoalDetection"]->get<string>("GoalDetection.Topics.filter_topic", NULL);
 		frame_id = (*sc)["GoalDetection"]->get<string>("GoalDetection.frame_id", NULL);
+		fileName = (*sc)["GoalDetection"]->get<string>("GoalDetection.Logging.fileName", NULL);
 
 		back_width = (*sc)["GoalDetection"]->get<double>("GoalDetection.back_width", NULL);
 		goal_depth = (*sc)["GoalDetection"]->get<double>("GoalDetection.goal_depth", NULL);
@@ -39,14 +40,26 @@ namespace msl
 		max_distance = (*sc)["GoalDetection"]->get<double>("GoalDetection.max_distance", NULL);
 		min_distance = (*sc)["GoalDetection"]->get<double>("GoalDetection.min_distance", NULL);
 		reduction_factor = (*sc)["GoalDetection"]->get<double>("GoalDetection.reduction_factor", NULL);
+
+		loggingEnabled = (*sc)["GoalDetection"]->get<bool>("GoalDetection.Logging.loggingEnabled", NULL);
+		probeNum = (*sc)["GoalDetection"]->get<bool>("GoalDetection.Logging.itCounter", NULL);
+
 		scanner_offset = tf::Vector3(0.2, 0.0, 0);
 		z_axis = tf::Vector3(0, 0, 1);
 		y_axis = tf::Vector3(0, 1, 0);
+
+		initLogging();
 
 	}
 
 	void LaserScanListener::onLaserScanReceived(sensor_msgs::LaserScanPtr msg)
 	{
+
+		for(int i = 0; i < msg->ranges.size(); i++) {
+			log(i, msg->ranges[i]);
+		}
+
+		log(-1,-1);
 		// reduce points to flatten the points by averaging some of them out
 		vector<double> reduced = reduce_points(msg);
 		// cout << "all count: " << msg->ranges.size() << endl;
@@ -90,7 +103,7 @@ namespace msl
 				auto p2 = corner_pair.second; // corner 2
 				auto back_candidate = p1 - p2; // back plane vector
 
-				// get relative angle of the back plane
+				// get relative angle of the back plane (to the robot)
 				double theta = calculate_angle(y_axis, back_candidate);
 
 				// vector orthogonal to the back plane
@@ -130,6 +143,7 @@ namespace msl
 
 				pose.pose.x = back_center_absolute.getX();
 				pose.pose.y = back_center_absolute.getY();
+				//TODO check this
 				pose.pose.theta = theta;
 
 //				position_msg le = {.x = offset.getX(), .y = offset.getY(), .theta = theta, .certainty =
@@ -193,7 +207,7 @@ namespace msl
 			{
 //				if (satisfies_threshold(xValues, x))
 //				{
-					xValues.push_back(x);
+				xValues.push_back(x);
 //				}
 			}
 		}
@@ -231,6 +245,7 @@ namespace msl
 			double angle = msg->angle_min + msg->angle_increment * value.first;
 			double length = value.second;
 
+			//TODO shouldn't it be view_area_angle/2?
 			if (!(length < min_distance || length > max_distance || angle > view_area_angle || angle < -view_area_angle))
 			{
 				dest.push_back(value);
@@ -312,6 +327,23 @@ namespace msl
 	{
 		return acos((a.dot(b)) / (a.length() * b.length()));
 	}
+
+	void LaserScanListener::initLogging()
+	{
+		if (loggingEnabled)
+		{
+			lp = fopen(fileName.c_str(), "a");
+		}
+	}
+
+	void LaserScanListener::log(double x, double y)
+	{
+		if (loggingEnabled)
+		{
+			fprintf(lp, "%f\t%f\n", x, y);
+		}
+	}
+
 
 }
 

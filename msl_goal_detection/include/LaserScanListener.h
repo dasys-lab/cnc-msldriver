@@ -10,6 +10,7 @@
 
 #include <ros/ros.h>
 #include <string>
+#include <stdio.h>
 #include "msl_msgs/PositionInfo.h"
 #include "geometry_msgs/PointStamped.h"
 #include "sensor_msgs/LaserScan.h"
@@ -32,6 +33,7 @@ namespace msl
 		string scanner_topic;
 		string publisher_topic;
 		string filter_topic;
+		string fileName;
 		ros::NodeHandle n;
 		ros::Publisher publisher;
 		//TODO check if obsolete
@@ -47,11 +49,17 @@ namespace msl
 		double max_distance;
 		double reduction_factor;
 
+		int probeNum;
+
+		FILE* lp;
+
 		tf::Vector3 scanner_offset;
 		tf::Vector3 z_axis;
 		tf::Vector3 y_axis;
 
 		string frame_id;
+
+		bool loggingEnabled;
 
 		void readConfigParameters();
 		vector<double> reduce_points(sensor_msgs::LaserScanPtr msg);
@@ -65,6 +73,8 @@ namespace msl
 		vector<pair<tf::Vector3, tf::Vector3>> find_back_candidates(vector<tf::Vector3> maximums);
 		double calculate_angle(tf::Vector3 a, tf::Vector3 b);
 		double rad_to_degree(double rad);
+		void initLogging();
+		void log(double x, double y);
 	};
 }
 
