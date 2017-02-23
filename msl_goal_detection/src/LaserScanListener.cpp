@@ -67,9 +67,9 @@ namespace msl
 				log(i, msg->ranges[i]);
 				timesLogged++;
 			}
+			log(-1, -1);
 		}
 
-		log(-1, -1);
 		// reduce points to flatten the points by averaging some of them out
 		vector<double> reduced = reduce_points(msg);
 		// cout << "all count: " << msg->ranges.size() << endl;
