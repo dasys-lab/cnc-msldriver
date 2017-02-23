@@ -64,10 +64,13 @@ namespace msl
 		{
 			for (int i = 0; i < msg->ranges.size(); i++)
 			{
-				log(i, msg->ranges[i]);
 				cout << "Logging ranges" << endl;
-				timesLogged++;
+				if (msg->ranges[i] < 60)
+				{
+					log(i, msg->ranges[i]);
+				}
 			}
+			timesLogged++;
 			log(-1, -1);
 		}
 
