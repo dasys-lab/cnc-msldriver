@@ -50,6 +50,8 @@ namespace msl
 		double reduction_factor;
 
 		int probeNum;
+		int itCounter;
+		int timesLogged;
 
 		FILE* lp;
 

@@ -48,6 +48,9 @@ namespace msl
 		z_axis = tf::Vector3(0, 0, 1);
 		y_axis = tf::Vector3(0, 1, 0);
 
+		itCounter = 0;
+		timesLogged = 0;
+
 		initLogging();
 
 	}
@@ -55,11 +58,18 @@ namespace msl
 	void LaserScanListener::onLaserScanReceived(sensor_msgs::LaserScanPtr msg)
 	{
 
-		for(int i = 0; i < msg->ranges.size(); i++) {
-			log(i, msg->ranges[i]);
+		itCounter++;
+
+		if (itCounter % 100 == 0 && timesLogged < probeNum)
+		{
+			for (int i = 0; i < msg->ranges.size(); i++)
+			{
+				log(i, msg->ranges[i]);
+				timesLogged++;
+			}
 		}
 
-		log(-1,-1);
+		log(-1, -1);
 		// reduce points to flatten the points by averaging some of them out
 		vector<double> reduced = reduce_points(msg);
 		// cout << "all count: " << msg->ranges.size() << endl;
@@ -133,7 +143,7 @@ namespace msl
 				// check if the calculated goal position is extremely far away.
 				// If so, this is point extremely wrong.
 				// uses the back plane width as a reference value.. just because.
-				if (scanner_center_offset_length > back_width)
+				if (scanner_center_offset_length > back_width * 1.25)
 				{
 					continue;
 				}
@@ -246,7 +256,8 @@ namespace msl
 			double length = value.second;
 
 			//TODO shouldn't it be view_area_angle/2?
-			if (!(length < min_distance || length > max_distance || angle > view_area_angle || angle < -view_area_angle))
+			if (!(length < min_distance || length > max_distance || angle > view_area_angle / 2
+					|| angle < -view_area_angle / 2))
 			{
 				dest.push_back(value);
 			}
@@ -332,7 +343,7 @@ namespace msl
 	{
 		if (loggingEnabled)
 		{
-			lp = fopen(fileName.c_str(), "a");
+			lp = fopen((fileName + ".log").c_str(), "a");
 		}
 	}
 
@@ -343,7 +354,6 @@ namespace msl
 			fprintf(lp, "%f\t%f\n", x, y);
 		}
 	}
-
 
 }
 
