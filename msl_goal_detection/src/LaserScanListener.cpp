@@ -65,13 +65,13 @@ namespace msl
 			for (int i = 0; i < msg->ranges.size(); i++)
 			{
 				cout << "Logging ranges" << endl;
-				if (msg->ranges[i] < 60)
+				if (msg->ranges[i] < back_width*1.2)
 				{
-					log(i, msg->ranges[i]);
+					log(rawLog, i, msg->ranges[i]);
 				}
 			}
 			timesLogged++;
-			log(-1, -1);
+			log(rawLog,-1, -1);
 		}
 
 		// reduce points to flatten the points by averaging some of them out
@@ -347,15 +347,15 @@ namespace msl
 	{
 		if (loggingEnabled)
 		{
-			lp = fopen((fileName + ".log").c_str(), "a");
+			rawLog = fopen((fileName + ".log").c_str(), "a");
 		}
 	}
 
-	void LaserScanListener::log(double x, double y)
+	void LaserScanListener::log(FILE* fp, double x, double y)
 	{
 		if (loggingEnabled)
 		{
-			fprintf(lp, "%f\t%f\n", x, y);
+			fprintf(fp, "%f\t%f\n", x, y);
 		}
 	}
 

@@ -53,7 +53,8 @@ namespace msl
 		int itCounter;
 		int timesLogged;
 
-		FILE* lp;
+		FILE* rawLog;
+//		FILE* rawLog;
 
 		tf::Vector3 scanner_offset;
 		tf::Vector3 z_axis;
@@ -76,7 +77,7 @@ namespace msl
 		double calculate_angle(tf::Vector3 a, tf::Vector3 b);
 		double rad_to_degree(double rad);
 		void initLogging();
-		void log(double x, double y);
+		void log(FILE* file,double x, double y);
 	};
 }
 
