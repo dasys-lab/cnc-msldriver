@@ -25,9 +25,9 @@ double robotcirc;
 double finfactor;
 
 double decoupling[4][3]={{-1/11.5, 1/9.65, 1/153},{-1/11.5, -1/9.65, 1/153},{1/11.5, -1/9.65, 1/153},{1/11.5, 1/9.65, 1/153}};
-double v_xError;
-double v_yError;
-double omegaError;
+double v_xError=0;
+double v_yError=0;
+double omegaError=0;
 double v_xIntegratedError = 0;
 double v_yIntegratedError = 0;
 double omegaIntegratedError = 0;
@@ -82,7 +82,9 @@ void gonz_init() {
     gonz_state.currentPosition.x = 0;
     gonz_state.currentPosition.y = 0;
     gonz_state.currentPosition.angle = 0;
-
+	v_xIntegratedError=0;
+	v_yIntegratedError=0;
+	omegaIntegratedError=0;
 }
 void gonz_set_mode(int mode) {
 	gonz_mode=mode;
@@ -231,6 +233,7 @@ void gonz_control(){
 //	gonz_state.currentMotorGoal[2] = (gonz_state.currentMotionGoal.x);
 //	gonz_state.currentMotorGoal[3] = (gonz_state.currentMotionGoal.x);
 
+	cout<<"currentMotionGoal:"<<gonz_state.currentMotionGoal.x<<" "<<gonz_state.currentMotionGoal.y<<" "<<gonz_state.currentMotionGoal.rotation<<endl;
 	v_xOldError=v_xError;
 	v_yOldError=v_yError;
 	omegaOldError=omegaError;
@@ -239,20 +242,26 @@ void gonz_control(){
 	v_yError = gonz_state.actualMotion.y - gonz_state.currentMotionGoal.y;
 	omegaError = gonz_state.actualMotion.rotation - gonz_state.currentMotionGoal.rotation;
 
+	cout<<"current Error:"<<v_xError<<" "<<v_yError<<" "<<omegaError<<endl;
 	// P-part
 	v_xCorrection = K_p * v_xError;
 	v_yCorrection = K_p * v_yError;
 	omegaCorrection = K_p * omegaError;
-
+	
+	cout<<"P output:"<<v_xCorrection<<" "<<v_yCorrection<<" "<<omegaCorrection<<endl;
+	cout<<"I before:"<<v_xIntegratedError<<" "<<v_yIntegratedError<<" "<<omegaIntegratedError<<endl;
 	// I-part
 	v_xIntegratedError += K_i * v_xError * dt;
 	v_yIntegratedError += K_i * v_yError * dt;
 	omegaIntegratedError += K_i * omegaError * dt;
+	
+	cout<<"I output:"<<v_xIntegratedError<<" "<<v_yIntegratedError<<" "<<omegaIntegratedError<<endl;
 
 	v_xCorrection += v_xIntegratedError;
 	v_yCorrection += v_yIntegratedError;
 	omegaCorrection += omegaIntegratedError;
-
+	
+	cout<<"PI output:"<<v_xCorrection<<" "<<v_yCorrection<<" "<<omegaCorrection<<endl;
 	//only if D-part is used
 //	if (v_xOldErrorDiffs.size > D_smoothing){
 //		v_xErrorDiffSum -= v_xOldErrorDiffs.front();
@@ -283,7 +292,8 @@ void gonz_control(){
 //	omegaOldErrorDiffs.push(omegaError - omegaOldError);
 //
 //	omegaCorrection += K_d* (omegaErrorDiffSum / omegaOldErrorDiffs.size);
-
+	
+	cout<<"decouplin Matrix:"<<decoupling[0][0]<<endl;
 	gonz_state.currentMotorGoal[0] = v_xCorrection*decoupling[0][0]+v_yCorrection*decoupling[0][1]+omegaCorrection*decoupling[0][2];
 	gonz_state.currentMotorGoal[1] = v_xCorrection*decoupling[1][0]+v_yCorrection*decoupling[1][1]+omegaCorrection*decoupling[1][2];
 	gonz_state.currentMotorGoal[2] = v_xCorrection*decoupling[2][0]+v_yCorrection*decoupling[2][1]+omegaCorrection*decoupling[2][2];
@@ -311,7 +321,7 @@ void gonz_control(){
 	v_yIntegratedError -= K_antiWindup*dt*(v1Saturation/decoupling[0][1]+v2Saturation/decoupling[1][1]+v3Saturation/decoupling[2][1]+v4Saturation/decoupling[3][1]);
 	omegaIntegratedError -= K_antiWindup*dt*(v1Saturation/decoupling[0][2]+v2Saturation/decoupling[1][2]+v3Saturation/decoupling[2][2]+v4Saturation/decoupling[3][2]);
 
-cout << "currentMotionGoal " << gonz_state.currentMotionGoal.x << endl;
+cout << "currentMotorGoal " << gonz_state.currentMotorGoal[0] <<" "<< gonz_state.currentMotorGoal[1]<<" "<<gonz_state.currentMotorGoal[2]<<" "<<gonz_state.currentMotorGoal[3]<< endl;
 	gonz_send_current_cmd();
 }
 
