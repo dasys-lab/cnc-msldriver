@@ -24,22 +24,22 @@ double wheelcirc;
 double robotcirc;
 double finfactor;
 
-double decoupling[4][3]={{-1/11.5, 1/9.65, 1/153},{-1/11.5, -1/9.65, 1/153},{1/11.5, -1/9.65, 1/153},{1/11.5, 1/9.65, 1/153}};
-double v_xError=0;
-double v_yError=0;
-double omegaError=0;
-double v_xIntegratedError = 0;
-double v_yIntegratedError = 0;
-double omegaIntegratedError = 0;
+double decoupling[4][3]={{-1.0/11.5, 1.0/9.65, 1.0/153.0},{-1.0/11.5, -1.0/9.65, 1.0/153.0},{1.0/11.5, -1.0/9.65, 1.0/153.0},{1.0/11.5, 1.0/9.65, 1.0/153.0}};
+double v_xError=0.0;
+double v_yError=0.0;
+double omegaError=0.0;
+double v_xIntegratedError = 0.0;
+double v_yIntegratedError = 0.0;
+double omegaIntegratedError = 0.0;
 double v_xOldError;
 queue<double> v_xOldErrorDiffs;
-double v_xErrorDiffSum = 0;
+double v_xErrorDiffSum = 0.0;
 double v_yOldError;
 queue<double> v_yOldErrorDiffs;
-double v_yErrorDiffSum = 0;
+double v_yErrorDiffSum = 0.0;
 double omegaOldError;
 queue<double> omegaOldErrorDiffs;
-double omegaErrorDiffSum = 0;
+double omegaErrorDiffSum = 0.0;
 double v_xCorrection;
 double v_yCorrection;
 double omegaCorrection;
@@ -82,9 +82,9 @@ void gonz_init() {
     gonz_state.currentPosition.x = 0;
     gonz_state.currentPosition.y = 0;
     gonz_state.currentPosition.angle = 0;
-	v_xIntegratedError=0;
-	v_yIntegratedError=0;
-	omegaIntegratedError=0;
+	v_xIntegratedError=0.0;
+	v_yIntegratedError=0.0;
+	omegaIntegratedError=0.0;
 }
 void gonz_set_mode(int mode) {
 	gonz_mode=mode;
@@ -99,10 +99,10 @@ void gonz_update_derived_settings() {
     wheelcirc = TWO_PI * current_settings.wheelRadius;
     robotcirc = TWO_PI * current_settings.robotRadius;
     finfactor = (double)current_settings.gear_ratio_denominator/(wheelcirc*(double)current_settings.gear_ratio_nominator)*60.0;
-    K_p = 60;
-    K_i = 15;
-    K_d = 2;
-    dt = 1/200;//[sec]
+    K_p = 60.0;
+    K_i = 15.0;
+    K_d = 2.0;
+    dt = 1.0/200.0;//[sec]
     K_antiWindup = 0.5; //TODO Tune
     D_smoothing = 20;
     maxCurrent = 25000;
@@ -293,7 +293,7 @@ void gonz_control(){
 //
 //	omegaCorrection += K_d* (omegaErrorDiffSum / omegaOldErrorDiffs.size);
 	
-	cout<<"decouplin Matrix:"<<decoupling[0][0]<<endl;
+	cout<<"decoupling Matrix:"<<decoupling[0][0]<<" "<<decoupling[1][0]<<" "<<decoupling[2][0]<<" "<<decoupling[3][0]<<" "<<decoupling[0][1]<<" "<<decoupling[1][1]<<" "<<decoupling[2][1]<<" "<<decoupling[3][1]<<" "<<decoupling[0][2]<<" "<<decoupling[1][2]<<" "<<decoupling[2][2]<<" "<<decoupling[3][2]<<endl;
 	gonz_state.currentMotorGoal[0] = v_xCorrection*decoupling[0][0]+v_yCorrection*decoupling[0][1]+omegaCorrection*decoupling[0][2];
 	gonz_state.currentMotorGoal[1] = v_xCorrection*decoupling[1][0]+v_yCorrection*decoupling[1][1]+omegaCorrection*decoupling[1][2];
 	gonz_state.currentMotorGoal[2] = v_xCorrection*decoupling[2][0]+v_yCorrection*decoupling[2][1]+omegaCorrection*decoupling[2][2];
@@ -302,8 +302,8 @@ void gonz_control(){
 	//correction in case of actuator saturation so direction of force is not changed
 	double antiWindup = 1;
 	for (int i=0; i<4; i++) {
-		if (((double)maxCurrent / gonz_state.currentMotorGoal[i])<antiWindup) {
-			antiWindup = (double)maxCurrent / gonz_state.currentMotorGoal[i];
+		if ((((double)maxCurrent) / gonz_state.currentMotorGoal[i])<antiWindup) {
+			antiWindup = ((double)maxCurrent) / gonz_state.currentMotorGoal[i];
 		}
 	}
 
