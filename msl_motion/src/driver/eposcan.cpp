@@ -976,8 +976,8 @@ void EposCan::SendCurrent()
 	cout << "SENDING CURRENT" << endl;
  	for(unsigned char i=0; i<controllerCount; i++)
 	{
-//TODO *10 hack, um Geschwindigkeitsdrosselung zu umgehen
-		INT2BYTEPOS(((epos+i)->demandCurrent*10),buf,0);
+
+		INT2BYTEPOS(((epos+i)->demandCurrent),buf,0);
 		buf[2] = 0xF; buf[3] = 0x0;
 		can->SendCanMsg(CAN_PDO_2_Rx|(i+1),buf,4);
 	}

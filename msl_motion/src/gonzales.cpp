@@ -4,6 +4,7 @@
 #include <math.h>
 #include "RosHelper.h"
 #include "util.h"
+#include "queue"
 
 #include <string.h>
 #include <DateTime.h>
@@ -23,6 +24,39 @@ double wheelcirc;
 double robotcirc;
 double finfactor;
 
+double decoupling[4][3]={{-1/11.5, 1/9.65, 1/153},{-1/11.5, -1/9.65, 1/153},{1/11.5, -1/9.65, 1/153},{1/11.5, 1/9.65, 1/153}};
+double v_xError;
+double v_yError;
+double omegaError;
+double v_xIntegratedError = 0;
+double v_yIntegratedError = 0;
+double omegaIntegratedError = 0;
+double v_xOldError;
+queue<double> v_xOldErrorDiffs;
+double v_xErrorDiffSum = 0;
+double v_yOldError;
+queue<double> v_yOldErrorDiffs;
+double v_yErrorDiffSum = 0;
+double omegaOldError;
+queue<double> omegaOldErrorDiffs;
+double omegaErrorDiffSum = 0;
+double v_xCorrection;
+double v_yCorrection;
+double omegaCorrection;
+
+double v1Saturation;
+double v2Saturation;
+double v3Saturation;
+double v4Saturation;
+
+double K_p;
+double K_i;
+double K_d;
+double dt;
+double K_antiWindup;
+int D_smoothing;
+
+int maxCurrent;
 
 
 struct timeval odotime_last;
@@ -63,6 +97,13 @@ void gonz_update_derived_settings() {
     wheelcirc = TWO_PI * current_settings.wheelRadius;
     robotcirc = TWO_PI * current_settings.robotRadius;
     finfactor = (double)current_settings.gear_ratio_denominator/(wheelcirc*(double)current_settings.gear_ratio_nominator)*60.0;
+    K_p = 60;
+    K_i = 15;
+    K_d = 2;
+    dt = 1/200;//[sec]
+    K_antiWindup = 0.5; //TODO Tune
+    D_smoothing = 20;
+    maxCurrent = 25000;
 }
 void gonz_main() { //main loop
 	cout << "MAIN LOOP TRIGGERED" << endl;
@@ -173,10 +214,10 @@ void gonz_control(){
 //	gonz_state.currentMotorGoal[3] = -(gonz_state.currentMotionGoal.x);
 	
 	//drive in y
-	gonz_state.currentMotorGoal[0] = gonz_state.currentMotionGoal.x;
-	gonz_state.currentMotorGoal[1] = -(gonz_state.currentMotionGoal.x);
-	gonz_state.currentMotorGoal[2] = -(gonz_state.currentMotionGoal.x);
-	gonz_state.currentMotorGoal[3] = (gonz_state.currentMotionGoal.x);
+//	gonz_state.currentMotorGoal[0] = gonz_state.currentMotionGoal.x;
+//	gonz_state.currentMotorGoal[1] = -(gonz_state.currentMotionGoal.x);
+//	gonz_state.currentMotorGoal[2] = -(gonz_state.currentMotionGoal.x);
+//	gonz_state.currentMotorGoal[3] = (gonz_state.currentMotionGoal.x);
 
 	//drive in wheel direction
 //	gonz_state.currentMotorGoal[0] = gonz_state.currentMotionGoal.x;
@@ -189,6 +230,86 @@ void gonz_control(){
 //	gonz_state.currentMotorGoal[1] = gonz_state.currentMotionGoal.x;
 //	gonz_state.currentMotorGoal[2] = (gonz_state.currentMotionGoal.x);
 //	gonz_state.currentMotorGoal[3] = (gonz_state.currentMotionGoal.x);
+
+	v_xOldError=v_xError;
+	v_yOldError=v_yError;
+	omegaOldError=omegaError;
+
+	v_xError = gonz_state.actualMotion.x - gonz_state.currentMotionGoal.x;
+	v_yError = gonz_state.actualMotion.y - gonz_state.currentMotionGoal.y;
+	omegaError = gonz_state.actualMotion.rotation - gonz_state.currentMotionGoal.rotation;
+
+	// P-part
+	v_xCorrection = K_p * v_xError;
+	v_yCorrection = K_p * v_yError;
+	omegaCorrection = K_p * omegaError;
+
+	// I-part
+	v_xIntegratedError += K_i * v_xError * dt;
+	v_yIntegratedError += K_i * v_yError * dt;
+	omegaIntegratedError += K_i * omegaError * dt;
+
+	v_xCorrection += v_xIntegratedError;
+	v_yCorrection += v_yIntegratedError;
+	omegaCorrection += omegaIntegratedError;
+
+	//only if D-part is used
+//	if (v_xOldErrorDiffs.size > D_smoothing){
+//		v_xErrorDiffSum -= v_xOldErrorDiffs.front();
+//		v_xOldErrorDiffs.pop();
+//	}
+//
+//	v_xErrorDiffSum += v_xError - v_xOldError;
+//	v_xOldErrorDiffs.push(v_xError - v_xOldError);
+//
+//	v_xCorrection += K_d* (v_xErrorDiffSum / v_xOldErrorDiffs.size);
+//
+//	if (v_yOldErrorDiffs.size > D_smoothing){
+//		v_yErrorDiffSum -= v_yOldErrorDiffs.front();
+//		v_yOldErrorDiffs.pop();
+//	}
+//
+//	v_yErrorDiffSum += v_yError - v_yOldError;
+//	v_yOldErrorDiffs.push(v_yError - v_yOldError);
+//
+//	v_yCorrection += K_d* (v_yErrorDiffSum / v_yOldErrorDiffs.size);
+//
+//	if (omegaOldErrorDiffs.size > D_smoothing){
+//		omegaErrorDiffSum -= omegaOldErrorDiffs.front();
+//		omegaOldErrorDiffs.pop();
+//	}
+//
+//	omegaErrorDiffSum += omegaError - omegaOldError;
+//	omegaOldErrorDiffs.push(omegaError - omegaOldError);
+//
+//	omegaCorrection += K_d* (omegaErrorDiffSum / omegaOldErrorDiffs.size);
+
+	gonz_state.currentMotorGoal[0] = v_xCorrection*decoupling[0][0]+v_yCorrection*decoupling[0][1]+omegaCorrection*decoupling[0][2];
+	gonz_state.currentMotorGoal[1] = v_xCorrection*decoupling[1][0]+v_yCorrection*decoupling[1][1]+omegaCorrection*decoupling[1][2];
+	gonz_state.currentMotorGoal[2] = v_xCorrection*decoupling[2][0]+v_yCorrection*decoupling[2][1]+omegaCorrection*decoupling[2][2];
+	gonz_state.currentMotorGoal[3] = v_xCorrection*decoupling[3][0]+v_yCorrection*decoupling[3][1]+omegaCorrection*decoupling[3][2];
+
+	//correction in case of actuator saturation so direction of force is not changed
+	double antiWindup = 1;
+	for (int i=0; i<4; i++) {
+		if (((double)maxCurrent / gonz_state.currentMotorGoal[i])<antiWindup) {
+			antiWindup = (double)maxCurrent / gonz_state.currentMotorGoal[i];
+		}
+	}
+
+	v1Saturation = gonz_state.currentMotorGoal[0]*(1-antiWindup);
+	gonz_state.currentMotorGoal[0]*=antiWindup;
+	v2Saturation = gonz_state.currentMotorGoal[1]*(1-antiWindup);
+	gonz_state.currentMotorGoal[1]*=antiWindup;
+	v3Saturation = gonz_state.currentMotorGoal[2]*(1-antiWindup);
+	gonz_state.currentMotorGoal[2]*=antiWindup;
+	v4Saturation = gonz_state.currentMotorGoal[3]*(1-antiWindup);
+	gonz_state.currentMotorGoal[3]*=antiWindup;
+
+	//antiWindUp
+	v_xIntegratedError -= K_antiWindup*dt*(v1Saturation/decoupling[0][0]+v2Saturation/decoupling[1][0]+v3Saturation/decoupling[2][0]+v4Saturation/decoupling[3][0]);
+	v_yIntegratedError -= K_antiWindup*dt*(v1Saturation/decoupling[0][1]+v2Saturation/decoupling[1][1]+v3Saturation/decoupling[2][1]+v4Saturation/decoupling[3][1]);
+	omegaIntegratedError -= K_antiWindup*dt*(v1Saturation/decoupling[0][2]+v2Saturation/decoupling[1][2]+v3Saturation/decoupling[2][2]+v4Saturation/decoupling[3][2]);
 
 cout << "currentMotionGoal " << gonz_state.currentMotionGoal.x << endl;
 	gonz_send_current_cmd();
