@@ -238,9 +238,9 @@ void gonz_control(){
 	v_yOldError=v_yError;
 	omegaOldError=omegaError;
 
-	v_xError = gonz_state.actualMotion.x - gonz_state.currentMotionGoal.x;
-	v_yError = gonz_state.actualMotion.y - gonz_state.currentMotionGoal.y;
-	omegaError = gonz_state.actualMotion.rotation - gonz_state.currentMotionGoal.rotation;
+	v_xError = gonz_state.currentMotionGoal.x - gonz_state.actualMotion.x;
+	v_yError = gonz_state.currentMotionGoal.y - gonz_state.actualMotion.y;
+	omegaError = gonz_state.currentMotionGoal.rotation - gonz_state.actualMotion.rotation;
 
 	cout<<"current Error:"<<v_xError<<" "<<v_yError<<" "<<omegaError<<endl;
 	// P-part
