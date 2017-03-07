@@ -99,8 +99,8 @@ void gonz_update_derived_settings() {
     wheelcirc = TWO_PI * current_settings.wheelRadius;
     robotcirc = TWO_PI * current_settings.robotRadius;
     finfactor = (double)current_settings.gear_ratio_denominator/(wheelcirc*(double)current_settings.gear_ratio_nominator)*60.0;
-    K_p = 60.0;
-    K_i = 15.0;
+    K_p = 100.0;
+    K_i = 1.0;
     K_d = 2.0;
     dt = 1.0/200.0;//[sec]
     K_antiWindup = 0.5; //TODO Tune
