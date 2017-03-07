@@ -302,8 +302,8 @@ void gonz_control(){
 	//correction in case of actuator saturation so direction of force is not changed
 	double antiWindup = 1;
 	for (int i=0; i<4; i++) {
-		if ((((double)maxCurrent) / gonz_state.currentMotorGoal[i])<antiWindup) {
-			antiWindup = ((double)maxCurrent) / gonz_state.currentMotorGoal[i];
+		if ((((double)maxCurrent) / abs(gonz_state.currentMotorGoal[i]))<antiWindup) {
+			antiWindup = ((double)maxCurrent) / abs(gonz_state.currentMotorGoal[i]);
 		}
 	}
 
