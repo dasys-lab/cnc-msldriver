@@ -65,13 +65,13 @@ namespace msl
 			for (int i = 0; i < msg->ranges.size(); i++)
 			{
 				cout << "Logging ranges" << endl;
-				if (msg->ranges[i] < back_width*1.2)
+				if (msg->ranges[i] < back_width * 1.2)
 				{
 					log(rawLog, i, msg->ranges[i]);
 				}
 			}
 			timesLogged++;
-			log(rawLog,-1, -1);
+			log(rawLog, -1, -1);
 		}
 
 		// reduce points to flatten the points by averaging some of them out
@@ -117,6 +117,8 @@ namespace msl
 				auto p2 = corner_pair.second; // corner 2
 				auto back_candidate = p1 - p2; // back plane vector
 
+				tf::Vector3 goalie_center = tf::Vector3(-0.2, 0.0, 0);
+
 				// get relative angle of the back plane (to the robot)
 				double theta = calculate_angle(y_axis, back_candidate);
 
@@ -136,11 +138,22 @@ namespace msl
 				// add our offset of the scanner position to the goal keeper center
 				auto offset = scanner_center_offset + scanner_offset;
 
-				cout << "(" << p1.getX() << " | " << p1.getY() << ")" << " -> " << "(" << p2.getX() << " | "
-						<< p2.getY() << ")" << "\t" << "[" << back_candidate.length() << "]" << "\t" << "[" << theta
-						<< ", " << (theta * 180 / M_PI) << "]" << "\t" << "(" << back_center_absolute.getX() << " | "
-						<< back_center_absolute.getY() << ")" << "(" << offset.getX() << " | " << offset.getY() << ")"
-						<< endl;
+//				cout << "(" << p1.getX() << " | " << p1.getY() << ")" << " -> " << "(" << p2.getX() << " | "
+//						<< p2.getY() << ")" << "\t" << "[" << back_candidate.length() << "]" << "\t" << "[" << theta
+//						<< ", " << (theta * 180 / M_PI) << "]" << "\t" << "(" << back_center_absolute.getX() << " | "
+//						<< back_center_absolute.getY() << ")" << "(" << offset.getX() << " | " << offset.getY() << ")"
+//						<< endl;
+
+				if (loggingEnabled)
+				{
+					ofstream os(fileName + "General.log", std::ofstream::app);
+					os << "(" << p1.getX() << " | " << p1.getY() << ")" << " -> " << "(" << p2.getX() << " | "
+							<< p2.getY() << ")" << "\t" << "[" << back_candidate.length() << "]" << "\t" << "[" << theta
+							<< ", " << (theta * 180 / M_PI) << "]" << "\t" << "(" << back_center_absolute.getX()
+							<< " | " << back_center_absolute.getY() << ")" << "(" << offset.getX() << " | "
+							<< offset.getY() << ")" << endl;
+					os.close();
+				}
 
 				double scanner_center_offset_length = scanner_center_offset.length();
 
@@ -152,19 +165,32 @@ namespace msl
 					continue;
 				}
 
+				auto leftGoalCornerEgo = p1 - goalie_center;
+				auto rightGoalCornerEgo = p2 - goalie_center;
+
+				auto leftGoalPostEgo = leftGoalCornerEgo + post_vector;
+				auto rightGoalPostEgo = rightGoalCornerEgo + post_vector;
+
 				// Add this goal center to the potential points list.
 				msl_msgs::Pose2dStamped pose;
 
 				pose.pose.x = back_center_absolute.getX();
 				pose.pose.y = back_center_absolute.getY();
+				pose.leftGoalPost.x = leftGoalPostEgo.getX();
+				pose.leftGoalPost.y = leftGoalPostEgo.getY();
+				pose.rightGoalPost.x = rightGoalPostEgo.getX();
+				pose.rightGoalPost.y = rightGoalPostEgo.getY();
 				//TODO check this
 				pose.pose.theta = theta;
-
 //				position_msg le = {.x = offset.getX(), .y = offset.getY(), .theta = theta, .certainty =
 //											scanner_center_offset_length};
 				positions.push_back(pose);
-				break;
+
+				//TODO why
+//				break;
 			}
+
+			logPositions(positionsLog, positions);
 
 			if (positions.size() > 0)
 			{
@@ -347,7 +373,11 @@ namespace msl
 	{
 		if (loggingEnabled)
 		{
-			rawLog = fopen((fileName + ".log").c_str(), "a");
+			rawLog = fopen((fileName + "Raw.log").c_str(), "a");
+			smoothLog = fopen((fileName + "Smooth.log").c_str(), "a");
+			positionsLog = fopen((fileName + "Positions.log").c_str(), "a");
+//			generalLog = fopen((fileName + "General.log").c_str(), "a");
+
 		}
 	}
 
@@ -356,6 +386,19 @@ namespace msl
 		if (loggingEnabled)
 		{
 			fprintf(fp, "%f\t%f\n", x, y);
+		}
+	}
+
+	void LaserScanListener::logPositions(FILE* file, vector<msl_msgs::Pose2dStamped> positions)
+	{
+		if (loggingEnabled)
+		{
+			for (auto position : positions)
+			{
+				fprintf(file, "%f\t%f\t%f\t%f\t%f\t%f\t%f\n", position.pose.x, position.pose.y, position.leftGoalPost.x,
+						position.leftGoalPost.y, position.rightGoalPost.x, position.rightGoalPost.y,
+						position.pose.theta);
+			}
 		}
 	}
 

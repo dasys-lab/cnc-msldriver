@@ -13,8 +13,8 @@
 #include <stdio.h>
 #include "msl_msgs/PositionInfo.h"
 #include "geometry_msgs/PointStamped.h"
+#include "msl_msgs/Pose2dStamped.h"
 #include "sensor_msgs/LaserScan.h"
-#include <msl_msgs/Pose2dStamped.h>
 #include <tf/transform_datatypes.h>
 
 using namespace std;
@@ -54,7 +54,9 @@ namespace msl
 		int timesLogged;
 
 		FILE* rawLog;
-//		FILE* rawLog;
+		FILE* smoothLog;
+		FILE* positionsLog;
+		FILE* generalLog;
 
 		tf::Vector3 scanner_offset;
 		tf::Vector3 z_axis;
@@ -78,6 +80,8 @@ namespace msl
 		double rad_to_degree(double rad);
 		void initLogging();
 		void log(FILE* file,double x, double y);
+		void logGeneralInfo();
+		void logPositions(FILE* file, vector<msl_msgs::Pose2dStamped> positions);
 	};
 }
 
