@@ -102,6 +102,11 @@ void settings_init() {
     default_settings.wheelRadius = motion->get<int>("Motion","MotionControl","WheelRadius",NULL);
     default_settings.robotRadius = motion->get<int>("Motion","MotionControl","RobotRadius",NULL);
 
+    default_settings.K_P = motion->get<int>("Motion","MotionControl","K_P",NULL);
+    default_settings.K_I = motion->get<int>("Motion","MotionControl","K_I",NULL);
+    default_settings.K_D = motion->get<int>("Motion","MotionControl","K_D",NULL);
+    default_settings.K_antiWindup = motion->get<int>("Motion","MotionControl","K_antiWindup",NULL);
+
 
 
     current_settings = default_settings;

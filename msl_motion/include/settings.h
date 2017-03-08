@@ -62,6 +62,10 @@ typedef struct {
 	double maxRotationErrorInt;
 	double rotationControlByVeloP;
 	
+	int K_P;
+	int K_I;
+	int K_D;
+	int K_antiWindup;
 	
 	int newGearHack;
 
