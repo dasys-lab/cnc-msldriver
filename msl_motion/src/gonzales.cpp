@@ -104,7 +104,7 @@ void gonz_update_derived_settings() {
     K_d = current_settings.K_D;
     dt = 1.0/200.0;//[sec]
     K_antiWindup = current_settings.K_antiWindup; //TODO Tune
-    D_smoothing = 10;
+    D_smoothing = 9;
     maxCurrent = 25000;
 }
 void gonz_main() { //main loop
