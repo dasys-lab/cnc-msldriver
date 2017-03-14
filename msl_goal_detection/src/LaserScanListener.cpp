@@ -138,11 +138,11 @@ namespace msl
 				// add our offset of the scanner position to the goal keeper center
 				auto offset = scanner_center_offset + scanner_offset;
 
-//				cout << "(" << p1.getX() << " | " << p1.getY() << ")" << " -> " << "(" << p2.getX() << " | "
-//						<< p2.getY() << ")" << "\t" << "[" << back_candidate.length() << "]" << "\t" << "[" << theta
-//						<< ", " << (theta * 180 / M_PI) << "]" << "\t" << "(" << back_center_absolute.getX() << " | "
-//						<< back_center_absolute.getY() << ")" << "(" << offset.getX() << " | " << offset.getY() << ")"
-//						<< endl;
+				cout << "(" << p1.getX() << " | " << p1.getY() << ")" << " -> " << "(" << p2.getX() << " | "
+						<< p2.getY() << ")" << "\t" << "[" << back_candidate.length() << "]" << "\t" << "[" << theta
+						<< ", " << (theta * 180 / M_PI) << "]" << "\t" << "(" << back_center_absolute.getX() << " | "
+						<< back_center_absolute.getY() << ")" << "(" << offset.getX() << " | " << offset.getY() << ")"
+						<< endl;
 
 				if (loggingEnabled)
 				{
