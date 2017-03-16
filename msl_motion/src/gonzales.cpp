@@ -50,6 +50,7 @@ double v3Saturation;
 double v4Saturation;
 
 double K_p;
+int P_treshold;
 double K_i;
 double K_d;
 double dt;
@@ -100,6 +101,7 @@ void gonz_update_derived_settings() {
     robotcirc = TWO_PI * current_settings.robotRadius;
     finfactor = (double)current_settings.gear_ratio_denominator/(wheelcirc*(double)current_settings.gear_ratio_nominator)*60.0;
     K_p = current_settings.K_P;
+    P_treshold = current_settings.P_treshold;
     K_i = current_settings.K_I;
     K_d = current_settings.K_D;
     dt = 1.0/200.0;//[sec]
@@ -215,9 +217,15 @@ void gonz_control(){
 
 	cout<<"current Error:"<<v_xError<<" "<<v_yError<<" "<<omegaError<<endl;
 	// P-part
-	v_xCorrection = K_p * v_xError;
-	v_yCorrection = K_p * v_yError;
-	omegaCorrection = K_p * omegaError;
+	if(abs(v_xError) > P_treshold){
+		v_xCorrection = K_p * v_xError;
+	}
+	if(abs(v_yError) > P_treshold){
+		v_yCorrection = K_p * v_yError;
+	}
+	if(abs(omegaError) > P_treshold){
+		omegaCorrection = K_p * omegaError;
+	}
 	
 	cout<<"P output:"<<v_xCorrection<<" "<<v_yCorrection<<" "<<omegaCorrection<<endl;
 	cout<<"I before:"<<v_xIntegratedError<<" "<<v_yIntegratedError<<" "<<omegaIntegratedError<<endl;
@@ -234,35 +242,35 @@ void gonz_control(){
 	
 	cout<<"PI output:"<<v_xCorrection<<" "<<v_yCorrection<<" "<<omegaCorrection<<endl;
 	//only if D-part is used
-	if (v_xOldErrorDiffs.size() > D_smoothing){
-		v_xErrorDiffSum -= v_xOldErrorDiffs.front();
-		v_xOldErrorDiffs.pop();
-	}
-
-	v_xErrorDiffSum += v_xError - v_xOldError;
-	v_xOldErrorDiffs.push(v_xError - v_xOldError);
-
-	v_xCorrection += K_d* (v_xErrorDiffSum / (v_xOldErrorDiffs.size() * dt));
-
-	if (v_yOldErrorDiffs.size() > D_smoothing){
-		v_yErrorDiffSum -= v_yOldErrorDiffs.front();
-		v_yOldErrorDiffs.pop();
-	}
-
-	v_yErrorDiffSum += v_yError - v_yOldError;
-	v_yOldErrorDiffs.push(v_yError - v_yOldError);
-
-	v_yCorrection += K_d* (v_yErrorDiffSum / (v_yOldErrorDiffs.size() * dt));
-
-	if (omegaOldErrorDiffs.size() > D_smoothing){
-		omegaErrorDiffSum -= omegaOldErrorDiffs.front();
-		omegaOldErrorDiffs.pop();
-	}
-
-	omegaErrorDiffSum += omegaError - omegaOldError;
-	omegaOldErrorDiffs.push(omegaError - omegaOldError);
-
-	omegaCorrection += K_d* (omegaErrorDiffSum / (omegaOldErrorDiffs.size() * dt));
+//	if (v_xOldErrorDiffs.size() > D_smoothing){
+//		v_xErrorDiffSum -= v_xOldErrorDiffs.front();
+//		v_xOldErrorDiffs.pop();
+//	}
+//
+//	v_xErrorDiffSum += v_xError - v_xOldError;
+//	v_xOldErrorDiffs.push(v_xError - v_xOldError);
+//
+//	v_xCorrection += K_d* (v_xErrorDiffSum / (v_xOldErrorDiffs.size() * dt));
+//
+//	if (v_yOldErrorDiffs.size() > D_smoothing){
+//		v_yErrorDiffSum -= v_yOldErrorDiffs.front();
+//		v_yOldErrorDiffs.pop();
+//	}
+//
+//	v_yErrorDiffSum += v_yError - v_yOldError;
+//	v_yOldErrorDiffs.push(v_yError - v_yOldError);
+//
+//	v_yCorrection += K_d* (v_yErrorDiffSum / (v_yOldErrorDiffs.size() * dt));
+//
+//	if (omegaOldErrorDiffs.size() > D_smoothing){
+//		omegaErrorDiffSum -= omegaOldErrorDiffs.front();
+//		omegaOldErrorDiffs.pop();
+//	}
+//
+//	omegaErrorDiffSum += omegaError - omegaOldError;
+//	omegaOldErrorDiffs.push(omegaError - omegaOldError);
+//
+//	omegaCorrection += K_d* (omegaErrorDiffSum / (omegaOldErrorDiffs.size() * dt));
 	
 	cout<<"decoupling Matrix:"<<decoupling[0][0]<<" "<<decoupling[1][0]<<" "<<decoupling[2][0]<<" "<<decoupling[3][0]<<" "<<decoupling[0][1]<<" "<<decoupling[1][1]<<" "<<decoupling[2][1]<<" "<<decoupling[3][1]<<" "<<decoupling[0][2]<<" "<<decoupling[1][2]<<" "<<decoupling[2][2]<<" "<<decoupling[3][2]<<endl;
 	gonz_state.currentMotorGoal[0] = v_xCorrection*decoupling[0][0]+v_yCorrection*decoupling[0][1]+omegaCorrection*decoupling[0][2];

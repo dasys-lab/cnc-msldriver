@@ -63,6 +63,7 @@ typedef struct {
 	double rotationControlByVeloP;
 	
 	int K_P;
+	int P_treshold;
 	int K_I;
 	int K_D;
 	int K_antiWindup;
