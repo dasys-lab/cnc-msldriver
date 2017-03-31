@@ -65,10 +65,10 @@ namespace msl
 			for (int i = 0; i < msg->ranges.size(); i++)
 			{
 				cout << "Logging ranges" << endl;
-				if (msg->ranges[i] < back_width * 1.2)
-				{
+//				if (msg->ranges[i] < back_width * 1.2)
+//				{
 					log(rawLog, i, msg->ranges[i]);
-				}
+//				}
 			}
 			timesLogged++;
 			log(rawLog, -1, -1);
@@ -220,6 +220,20 @@ namespace msl
 			sum /= reduction_factor;
 			reduced[i] = sum;
 		}
+
+		if (loggingEnabled && itCounter % 100 == 0 && timesLogged < probeNum)
+		{
+			for (int i = 0; i < reduced.size(); i++)
+			{
+				cout << "Logging smooth" << endl;
+//				if (msg->ranges[i] < back_width * 1.2)
+//				{
+					log(smoothLog, i,(double) reduced.at(i));
+//				}
+			}
+			timesLogged++;
+			log(smoothLog, -1, -1);
+		}
 		return reduced;
 	}
 
@@ -264,6 +278,7 @@ namespace msl
 			//cout << "adding " << msg->ranges[x] << "at idx " << x << endl;
 			result.push_back(make_pair(x, reduced.at(x)));
 		}
+
 		return result;
 	}
 
