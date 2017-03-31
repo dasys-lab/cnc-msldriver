@@ -79,8 +79,8 @@ namespace msl
 		// cout << "all count: " << msg->ranges.size() << endl;
 
 		// find maximum values of these points
-		vector<pair<int, double>> maxima = find_maxima(msg);
-//		vector<pair<int, double>> maxima = find_maxima(reduced);
+//		vector<pair<int, double>> maxima = find_maxima(msg);
+		vector<pair<int, double>> maxima = find_maxima(reduced);
 //		 cout << "Maximum count: " << maxima.size() << endl;
 //
 //		// filter out measurement errors
@@ -223,14 +223,21 @@ namespace msl
 		return reduced;
 	}
 
-	vector<pair<int, double> > LaserScanListener::find_maxima(sensor_msgs::LaserScanPtr msg)
-	{
-		vector<pair<int, double>> points_pairs(msg->ranges.size());
-		for (size_t x = 0; x < msg->ranges.size(); ++x)
-		{
-			points_pairs[x] = make_pair(x, msg->ranges[x]);
-		}
+//	vector<pair<int, double> > LaserScanListener::find_maxima(sensor_msgs::LaserScanPtr msg)
+//	{
+//		vector<pair<int, double>> points_pairs(msg->ranges.size());
+//		for (size_t x = 0; x < msg->ranges.size(); ++x)
+//		{
+//			points_pairs[x] = make_pair(x, msg->ranges[x]);
+//		}
 
+	vector<pair<int, double> > LaserScanListener::find_maxima(vector<double> reduced)
+	{
+		vector<pair<int, double>> points_pairs(reduced.size());
+		for (size_t x = 0; x < reduced.size(); ++x)
+		{
+			points_pairs[x] = make_pair(x, reduced.at(x));
+		}
 		//TODO check if obsolete?
 //
 		std::sort(points_pairs.begin(), points_pairs.end(), [](pair<int, double> left, pair<int, double> right)
@@ -255,7 +262,7 @@ namespace msl
 		for (auto x : xValues)
 		{
 			//cout << "adding " << msg->ranges[x] << "at idx " << x << endl;
-			result.push_back(make_pair(x, msg->ranges[x]));
+			result.push_back(make_pair(x, reduced.at(x)));
 		}
 		return result;
 	}
