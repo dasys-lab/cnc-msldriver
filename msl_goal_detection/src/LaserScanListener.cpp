@@ -60,7 +60,7 @@ namespace msl
 
 		itCounter++;
 
-		if (itCounter % 100 == 0 && timesLogged < probeNum)
+		if (loggingEnabled && itCounter % 100 == 0 && timesLogged < probeNum)
 		{
 			for (int i = 0; i < msg->ranges.size(); i++)
 			{
