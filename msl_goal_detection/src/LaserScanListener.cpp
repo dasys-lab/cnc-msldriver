@@ -64,7 +64,7 @@ namespace msl
 		{
 			for (int i = 0; i < msg->ranges.size(); i++)
 			{
-				cout << "Logging ranges" << endl;
+//				cout << "Logging ranges" << endl;
 //				if (msg->ranges[i] < back_width * 1.2)
 //				{
 					log(rawLog, i, msg->ranges[i]);
@@ -99,7 +99,7 @@ namespace msl
 
 		if (corner_candidates.size() > 0)
 		{
-//			cout << "cc count: " << corner_candidates.size() << endl;
+			cout << "cc count: " << corner_candidates.size() << endl;
 			// sort candidates by their distance to the scanner.
 			// the more farther away these two points are, the better
 			std::sort(corner_candidates.begin(), corner_candidates.end(),
@@ -308,8 +308,8 @@ namespace msl
 			double length = value.second;
 
 			//TODO shouldn't it be view_area_angle/2?
-			if (!(length < min_distance || length > max_distance || angle > view_area_angle / 2
-					|| angle < -view_area_angle / 2))
+			if (!(length < min_distance || length > max_distance || angle > view_area_angle
+					|| angle < -view_area_angle))
 			{
 				dest.push_back(value);
 			}
@@ -353,6 +353,7 @@ namespace msl
 		{
 			if (point.getX() < 0 || point.getY() < 0)
 			{
+				cout << "cont1" << endl;
 				continue;
 			}
 
