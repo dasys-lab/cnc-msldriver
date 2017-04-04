@@ -64,7 +64,7 @@ namespace msl
 		{
 			for (int i = 0; i < msg->ranges.size(); i++)
 			{
-//				cout << "Logging ranges" << endl;
+				cout << "Logging ranges" << endl;
 //				if (msg->ranges[i] < back_width * 1.2)
 //				{
 				log(rawLog, i, msg->ranges[i]);
@@ -252,7 +252,7 @@ namespace msl
 			else
 			{
 				//mark values to be discarded as negative
-				cout << "poor value" <<endl;
+				cout << "poor value" << endl;
 				points_pairs[x] = make_pair(x, -1);
 			}
 		}
