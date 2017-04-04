@@ -68,8 +68,8 @@ namespace msl
 
 		void readConfigParameters();
 		vector<double> reduce_points(sensor_msgs::LaserScanPtr msg);
-//		vector<pair<int, double>> find_maxima(sensor_msgs::LaserScanPtr msg);
-		vector<pair<int, double>> find_maxima(vector<double> reduced);
+		vector<pair<int, double>> find_maxima(sensor_msgs::LaserScanPtr msg);
+//		vector<pair<int, double>> find_maxima(vector<double> reduced);
 		bool satisfies_threshold(vector<int> vec, int value);
 		bool is_in_range(double value);
 		bool is_in_range(int compare_to, int value);

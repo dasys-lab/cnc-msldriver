@@ -67,7 +67,7 @@ namespace msl
 //				cout << "Logging ranges" << endl;
 //				if (msg->ranges[i] < back_width * 1.2)
 //				{
-					log(rawLog, i, msg->ranges[i]);
+				log(rawLog, i, msg->ranges[i]);
 //				}
 			}
 			timesLogged++;
@@ -75,12 +75,13 @@ namespace msl
 		}
 
 		// reduce points to flatten the points by averaging some of them out
-		vector<double> reduced = reduce_points(msg);
+		// not working
+//		vector<double> reduced = reduce_points(msg);
 		// cout << "all count: " << msg->ranges.size() << endl;
 
 		// find maximum values of these points
-//		vector<pair<int, double>> maxima = find_maxima(msg);
-		vector<pair<int, double>> maxima = find_maxima(reduced);
+		vector<pair<int, double>> maxima = find_maxima(msg);
+//		vector<pair<int, double>> maxima = find_maxima(reduced);
 //		 cout << "Maximum count: " << maxima.size() << endl;
 //
 //		// filter out measurement errors
@@ -144,7 +145,7 @@ namespace msl
 						<< back_center_absolute.getY() << ")" << "(" << offset.getX() << " | " << offset.getY() << ")"
 						<< endl;
 
-				if (loggingEnabled)
+				if (loggingEnabled && itCounter % 100 == 0)
 				{
 					ofstream os(fileName + "General.log", std::ofstream::app);
 					os << "(" << p1.getX() << " | " << p1.getY() << ")" << " -> " << "(" << p2.getX() << " | "
@@ -159,8 +160,8 @@ namespace msl
 
 				// check if the calculated goal position is extremely far away.
 				// If so, this is point extremely wrong.
-				// uses the back plane width as a reference value.. just because.
-				if (scanner_center_offset_length > back_width * 1.25)
+				// uses the back plane width as a reference value.. just because. check if obsolete
+				if (scanner_center_offset_length > back_width * 3)
 				{
 					continue;
 				}
@@ -209,6 +210,7 @@ namespace msl
 
 	vector<double> LaserScanListener::reduce_points(sensor_msgs::LaserScanPtr msg)
 	{
+		//not working
 		vector<double> reduced(msg->ranges.size() / reduction_factor);
 		for (size_t i = 0; i < reduced.size(); ++i)
 		{
@@ -225,10 +227,10 @@ namespace msl
 		{
 			for (int i = 0; i < reduced.size(); i++)
 			{
-				cout << "Logging smooth" << endl;
+//				cout << "Logging smooth" << endl;
 //				if (msg->ranges[i] < back_width * 1.2)
 //				{
-					log(smoothLog, i,(double) reduced.at(i));
+				log(smoothLog, i, (double)reduced.at(i));
 //				}
 			}
 			timesLogged++;
@@ -237,21 +239,29 @@ namespace msl
 		return reduced;
 	}
 
-//	vector<pair<int, double> > LaserScanListener::find_maxima(sensor_msgs::LaserScanPtr msg)
-//	{
-//		vector<pair<int, double>> points_pairs(msg->ranges.size());
-//		for (size_t x = 0; x < msg->ranges.size(); ++x)
-//		{
-//			points_pairs[x] = make_pair(x, msg->ranges[x]);
-//		}
-
-	vector<pair<int, double> > LaserScanListener::find_maxima(vector<double> reduced)
+	vector<pair<int, double> > LaserScanListener::find_maxima(sensor_msgs::LaserScanPtr msg)
 	{
-		vector<pair<int, double>> points_pairs(reduced.size());
-		for (size_t x = 0; x < reduced.size(); ++x)
+		vector<pair<int, double>> points_pairs(msg->ranges.size());
+		for (size_t x = 0; x < msg->ranges.size(); ++x)
 		{
-			points_pairs[x] = make_pair(x, reduced.at(x));
+			if (!(msg->ranges[x] < min_distance && msg->ranges[x] > max_distance))
+			{
+				points_pairs[x] = make_pair(x, msg->ranges[x]);
+			}
+			else
+			{
+				//mark values to be discarded as negative
+				points_pairs[x] = make_pair(x, -1);
+			}
 		}
+
+//	vector<pair<int, double> > LaserScanListener::find_maxima(vector<double> reduced)
+//	{
+//		vector<pair<int, double>> points_pairs(reduced.size());
+//		for (size_t x = 0; x < reduced.size(); ++x)
+//		{
+//			points_pairs[x] = make_pair(x, reduced.at(x));
+//		}
 		//TODO check if obsolete?
 //
 		std::sort(points_pairs.begin(), points_pairs.end(), [](pair<int, double> left, pair<int, double> right)
@@ -264,7 +274,7 @@ namespace msl
 		{
 			auto x = point.first;
 			auto y = point.second;
-			if (std::find(xValues.begin(), xValues.end(), x) == xValues.end())
+			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
 			{
 //				if (satisfies_threshold(xValues, x))
 //				{
@@ -276,7 +286,7 @@ namespace msl
 		for (auto x : xValues)
 		{
 			//cout << "adding " << msg->ranges[x] << "at idx " << x << endl;
-			result.push_back(make_pair(x, reduced.at(x)));
+			result.push_back(make_pair(x, msg->ranges[x]));
 		}
 
 		return result;
@@ -308,8 +318,7 @@ namespace msl
 			double length = value.second;
 
 			//TODO shouldn't it be view_area_angle/2?
-			if (!(length < min_distance || length > max_distance || angle > view_area_angle
-					|| angle < -view_area_angle))
+			if (!(length < min_distance || length > max_distance || angle > view_area_angle || angle < -view_area_angle))
 			{
 				dest.push_back(value);
 			}
@@ -352,12 +361,11 @@ namespace msl
 		for (auto point : maximums)
 		{
 
-			//JUST A TEST
-//			if (point.getX() < 0 || point.getY() < 0)
-//			{
-//				cout << "cont1" << endl;
-//				continue;
-//			}
+			if (point.getX() < 0 || point.getY() < 0)
+			{
+				cout << "cont1" << endl;
+				continue;
+			}
 
 			for (auto other : maximums)
 			{
@@ -416,7 +424,7 @@ namespace msl
 
 	void LaserScanListener::logPositions(FILE* file, vector<msl_msgs::Pose2dStamped> positions)
 	{
-		if (loggingEnabled)
+		if (loggingEnabled && itCounter % 100 == 0)
 		{
 			for (auto position : positions)
 			{
