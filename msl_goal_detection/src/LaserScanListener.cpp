@@ -247,13 +247,11 @@ namespace msl
 		{
 			if (!(msg->ranges[x] < min_distance || msg->ranges[x] > max_distance))
 			{
-				cout << "valid distance: " << msg->ranges[x] << endl;
 				points_pairs[x] = make_pair(x, msg->ranges[x]);
 			}
 			else
 			{
 				//mark values to be discarded as negative
-				cout << "poor value" << msg->ranges[x] << endl;
 				points_pairs[x] = make_pair(x, -1);
 			}
 		}
@@ -280,7 +278,6 @@ namespace msl
 //			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
 			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
 			{
-				cout << "new x value" << endl;
 				if (satisfies_threshold(xValues, x))
 				{
 				xValues.push_back(x);
