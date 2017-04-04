@@ -351,11 +351,13 @@ namespace msl
 
 		for (auto point : maximums)
 		{
-			if (point.getX() < 0 || point.getY() < 0)
-			{
-				cout << "cont1" << endl;
-				continue;
-			}
+
+			//JUST A TEST
+//			if (point.getX() < 0 || point.getY() < 0)
+//			{
+//				cout << "cont1" << endl;
+//				continue;
+//			}
 
 			for (auto other : maximums)
 			{
