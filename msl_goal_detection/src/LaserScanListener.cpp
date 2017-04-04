@@ -188,7 +188,7 @@ namespace msl
 				positions.push_back(pose);
 
 				//TODO why
-//				break;
+				break;
 			}
 
 			logPositions(positionsLog, positions);
@@ -427,7 +427,7 @@ namespace msl
 
 	void LaserScanListener::logPositions(FILE* file, vector<msl_msgs::Pose2dStamped> positions)
 	{
-		if (loggingEnabled && itCounter % 100 == 0)
+		if (loggingEnabled)
 		{
 			for (auto position : positions)
 			{
