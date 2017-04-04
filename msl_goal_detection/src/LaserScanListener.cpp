@@ -247,7 +247,7 @@ namespace msl
 		{
 			if (!(msg->ranges[x] < min_distance && msg->ranges[x] > max_distance))
 			{
-				cout << "valid" << endl;
+				cout << "valid distance: " << msg->ranges[x] << endl;
 				points_pairs[x] = make_pair(x, msg->ranges[x]);
 			}
 			else
