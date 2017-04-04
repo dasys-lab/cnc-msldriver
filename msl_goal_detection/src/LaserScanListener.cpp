@@ -245,7 +245,7 @@ namespace msl
 		vector<pair<int, double>> points_pairs(msg->ranges.size());
 		for (size_t x = 0; x < msg->ranges.size(); ++x)
 		{
-			if (!(msg->ranges[x] < min_distance && msg->ranges[x] > max_distance))
+			if (!(msg->ranges[x] < min_distance || msg->ranges[x] > max_distance))
 			{
 				cout << "valid distance: " << msg->ranges[x] << endl;
 				points_pairs[x] = make_pair(x, msg->ranges[x]);
@@ -253,7 +253,7 @@ namespace msl
 			else
 			{
 				//mark values to be discarded as negative
-				cout << "poor value" << endl;
+				cout << "poor value" << msg->ranges[x] << endl;
 				points_pairs[x] = make_pair(x, -1);
 			}
 		}
@@ -278,7 +278,7 @@ namespace msl
 			auto x = point.first;
 			auto y = point.second;
 //			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
-			if (std::find(xValues.begin(), xValues.end(), x) == xValues.end())
+			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
 			{
 				cout << "new x value" << endl;
 				if (satisfies_threshold(xValues, x))
