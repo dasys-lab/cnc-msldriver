@@ -172,11 +172,17 @@ namespace msl
 				auto leftGoalPostEgo = leftGoalCornerEgo + post_vector;
 				auto rightGoalPostEgo = rightGoalCornerEgo + post_vector;
 
+				auto actualGoalMidEgo = (leftGoalPostEgo + rightGoalPostEgo) / 2;
+
 				// Add this goal center to the potential points list.
 				msl_msgs::Pose2dStamped pose;
 
-				pose.pose.x = back_center_absolute.getX();
-				pose.pose.y = back_center_absolute.getY();
+				//TODO check
+//				pose.pose.x = back_center_absolute.getX();
+//				pose.pose.y = back_center_absolute.getY();
+
+				pose.pose.x = actualGoalMidEgo.getX();
+				pose.pose.y = actualGoalMidEgo.getY();
 				pose.leftGoalPost.x = leftGoalPostEgo.getX();
 				pose.leftGoalPost.y = leftGoalPostEgo.getY();
 				pose.rightGoalPost.x = rightGoalPostEgo.getX();
