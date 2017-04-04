@@ -80,7 +80,7 @@ namespace msl
 		// cout << "all count: " << msg->ranges.size() << endl;
 
 		// find maximum values of these points
-		 /*vector<pair<int, double>> maxima = find_maxima(msg);
+		 vector<pair<int, double>> maxima = find_maxima(msg);
 //		vector<pair<int, double>> maxima = find_maxima(reduced);
 //		 cout << "Maximum count: " << maxima.size() << endl;
 //
@@ -206,7 +206,7 @@ namespace msl
 //				publish_message(publisher, pos.x, pos.y, pos.theta);
 			}
 		}
-		*/
+
 	}
 
 	vector<double> LaserScanListener::reduce_points(sensor_msgs::LaserScanPtr msg)
@@ -277,13 +277,14 @@ namespace msl
 		{
 			auto x = point.first;
 			auto y = point.second;
-			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
+//			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
+			if (std::find(xValues.begin(), xValues.end(), x) == xValues.end())
 			{
 				cout << "new x value" << endl;
-//				if (satisfies_threshold(xValues, x))
-//				{
+				if (satisfies_threshold(xValues, x))
+				{
 				xValues.push_back(x);
-//				}
+				}
 			}
 		}
 		vector<pair<int, double>> result;
