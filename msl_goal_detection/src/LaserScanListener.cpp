@@ -80,7 +80,7 @@ namespace msl
 		// cout << "all count: " << msg->ranges.size() << endl;
 
 		// find maximum values of these points
-		vector<pair<int, double>> maxima = find_maxima(msg);
+		 /*vector<pair<int, double>> maxima = find_maxima(msg);
 //		vector<pair<int, double>> maxima = find_maxima(reduced);
 //		 cout << "Maximum count: " << maxima.size() << endl;
 //
@@ -206,6 +206,7 @@ namespace msl
 //				publish_message(publisher, pos.x, pos.y, pos.theta);
 			}
 		}
+		*/
 	}
 
 	vector<double> LaserScanListener::reduce_points(sensor_msgs::LaserScanPtr msg)
@@ -410,7 +411,7 @@ namespace msl
 		if (loggingEnabled)
 		{
 			rawLog = fopen((fileName + "Raw.log").c_str(), "a");
-			smoothLog = fopen((fileName + "Smooth.log").c_str(), "a");
+//			smoothLog = fopen((fileName + "Smooth.log").c_str(), "a");
 			positionsLog = fopen((fileName + "Positions.log").c_str(), "a");
 //			generalLog = fopen((fileName + "General.log").c_str(), "a");
 
