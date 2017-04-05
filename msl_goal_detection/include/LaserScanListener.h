@@ -72,7 +72,7 @@ namespace msl
 //		vector<pair<int, double>> find_maxima(vector<double> reduced);
 		bool satisfies_threshold(vector<int> vec, int value);
 		bool is_in_range(double value);
-		bool is_in_range(int compare_to, int value);
+		bool idxTooClose(int compare_to, int value);
 		vector<pair<int, double>> filter_points(vector<pair<int, double>> polars, sensor_msgs::LaserScanPtr msg);
 		vector<tf::Vector3> polar_to_cartesian(vector<pair<int, double>> polars, sensor_msgs::LaserScanPtr msg);
 		vector<pair<tf::Vector3, tf::Vector3>> find_back_candidates(vector<tf::Vector3> maximums);

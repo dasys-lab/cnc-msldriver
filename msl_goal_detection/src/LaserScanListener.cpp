@@ -80,21 +80,20 @@ namespace msl
 		// cout << "all count: " << msg->ranges.size() << endl;
 
 		// find maximum values of these points
-		 vector<pair<int, double>> maxima = find_maxima(msg);
+		vector<pair<int, double>> maxima = find_maxima(msg);
 //		vector<pair<int, double>> maxima = find_maxima(reduced);
 //		 cout << "Maximum count: " << maxima.size() << endl;
 //
+
 //		// filter out measurement errors
 		vector<pair<int, double>> okay_points = filter_points(maxima, msg);
 //		 cout << "okay_points count: " << okay_points.size() << endl;
 //
+
 //		// convert maximums to cartesian coordinates to find back plane candidates later
 		vector<tf::Vector3> points = polar_to_cartesian(okay_points, msg);
 //		 cout << "points count: " << points.size() << endl;
-//
-//		// Set precision for debugging purposes
-//		cout.precision(3);
-//
+
 //		// find candidates for the goal corners by maximums
 		vector<pair<tf::Vector3, tf::Vector3>> corner_candidates = find_back_candidates(points);
 
@@ -172,29 +171,26 @@ namespace msl
 				auto leftGoalPostEgo = leftGoalCornerEgo + post_vector;
 				auto rightGoalPostEgo = rightGoalCornerEgo + post_vector;
 
+				//for some reason, this doesn't seem to work? TODO !!!
 				auto actualGoalMidEgo = (leftGoalPostEgo + rightGoalPostEgo) / 2;
 
 				// Add this goal center to the potential points list.
 				msl_msgs::Pose2dStamped pose;
 
-				//TODO check
-//				pose.pose.x = back_center_absolute.getX();
-//				pose.pose.y = back_center_absolute.getY();
+				//fill msg values (x1000 because m to mm)
+				pose.pose.x = actualGoalMidEgo.getX() * 1000;
+				pose.pose.y = actualGoalMidEgo.getY() * 1000;
+				pose.leftGoalPost.x = leftGoalPostEgo.getX() * 1000;
+				pose.leftGoalPost.y = leftGoalPostEgo.getY() * 1000;
+				pose.rightGoalPost.x = rightGoalPostEgo.getX() * 1000;
+				pose.rightGoalPost.y = rightGoalPostEgo.getY() * 1000;
 
-				pose.pose.x = actualGoalMidEgo.getX();
-				pose.pose.y = actualGoalMidEgo.getY();
-				pose.leftGoalPost.x = leftGoalPostEgo.getX();
-				pose.leftGoalPost.y = leftGoalPostEgo.getY();
-				pose.rightGoalPost.x = rightGoalPostEgo.getX();
-				pose.rightGoalPost.y = rightGoalPostEgo.getY();
 				//TODO check this
 				pose.pose.theta = theta;
-//				position_msg le = {.x = offset.getX(), .y = offset.getY(), .theta = theta, .certainty =
-//											scanner_center_offset_length};
 				positions.push_back(pose);
 
 				//TODO why
-				break;
+//				break;
 			}
 
 			logPositions(positionsLog, positions);
@@ -202,12 +198,34 @@ namespace msl
 			if (positions.size() > 0)
 			{
 				// just take the first one and publish it.
-				msl_msgs::Pose2dStamped pose = positions[0];
+				msl_msgs::Pose2dStamped final = positions[0];
 
-				pose.header.frame_id = frame_id;
-				pose.header.stamp = ros::Time::now();
+				//favor a position where angle theta corresponds to x and y coordinates
+				//for now just take avg position
+				int num = positions.size();
 
-				publisher.publish(pose);
+				for (auto pos : positions) {
+					final.pose.x += pos.pose.x;
+					final.pose.y += pos.pose.y;
+					final.leftGoalPost.x += pos.leftGoalPost.x;
+					final.leftGoalPost.y += pos.leftGoalPost.y;
+					final.rightGoalPost.x += pos.rightGoalPost.x;
+					final.rightGoalPost.y += pos.rightGoalPost.y;
+					final.pose.theta += pos.pose.theta;
+				}
+
+				final.pose.x /= num;
+				final.pose.y /= num;
+				final.leftGoalPost.x /= num;
+				final.leftGoalPost.y /= num;
+				final.rightGoalPost.x /= num;
+				final.rightGoalPost.y /= num;
+				final.pose.theta /= num;
+
+				final.header.frame_id = frame_id;
+				final.header.stamp = ros::Time::now();
+
+				publisher.publish(final);
 
 //				publish_message(publisher, pos.x, pos.y, pos.theta);
 			}
@@ -230,19 +248,6 @@ namespace msl
 			reduced[i] = sum;
 		}
 
-		if (loggingEnabled && itCounter % 100 == 0 && timesLogged < probeNum)
-		{
-			for (int i = 0; i < reduced.size(); i++)
-			{
-//				cout << "Logging smooth" << endl;
-//				if (msg->ranges[i] < back_width * 1.2)
-//				{
-				log(smoothLog, i, (double)reduced.at(i));
-//				}
-			}
-			timesLogged++;
-			log(smoothLog, -1, -1);
-		}
 		return reduced;
 	}
 
@@ -262,15 +267,6 @@ namespace msl
 			}
 		}
 
-//	vector<pair<int, double> > LaserScanListener::find_maxima(vector<double> reduced)
-//	{
-//		vector<pair<int, double>> points_pairs(reduced.size());
-//		for (size_t x = 0; x < reduced.size(); ++x)
-//		{
-//			points_pairs[x] = make_pair(x, reduced.at(x));
-//		}
-		//TODO check if obsolete?
-//
 		std::sort(points_pairs.begin(), points_pairs.end(), [](pair<int, double> left, pair<int, double> right)
 		{
 			return left.second > right.second;
@@ -281,12 +277,11 @@ namespace msl
 		{
 			auto x = point.first;
 			auto y = point.second;
-//			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
 			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
 			{
 				if (satisfies_threshold(xValues, x))
 				{
-				xValues.push_back(x);
+					xValues.push_back(x);
 				}
 			}
 		}
@@ -302,13 +297,9 @@ namespace msl
 
 	bool LaserScanListener::satisfies_threshold(vector<int> vec, int value)
 	{
-//		if (vec.size() == 0)
-//		{
-//			return true;
-//		}
 		for (auto x : vec)
 		{
-			if (is_in_range(x, value))
+			if (idxTooClose(x, value))
 			{
 				return false;
 			}
@@ -400,7 +391,7 @@ namespace msl
 		return (back_width - back_width_tolerance) <= value && value <= (back_width + back_width_tolerance);
 	}
 
-	bool LaserScanListener::is_in_range(int compare_to, int value)
+	bool LaserScanListener::idxTooClose(int compare_to, int value)
 	{
 		return (compare_to - max_angle_distance) <= value && value <= (compare_to + max_angle_distance);
 	}
