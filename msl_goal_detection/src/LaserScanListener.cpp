@@ -435,11 +435,11 @@ namespace msl
 		{
 
 			//continue if pt is behind robot or right of robot
-			if (point.getX() < 0 || point.getY() < 0)
-			{
-				cout << "cont1" << endl;
-				continue;
-			}
+//			if (point.getX() < 0 || point.getY() < 0)
+//			{
+//				cout << "cont1" << endl;
+//				continue;
+//			}
 
 			for (auto other : maximums)
 			{
