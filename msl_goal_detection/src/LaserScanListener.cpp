@@ -257,8 +257,12 @@ namespace msl
 
 		vector<pair<int, double>> closestToAvg(reduced.size());
 
+		int loop = 0;
+
 		for (int k = 0; k < reduced.size() - reduction_factor; k++)
 		{
+
+			cout << "loop " << k++ << endl;
 
 			pair<int, double> bestCandidate = make_pair(k, msg->ranges[k * reduction_factor]);
 
@@ -271,6 +275,8 @@ namespace msl
 							<< bestCandidate.second << "at " << reduced.at(k) << endl;
 					bestCandidate = make_pair(k, msg->ranges[k * reduction_factor + l]);
 				}
+
+				cout << "next quint" << endl;
 
 			}
 
