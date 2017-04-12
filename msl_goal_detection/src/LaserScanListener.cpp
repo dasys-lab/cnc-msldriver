@@ -450,12 +450,12 @@ namespace msl
 
 				tf::Vector3 back_candidate = point - other;
 				double distance = back_candidate.length();
-				bool is_ok = is_in_range(distance);
-				if (is_ok)
-				{
+//				bool is_ok = is_in_range(distance);
+//				if (is_ok)
+//				{
 					auto pair = make_pair(point, other);
 					candidates.push_back(pair);
-				}
+//				}
 			}
 		}
 		return candidates;
