@@ -262,7 +262,7 @@ namespace msl
 		for (int k = 0; k < reduced.size() - reduction_factor; k++)
 		{
 
-			cout << "loop " << k++ << endl;
+			cout << "loop " << k << endl;
 
 			pair<int, double> bestCandidate = make_pair(k, msg->ranges[k * reduction_factor]);
 
