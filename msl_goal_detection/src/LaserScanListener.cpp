@@ -258,7 +258,7 @@ namespace msl
 
 		vector<pair<int,double>> closestToAvg(reduced.size());
 
-		for (int k = 0; k < reduced.size(); k++)
+		for (int k = 0; k < reduced.size() - reduction_factor; k++)
 		{
 
 			pair<int, double> bestCandidate = make_pair(k, msg->ranges[k * reduction_factor]);
