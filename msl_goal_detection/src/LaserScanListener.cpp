@@ -259,7 +259,7 @@ namespace msl
 
 		int loop = 0;
 
-		for (int k = 0; k < reduced.size() - reduction_factor; k++)
+		for (int k = 0; k < reduced.size(); k++)
 		{
 
 
