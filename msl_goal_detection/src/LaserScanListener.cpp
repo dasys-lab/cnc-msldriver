@@ -83,18 +83,18 @@ namespace msl
 		// find maximum values of these points
 //		vector<pair<int, double>> maxima = find_maxima(msg);
 		vector<pair<int, double>> maxima = find_maxima(reduced);
-		 cout << "Maximum count: " << maxima.size() << endl;
+		cout << "Maximum count: " << maxima.size() << endl;
 //
 
 //		// filter out measurement errors
 		vector<pair<int, double>> okay_points = filter_points(maxima, msg);
 
-		 cout << "okay_points count: " << okay_points.size() << endl;
+		cout << "okay_points count: " << okay_points.size() << endl;
 //
 
 //		// convert maximums to cartesian coordinates to find back plane candidates later
 		vector<tf::Vector3> points = polar_to_cartesian(okay_points, msg);
-		 cout << "points count: " << points.size() << endl;
+		cout << "points count: " << points.size() << endl;
 
 //		// find candidates for the goal corners by maximums
 		vector<pair<tf::Vector3, tf::Vector3>> corner_candidates = find_back_candidates(points);
@@ -138,7 +138,6 @@ namespace msl
 
 				// add our offset of the scanner position to the goal keeper center
 				auto offset = scanner_center_offset + scanner_offset;
-
 
 				cout << "(" << p1.getX() << " | " << p1.getY() << ")" << " -> " << "(" << p2.getX() << " | "
 						<< p2.getY() << ")" << "\t" << "[" << back_candidate.length() << "]" << "\t" << "[" << theta
@@ -238,7 +237,7 @@ namespace msl
 	vector<pair<int, double>> LaserScanListener::smoothen_points(sensor_msgs::LaserScanPtr msg)
 	{
 
-		cout << "ranges: "<<  msg->ranges.size() << endl;
+		cout << "ranges: " << msg->ranges.size() << endl;
 
 		//not working by itself because of index issues during polar to cartesian conversion
 		vector<double> reduced(msg->ranges.size() / reduction_factor);
@@ -256,7 +255,7 @@ namespace msl
 
 		cout << "red: " << reduced.size() << endl;
 
-		vector<pair<int,double>> closestToAvg(reduced.size());
+		vector<pair<int, double>> closestToAvg(reduced.size());
 
 		for (int k = 0; k < reduced.size() - reduction_factor; k++)
 		{
@@ -268,7 +267,9 @@ namespace msl
 
 				if (abs(msg->ranges[k * reduction_factor + l] - reduced.at(k)) < abs(bestCandidate.second))
 				{
-					bestCandidate = make_pair(k*reduction_factor+l, msg->ranges[k * reduction_factor + l]);
+					cout << "new best candidate " << msg->ranges[k * reduction_factor + l] << "beats "
+							<< bestCandidate.second << "at " << reduced.at(k) << endl;
+					bestCandidate = make_pair(k, msg->ranges[k * reduction_factor + l]);
 				}
 
 			}
@@ -368,8 +369,6 @@ namespace msl
 		return result;
 	}
 
-
-
 	bool LaserScanListener::satisfies_threshold(vector<int> vec, int value)
 	{
 		for (auto x : vec)
@@ -392,15 +391,14 @@ namespace msl
 			double length = value.second;
 
 			//TODO shouldn't it be view_area_angle/2?
-			if (!(length < min_distance || length > max_distance || angle > view_area_angle/2 || angle < -view_area_angle/2))
+			if (!(length < min_distance || length > max_distance || angle > view_area_angle / 2
+					|| angle < -view_area_angle / 2))
 			{
 				dest.push_back(value);
 			}
 		}
 		return dest;
 	}
-
-
 
 	/**
 	 * @brief Converts polar coordinates to cartesian coordinates
