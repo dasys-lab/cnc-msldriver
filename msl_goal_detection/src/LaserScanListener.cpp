@@ -238,6 +238,8 @@ namespace msl
 	vector<pair<int, double>> LaserScanListener::smoothen_points(sensor_msgs::LaserScanPtr msg)
 	{
 
+		cout << "ranges: "<<  msg->ranges.size() << endl;
+
 		//not working by itself because of index issues during polar to cartesian conversion
 		vector<double> reduced(msg->ranges.size() / reduction_factor);
 
@@ -252,7 +254,7 @@ namespace msl
 			reduced[i] = sum;
 		}
 
-		cout << "red: " << reduced.size();
+		cout << "red: " << reduced.size() << endl;
 
 		vector<pair<int,double>> closestToAvg(reduced.size());
 
@@ -390,7 +392,7 @@ namespace msl
 			double length = value.second;
 
 			//TODO shouldn't it be view_area_angle/2?
-			if (!(length < min_distance || length > max_distance || angle > view_area_angle || angle < -view_area_angle))
+			if (!(length < min_distance || length > max_distance || angle > view_area_angle/2 || angle < -view_area_angle/2))
 			{
 				dest.push_back(value);
 			}
