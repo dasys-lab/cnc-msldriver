@@ -255,9 +255,7 @@ namespace msl
 
 		cout << "red: " << reduced.size() << endl;
 
-		vector<pair<int, double>> closestToAvg(reduced.size());
-
-		int loop = 0;
+		vector<pair<int, double>> closestToAvg;
 
 		for (int k = 0; k < reduced.size(); k++)
 		{
@@ -276,6 +274,7 @@ namespace msl
 			}
 
 			closestToAvg.push_back(bestCandidate);
+			cout << "cta size: " << closestToAvg.size() <<endl;
 		}
 
 		return closestToAvg;
