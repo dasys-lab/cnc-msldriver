@@ -269,9 +269,9 @@ namespace msl
 			for (int l = 0; l < reduction_factor; l++)
 			{
 
-				if (abs(msg->ranges[k * reduction_factor + l] - reduced.at(k)) < abs(bestCandidate.second))
+				if (abs(msg->ranges[k * reduction_factor + l] - reduced.at(k)) < abs(bestCandidate.second - reduced.at(k)))
 				{
-					cout << "new best candidate " << msg->ranges[k * reduction_factor + l] << "beats "
+					cout << "new best candidate " << msg->ranges[k * reduction_factor + l] << " beats "
 							<< bestCandidate.second << "at " << reduced.at(k) << endl;
 					bestCandidate = make_pair(k, msg->ranges[k * reduction_factor + l]);
 				}
