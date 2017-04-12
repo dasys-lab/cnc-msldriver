@@ -259,8 +259,6 @@ namespace msl
 
 		for (int k = 0; k < reduced.size(); k++)
 		{
-
-
 			pair<int, double> bestCandidate = make_pair(k, msg->ranges[k * reduction_factor]);
 
 			for (int l = 0; l < reduction_factor; l++)
@@ -274,7 +272,6 @@ namespace msl
 			}
 
 			closestToAvg.push_back(bestCandidate);
-			cout << "cta size: " << closestToAvg.size() <<endl;
 		}
 
 		return closestToAvg;
@@ -390,7 +387,8 @@ namespace msl
 		{
 			double angle = msg->angle_min + msg->angle_increment * value.first;
 			double length = value.second;
-
+			cout << "LEN " << length << endl;
+			cout << "angle: " << angle << endl;
 			//TODO shouldn't it be view_area_angle/2?
 			if (!(length < min_distance || length > max_distance || angle > view_area_angle / 2
 					|| angle < -view_area_angle / 2))
