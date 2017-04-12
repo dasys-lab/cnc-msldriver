@@ -268,7 +268,7 @@ namespace msl
 
 				if (abs(msg->ranges[k * reduction_factor + l] - reduced.at(k)) < abs(bestCandidate.second))
 				{
-					bestCandidate = make_pair(k, msg->ranges[k * reduction_factor + l]);
+					bestCandidate = make_pair(k*reduction_factor+l, msg->ranges[k * reduction_factor + l]);
 				}
 
 			}
