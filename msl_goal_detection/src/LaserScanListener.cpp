@@ -350,11 +350,11 @@ namespace msl
 			auto y = point.second;
 			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
 			{
-				if (satisfies_threshold(xValues, x))
-				{
+//				if (satisfies_threshold(xValues, x))
+//				{
 //					cout << "new x value" << x << endl;
 					xValues.push_back(x);
-				}
+//				}
 			}
 		}
 		vector<pair<int, double>> result;
