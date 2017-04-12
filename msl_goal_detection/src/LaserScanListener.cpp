@@ -276,10 +276,9 @@ namespace msl
 					bestCandidate = make_pair(k, msg->ranges[k * reduction_factor + l]);
 				}
 
-				cout << "next quint" << endl;
-
 			}
 
+			cout << "next quint" << endl;
 			closestToAvg.push_back(bestCandidate);
 		}
 
