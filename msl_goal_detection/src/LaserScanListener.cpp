@@ -352,7 +352,7 @@ namespace msl
 			{
 				if (satisfies_threshold(xValues, x))
 				{
-					cout << "new x value" << x << endl;
+//					cout << "new x value" << x << endl;
 					xValues.push_back(x);
 				}
 			}
@@ -360,7 +360,7 @@ namespace msl
 		vector<pair<int, double>> result;
 		for (auto x : xValues)
 		{
-			cout << "adding " << values.at(x).second << "at idx " << values.at(x).first << endl;
+//			cout << "adding " << values.at(x).second << "at idx " << values.at(x).first << endl;
 			result.push_back(make_pair(values.at(x).first, values.at(x).second));
 		}
 
@@ -390,8 +390,8 @@ namespace msl
 			cout << "LEN " << length << endl;
 			cout << "angle: " << angle << endl;
 			//TODO shouldn't it be view_area_angle/2?
-			if (!(length < min_distance || length > max_distance || angle > view_area_angle / 2
-					|| angle < -view_area_angle / 2))
+			if (!(length < min_distance || length > max_distance || angle > view_area_angle
+					|| angle < -view_area_angle ))
 			{
 				dest.push_back(value);
 			}
