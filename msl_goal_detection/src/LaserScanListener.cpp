@@ -262,7 +262,6 @@ namespace msl
 		for (int k = 0; k < reduced.size() - reduction_factor; k++)
 		{
 
-			cout << "loop " << k << endl;
 
 			pair<int, double> bestCandidate = make_pair(k, msg->ranges[k * reduction_factor]);
 
@@ -271,14 +270,11 @@ namespace msl
 
 				if (abs(msg->ranges[k * reduction_factor + l] - reduced.at(k)) < abs(bestCandidate.second - reduced.at(k)))
 				{
-					cout << "new best candidate " << msg->ranges[k * reduction_factor + l] << " beats "
-							<< bestCandidate.second << "at " << reduced.at(k) << endl;
 					bestCandidate = make_pair(k, msg->ranges[k * reduction_factor + l]);
 				}
 
 			}
 
-			cout << "next quint" << endl;
 			closestToAvg.push_back(bestCandidate);
 		}
 
@@ -360,6 +356,7 @@ namespace msl
 			{
 				if (satisfies_threshold(xValues, x))
 				{
+					cout << "new x value" << x << endl;
 					xValues.push_back(x);
 				}
 			}
@@ -367,7 +364,7 @@ namespace msl
 		vector<pair<int, double>> result;
 		for (auto x : xValues)
 		{
-			//cout << "adding " << msg->ranges[x] << "at idx " << x << endl;
+			cout << "adding " << values.at(x).second << "at idx " << values.at(x).first << endl;
 			result.push_back(make_pair(values.at(x).first, values.at(x).second));
 		}
 
