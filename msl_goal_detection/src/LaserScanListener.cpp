@@ -7,6 +7,7 @@
 
 #include <LaserScanListener.h>
 #include <SystemConfig.h>
+
 namespace msl
 {
 	LaserScanListener::LaserScanListener()
@@ -75,18 +76,18 @@ namespace msl
 		}
 
 		// reduce points to flatten the points by averaging some of them out
-		// not working
-//		vector<double> reduced = reduce_points(msg);
+		vector<pair<int, double>> reduced = smoothen_points(msg);
 		// cout << "all count: " << msg->ranges.size() << endl;
 
 		// find maximum values of these points
-		vector<pair<int, double>> maxima = find_maxima(msg);
-//		vector<pair<int, double>> maxima = find_maxima(reduced);
+//		vector<pair<int, double>> maxima = find_maxima(msg);
+		vector<pair<int, double>> maxima = find_maxima(reduced);
 //		 cout << "Maximum count: " << maxima.size() << endl;
 //
 
 //		// filter out measurement errors
 		vector<pair<int, double>> okay_points = filter_points(maxima, msg);
+
 //		 cout << "okay_points count: " << okay_points.size() << endl;
 //
 
@@ -120,8 +121,7 @@ namespace msl
 				tf::Vector3 goalie_center = tf::Vector3(-0.2, 0.0, 0);
 
 				// get relative angle of the back plane (to the robot)
-				double theta = calculate_angle(y_axis, back_candidate);
-
+				double theta = y_axis.angle(back_candidate);
 				// vector orthogonal to the back plane
 				// has the length of the goal depth
 				auto post_vector = back_candidate.rotate(z_axis, M_PI / 2).normalized() * goal_depth;
@@ -137,6 +137,7 @@ namespace msl
 
 				// add our offset of the scanner position to the goal keeper center
 				auto offset = scanner_center_offset + scanner_offset;
+
 
 				cout << "(" << p1.getX() << " | " << p1.getY() << ")" << " -> " << "(" << p2.getX() << " | "
 						<< p2.getY() << ")" << "\t" << "[" << back_candidate.length() << "]" << "\t" << "[" << theta
@@ -154,7 +155,6 @@ namespace msl
 							<< offset.getY() << ")" << endl;
 					os.close();
 				}
-
 				double scanner_center_offset_length = scanner_center_offset.length();
 
 				// check if the calculated goal position is extremely far away.
@@ -204,7 +204,8 @@ namespace msl
 				//for now just take avg position
 				int num = positions.size();
 
-				for (auto pos : positions) {
+				for (auto pos : positions)
+				{
 					final.pose.x += pos.pose.x;
 					final.pose.y += pos.pose.y;
 					final.leftGoalPost.x += pos.leftGoalPost.x;
@@ -233,10 +234,12 @@ namespace msl
 
 	}
 
-	vector<double> LaserScanListener::reduce_points(sensor_msgs::LaserScanPtr msg)
+	vector<pair<int, double>> LaserScanListener::smoothen_points(sensor_msgs::LaserScanPtr msg)
 	{
-		//not working
+
+		//not working by itself because of index issues during polar to cartesian conversion
 		vector<double> reduced(msg->ranges.size() / reduction_factor);
+
 		for (size_t i = 0; i < reduced.size(); ++i)
 		{
 			double sum = 0;
@@ -248,22 +251,87 @@ namespace msl
 			reduced[i] = sum;
 		}
 
-		return reduced;
+		vector<pair<int,double>> closestToAvg(reduced.size());
+
+		for (int k = 0; k < reduced.size(); k++)
+		{
+
+			pair<int, double> bestCandidate = make_pair(k, msg->ranges[k * reduction_factor]);
+
+			for (int l = 0; l < reduction_factor; l++)
+			{
+
+				if (abs(msg->ranges[k * reduction_factor + l] - reduced.at(k)) < abs(bestCandidate.second))
+				{
+					bestCandidate = make_pair(k, msg->ranges[k * reduction_factor + l]);
+				}
+
+			}
+
+			closestToAvg.push_back(bestCandidate);
+		}
+
+		return closestToAvg;
+
 	}
 
-	vector<pair<int, double> > LaserScanListener::find_maxima(sensor_msgs::LaserScanPtr msg)
+//	vector<pair<int, double> > LaserScanListener::find_maxima(sensor_msgs::LaserScanPtr msg)
+//	{
+//		vector<pair<int, double>> points_pairs(msg->ranges.size());
+//		for (size_t x = 0; x < msg->ranges.size(); ++x)
+//		{
+//			if (!(msg->ranges[x] < min_distance || msg->ranges[x] > max_distance))
+//			{
+//				points_pairs[x] = make_pair(x, msg->ranges[x]);
+//			}
+//			else
+//			{
+//				//mark values to be discarded as negative
+//				points_pairs[x] = make_pair(x, -1);
+//			}
+//		}
+//
+//		std::sort(points_pairs.begin(), points_pairs.end(), [](pair<int, double> left, pair<int, double> right)
+//		{
+//			return left.second > right.second;
+//		});
+//
+//		vector<int> xValues;
+//		for (auto point : points_pairs)
+//		{
+//			auto x = point.first;
+//			auto y = point.second;
+//			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
+//			{
+//				if (satisfies_threshold(xValues, x))
+//				{
+//					xValues.push_back(x);
+//				}
+//			}
+//		}
+//		vector<pair<int, double>> result;
+//		for (auto x : xValues)
+//		{
+//			//cout << "adding " << msg->ranges[x] << "at idx " << x << endl;
+//			result.push_back(make_pair(x, msg->ranges[x]));
+//		}
+//
+//		return result;
+//	}
+
+	vector<pair<int, double> > LaserScanListener::find_maxima(vector<pair<int, double>> values)
 	{
-		vector<pair<int, double>> points_pairs(msg->ranges.size());
-		for (size_t x = 0; x < msg->ranges.size(); ++x)
+		vector<pair<int, double>> points_pairs(values.size());
+		for (size_t x = 0; x < values.size(); ++x)
 		{
-			if (!(msg->ranges[x] < min_distance || msg->ranges[x] > max_distance))
+			if (!(values.at(x).second < min_distance || values.at(x).second > max_distance))
 			{
-				points_pairs[x] = make_pair(x, msg->ranges[x]);
+				points_pairs[x] = make_pair(values.at(x).first, values.at(x).second); // obsolete??
 			}
 			else
 			{
 				//mark values to be discarded as negative
-				points_pairs[x] = make_pair(x, -1);
+				points_pairs[x] = make_pair(values.at(x).first, -1);
 			}
 		}
 
@@ -289,11 +357,13 @@ namespace msl
 		for (auto x : xValues)
 		{
 			//cout << "adding " << msg->ranges[x] << "at idx " << x << endl;
-			result.push_back(make_pair(x, msg->ranges[x]));
+			result.push_back(make_pair(values.at(x).first, values.at(x).second));
 		}
 
 		return result;
 	}
+
+
 
 	bool LaserScanListener::satisfies_threshold(vector<int> vec, int value)
 	{
@@ -324,6 +394,8 @@ namespace msl
 		}
 		return dest;
 	}
+
+
 
 	/**
 	 * @brief Converts polar coordinates to cartesian coordinates
@@ -360,6 +432,7 @@ namespace msl
 		for (auto point : maximums)
 		{
 
+			//continue if pt is behind robot or right of robot
 			if (point.getX() < 0 || point.getY() < 0)
 			{
 				cout << "cont1" << endl;
@@ -394,11 +467,6 @@ namespace msl
 	bool LaserScanListener::idxTooClose(int compare_to, int value)
 	{
 		return (compare_to - max_angle_distance) <= value && value <= (compare_to + max_angle_distance);
-	}
-
-	double LaserScanListener::calculate_angle(tf::Vector3 a, tf::Vector3 b)
-	{
-		return acos((a.dot(b)) / (a.length() * b.length()));
 	}
 
 	void LaserScanListener::initLogging()

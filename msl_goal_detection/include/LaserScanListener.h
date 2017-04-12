@@ -11,6 +11,9 @@
 #include <ros/ros.h>
 #include <string>
 #include <stdio.h>
+#include <memory>
+#include <vector>
+#include <iostream>
 #include "msl_msgs/PositionInfo.h"
 #include "geometry_msgs/PointStamped.h"
 #include "msl_msgs/Pose2dStamped.h"
@@ -67,16 +70,15 @@ namespace msl
 		bool loggingEnabled;
 
 		void readConfigParameters();
-		vector<double> reduce_points(sensor_msgs::LaserScanPtr msg);
-		vector<pair<int, double>> find_maxima(sensor_msgs::LaserScanPtr msg);
-//		vector<pair<int, double>> find_maxima(vector<double> reduced);
+		vector<pair<int,double>> smoothen_points(sensor_msgs::LaserScanPtr msg);
+//		vector<pair<int, double>> find_maxima(sensor_msgs::LaserScanPtr msg);
+		vector<pair<int, double>> find_maxima(vector<pair<int,double>> values);
 		bool satisfies_threshold(vector<int> vec, int value);
 		bool is_in_range(double value);
 		bool idxTooClose(int compare_to, int value);
 		vector<pair<int, double>> filter_points(vector<pair<int, double>> polars, sensor_msgs::LaserScanPtr msg);
 		vector<tf::Vector3> polar_to_cartesian(vector<pair<int, double>> polars, sensor_msgs::LaserScanPtr msg);
 		vector<pair<tf::Vector3, tf::Vector3>> find_back_candidates(vector<tf::Vector3> maximums);
-		double calculate_angle(tf::Vector3 a, tf::Vector3 b);
 		double rad_to_degree(double rad);
 		void initLogging();
 		void log(FILE* file,double x, double y);
