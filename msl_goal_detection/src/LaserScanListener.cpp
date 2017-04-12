@@ -78,7 +78,7 @@ namespace msl
 		// reduce points to flatten the points by averaging some of them out
 		vector<pair<int, double>> reduced = smoothen_points(msg);
 		// cout << "all count: " << msg->ranges.size() << endl;
-		cout << reduced.size();
+		cout << "reduced pairs: " << reduced.size() << endl;
 
 		// find maximum values of these points
 //		vector<pair<int, double>> maxima = find_maxima(msg);
