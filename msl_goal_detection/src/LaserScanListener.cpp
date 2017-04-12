@@ -78,22 +78,23 @@ namespace msl
 		// reduce points to flatten the points by averaging some of them out
 		vector<pair<int, double>> reduced = smoothen_points(msg);
 		// cout << "all count: " << msg->ranges.size() << endl;
+		cout << reduced.size();
 
 		// find maximum values of these points
 //		vector<pair<int, double>> maxima = find_maxima(msg);
 		vector<pair<int, double>> maxima = find_maxima(reduced);
-//		 cout << "Maximum count: " << maxima.size() << endl;
+		 cout << "Maximum count: " << maxima.size() << endl;
 //
 
 //		// filter out measurement errors
 		vector<pair<int, double>> okay_points = filter_points(maxima, msg);
 
-//		 cout << "okay_points count: " << okay_points.size() << endl;
+		 cout << "okay_points count: " << okay_points.size() << endl;
 //
 
 //		// convert maximums to cartesian coordinates to find back plane candidates later
 		vector<tf::Vector3> points = polar_to_cartesian(okay_points, msg);
-//		 cout << "points count: " << points.size() << endl;
+		 cout << "points count: " << points.size() << endl;
 
 //		// find candidates for the goal corners by maximums
 		vector<pair<tf::Vector3, tf::Vector3>> corner_candidates = find_back_candidates(points);
@@ -250,6 +251,8 @@ namespace msl
 			sum /= reduction_factor;
 			reduced[i] = sum;
 		}
+
+		cout << "red: " << reduced.size();
 
 		vector<pair<int,double>> closestToAvg(reduced.size());
 
