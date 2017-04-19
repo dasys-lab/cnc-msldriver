@@ -71,8 +71,8 @@ namespace msl
 
 		void readConfigParameters();
 		vector<pair<int,double>> smoothen_points(sensor_msgs::LaserScanPtr msg);
-//		vector<pair<int, double>> find_maxima(sensor_msgs::LaserScanPtr msg);
-		vector<pair<int, double>> find_maxima(vector<pair<int,double>> values);
+		vector<pair<int, double>> find_maxima(sensor_msgs::LaserScanPtr msg);
+//		vector<pair<int, double>> find_maxima(vector<pair<int,double>> values);
 		bool satisfies_threshold(vector<int> vec, int value);
 		bool is_in_range(double value);
 		bool idxTooClose(int compare_to, int value);

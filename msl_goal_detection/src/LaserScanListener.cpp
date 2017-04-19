@@ -81,8 +81,8 @@ namespace msl
 		cout << "reduced pairs: " << reduced.size() << endl;
 
 		// find maximum values of these points
-//		vector<pair<int, double>> maxima = find_maxima(msg);
-		vector<pair<int, double>> maxima = find_maxima(reduced);
+		vector<pair<int, double>> maxima = find_maxima(msg);
+//		vector<pair<int, double>> maxima = find_maxima(reduced);
 		cout << "Maximum count: " << maxima.size() << endl;
 //
 
@@ -278,63 +278,19 @@ namespace msl
 
 	}
 
-//	vector<pair<int, double> > LaserScanListener::find_maxima(sensor_msgs::LaserScanPtr msg)
-//	{
-//		vector<pair<int, double>> points_pairs(msg->ranges.size());
-//		for (size_t x = 0; x < msg->ranges.size(); ++x)
-//		{
-//			if (!(msg->ranges[x] < min_distance || msg->ranges[x] > max_distance))
-//			{
-//				points_pairs[x] = make_pair(x, msg->ranges[x]);
-//			}
-//			else
-//			{
-//				//mark values to be discarded as negative
-//				points_pairs[x] = make_pair(x, -1);
-//			}
-//		}
-//
-//		std::sort(points_pairs.begin(), points_pairs.end(), [](pair<int, double> left, pair<int, double> right)
-//		{
-//			return left.second > right.second;
-//		});
-//
-//		vector<int> xValues;
-//		for (auto point : points_pairs)
-//		{
-//			auto x = point.first;
-//			auto y = point.second;
-//			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
-//			{
-//				if (satisfies_threshold(xValues, x))
-//				{
-//					xValues.push_back(x);
-//				}
-//			}
-//		}
-//		vector<pair<int, double>> result;
-//		for (auto x : xValues)
-//		{
-//			//cout << "adding " << msg->ranges[x] << "at idx " << x << endl;
-//			result.push_back(make_pair(x, msg->ranges[x]));
-//		}
-//
-//		return result;
-//	}
-
-	vector<pair<int, double> > LaserScanListener::find_maxima(vector<pair<int, double>> values)
+	vector<pair<int, double> > LaserScanListener::find_maxima(sensor_msgs::LaserScanPtr msg)
 	{
-		vector<pair<int, double>> points_pairs(values.size());
-		for (size_t x = 0; x < values.size(); ++x)
+		vector<pair<int, double>> points_pairs(msg->ranges.size());
+		for (size_t x = 0; x < msg->ranges.size(); ++x)
 		{
-			if (!(values.at(x).second < min_distance || values.at(x).second > max_distance))
+			if (!(msg->ranges[x] < min_distance || msg->ranges[x] > max_distance))
 			{
-				points_pairs[x] = make_pair(values.at(x).first, values.at(x).second); // obsolete??
+				points_pairs[x] = make_pair(x, msg->ranges[x]);
 			}
 			else
 			{
 				//mark values to be discarded as negative
-				points_pairs[x] = make_pair(values.at(x).first, -1);
+				points_pairs[x] = make_pair(x, -1);
 			}
 		}
 
@@ -350,22 +306,66 @@ namespace msl
 			auto y = point.second;
 			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
 			{
-//				if (satisfies_threshold(xValues, x))
-//				{
-//					cout << "new x value" << x << endl;
+				if (satisfies_threshold(xValues, x))
+				{
 					xValues.push_back(x);
-//				}
+				}
 			}
 		}
 		vector<pair<int, double>> result;
 		for (auto x : xValues)
 		{
-//			cout << "adding " << values.at(x).second << "at idx " << values.at(x).first << endl;
-			result.push_back(make_pair(values.at(x).first, values.at(x).second));
+			//cout << "adding " << msg->ranges[x] << "at idx " << x << endl;
+			result.push_back(make_pair(x, msg->ranges[x]));
 		}
 
 		return result;
 	}
+
+//	vector<pair<int, double> > LaserScanListener::find_maxima(vector<pair<int, double>> values)
+//	{
+//		vector<pair<int, double>> points_pairs(values.size());
+//		for (size_t x = 0; x < values.size(); ++x)
+//		{
+//			if (!(values.at(x).second < min_distance || values.at(x).second > max_distance))
+//			{
+//				points_pairs[x] = make_pair(values.at(x).first, values.at(x).second); // obsolete??
+//			}
+//			else
+//			{
+//				//mark values to be discarded as negative
+//				points_pairs[x] = make_pair(values.at(x).first, -1);
+//			}
+//		}
+//
+//		std::sort(points_pairs.begin(), points_pairs.end(), [](pair<int, double> left, pair<int, double> right)
+//		{
+//			return left.second > right.second;
+//		});
+//
+//		vector<int> xValues;
+//		for (auto point : points_pairs)
+//		{
+//			auto x = point.first;
+//			auto y = point.second;
+//			if (y > 0 && std::find(xValues.begin(), xValues.end(), x) == xValues.end())
+//			{
+////				if (satisfies_threshold(xValues, x))
+////				{
+////					cout << "new x value" << x << endl;
+//					xValues.push_back(x);
+////				}
+//			}
+//		}
+//		vector<pair<int, double>> result;
+//		for (auto x : xValues)
+//		{
+////			cout << "adding " << values.at(x).second << "at idx " << values.at(x).first << endl;
+//			result.push_back(make_pair(values.at(x).first, values.at(x).second));
+//		}
+//
+//		return result;
+//	}
 
 	bool LaserScanListener::satisfies_threshold(vector<int> vec, int value)
 	{
