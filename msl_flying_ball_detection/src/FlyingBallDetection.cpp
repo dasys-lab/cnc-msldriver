@@ -9,6 +9,7 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
+	//driver
 	openni::Device device;
 	openni::VideoStream depth;
 	const char* deviceURI = openni::ANY_DEVICE;
