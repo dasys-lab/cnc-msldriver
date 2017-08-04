@@ -7,6 +7,8 @@
 
 #include <string.h>
 #include <DateTime.h>
+#include <valarray>
+#include <queue>
 
 #define CONTROLLER_COUNT 4
 
@@ -22,6 +24,9 @@ double cosphi;
 double wheelcirc;
 double robotcirc;
 double finfactor;
+
+std::queue<std::valarray<double>> rpm_unfiltered;
+std::queue<std::valarray<double>> rpm_filtered;
 
 
 
@@ -156,6 +161,34 @@ void gonz_calc_odometry() { //TODO: Optimise!
 	//v1+v2+v3+v4 = 4*rotationVelocity (rotation) * robotRadius
 	//-v1-v2+v3+v4 = 4*vx*cos(phi)
 	//v1-v2-v3+v4 = 4*vy*sin(phi)
+
+
+	double init[] = {0.0,0.0,0.0,0.0};
+
+	if (rpm_unfiltered.empty()) {
+		rpm_unfiltered.push(std::valarray<double>(init,4) );
+		rpm_unfiltered.push(std::valarray<double>(init,4) );
+	}
+
+	if (rpm_filtered.empty()){
+			rpm_filtered.push(std::valarray<double>(init,4));
+			rpm_filtered.push(std::valarray<double>(init,4));
+		}
+
+	double nextData[] = {(double)ep->ActualRPM(0), (double)ep->ActualRPM(1), (double)ep->ActualRPM(2), (double)ep->ActualRPM(3)};
+	rpm_unfiltered.push(std::valarray<double>(nextData,4));
+
+	rpm_filtered.push(std::valarray<double>(init,4));
+
+	rpm_filtered.back() += 0.1294 * rpm_unfiltered.front() -0.1518 * rpm_filtered.front();
+	rpm_unfiltered.pop();
+	rpm_filtered.pop();
+	rpm_filtered.back() += 0.2431 * rpm_unfiltered.front() + 0.7793* rpm_filtered.front();
+
+	gonz_state.filteredRPM[0] = rpm_filtered.back()[0];
+	gonz_state.filteredRPM[1] = rpm_filtered.back()[1];
+	gonz_state.filteredRPM[2] = rpm_filtered.back()[2];
+	gonz_state.filteredRPM[3] = rpm_filtered.back()[3];
 
     unsigned char i;
     gonz_state.actualMotion.rotation = 0;

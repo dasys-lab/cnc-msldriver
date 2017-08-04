@@ -57,6 +57,7 @@ typedef struct {
 	double currentRotationError;
 	double lastRotationError;
 	double rotationErrorInt;
+	double filteredRPM[4];
 	
 } gonzales_state;
 

@@ -30,6 +30,7 @@ void logData() {
             gonz_state.actualMotion.x,gonz_state.actualMotion.y,gonz_state.actualMotion.rotation,
             gonz_state.currentMotionGoal.x,gonz_state.currentMotionGoal.y,gonz_state.currentMotionGoal.rotation,
 			ep->ActualRPM(0),ep->ActualRPM(1),ep->ActualRPM(2),ep->ActualRPM(3),
+			gonz_state.filteredRPM[0],gonz_state.filteredRPM[1],gonz_state.filteredRPM[2],gonz_state.filteredRPM[3],
 			ep->DemandRPM(0),ep->DemandRPM(1),ep->DemandRPM(2),ep->DemandRPM(3),
 			ep->ActualCurrent(0),ep->ActualCurrent(1),ep->ActualCurrent(2),ep->ActualCurrent(3),
 			gonz_state.currentSlip
