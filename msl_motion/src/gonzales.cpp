@@ -28,7 +28,11 @@ double finfactor;
 std::queue<std::valarray<double>> rpm_unfiltered;
 std::queue<std::valarray<double>> rpm_filtered;
 
-
+int filteredFrequency = 10;
+double lowpassN1 ;
+double lowpassN2 ;
+double lowpassD1 ;
+double lowpassD2 ;
 
 struct timeval odotime_last;
 struct timeval odotime_cur;
@@ -53,6 +57,11 @@ void gonz_init() {
     gonz_state.currentPosition.x = 0;
     gonz_state.currentPosition.y = 0;
     gonz_state.currentPosition.angle = 0;
+
+    lowpassN1 = 1-exp(-(double)filteredFrequency/200.0)-filteredFrequency/200.0*exp(-(double)filteredFrequency/200.0);
+    lowpassN2 = exp(-2*(double)filteredFrequency/200.0)-exp(-(double)filteredFrequency/200.0)+filteredFrequency/200.0*exp(-(double)filteredFrequency/200.0);
+    lowpassD1 = -2*exp(-(double)filteredFrequency/200.0);
+    lowpassD2 = exp(-2*(double)filteredFrequency/200.0);
 
 }
 void gonz_set_mode(int mode) {
@@ -180,10 +189,10 @@ void gonz_calc_odometry() { //TODO: Optimise!
 
 	rpm_filtered.push(std::valarray<double>(init,4));
 
-	rpm_filtered.back() += 0.1294 * rpm_unfiltered.front() -0.1518 * rpm_filtered.front();
+	rpm_filtered.back() += lowpassN2 * rpm_unfiltered.front() - lowpassD2 * rpm_filtered.front();
 	rpm_unfiltered.pop();
 	rpm_filtered.pop();
-	rpm_filtered.back() += 0.2431 * rpm_unfiltered.front() + 0.7793* rpm_filtered.front();
+	rpm_filtered.back() += lowpassN1 * rpm_unfiltered.front() - lowpassD1 * rpm_filtered.front();
 
 	gonz_state.filteredRPM[0] = rpm_filtered.back()[0];
 	gonz_state.filteredRPM[1] = rpm_filtered.back()[1];
