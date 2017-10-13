@@ -11,7 +11,7 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
-find_package(catkin REQUIRED std_msgs msl_actuator_msgs msl_sensor_msgs msl_msgs msl_helper_msgs system_config roscpp)
+find_package(catkin REQUIRED std_msgs msl_actuator_msgs msl_sensor_msgs msl_msgs msl_helper_msgs system_config roscpp agent_id)
 
 ## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
@@ -21,7 +21,7 @@ find_package(SSE)
 catkin_package(
   INCLUDE_DIRS src src/filters src/helpers 
   LIBRARIES lib_msl_vision #lib_msl_vision_3d
-  CATKIN_DEPENDS system_config msl_actuator_msgs msl_sensor_msgs msl_msgs msl_helper_msgs std_msgs 
+  CATKIN_DEPENDS system_config msl_actuator_msgs msl_sensor_msgs msl_msgs msl_helper_msgs std_msgs agent_id
   DEPENDS ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} pthread m Xv X11 Xext ICE SM dc1394 raw1394
 )
 
