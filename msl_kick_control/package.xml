@@ -11,8 +11,6 @@
 
 
   <author email="saur@vs.uni-kassel.de">Daniel Saur</author> -->
-msl_robot_id
-
   <build_depend>can_connection</build_depend>
   <build_depend>system_config</build_depend>
   <build_depend>roscpp</build_depend>
