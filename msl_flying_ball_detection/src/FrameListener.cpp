@@ -195,7 +195,6 @@ namespace msl
 		kc.extension = msl_actuator_msgs::KickControl::UPPER_EXTENSION;
 		kc.extTime = 1000;
 		kc.enabled = true;
-		kc.senderID = 0;
 		kickControlPub.publish(kc);
 		cout << "[FrameListener] kc: " << kc.extension  << endl;
 	}

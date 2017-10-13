@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
   msl_msgs
   message_generation
   roscpp
+  agent_id
 )
 
 ## System dependencies are found with CMake's conventions
@@ -36,7 +37,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES msl_motion
-  CATKIN_DEPENDS message_runtime can_connection msl_actuator_msgs msl_msgs
+  CATKIN_DEPENDS message_runtime can_connection msl_actuator_msgs msl_msgs agent_id
 #  DEPENDS system_lib
 )
 
