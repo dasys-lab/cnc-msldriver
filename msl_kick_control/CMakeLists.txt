@@ -9,7 +9,7 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
-find_package(catkin REQUIRED can_connection system_config roscpp usb_can_proxy msl_actuator_msgs msl_sensor_msgs msl_robot_id)
+find_package(catkin REQUIRED can_connection system_config roscpp usb_can_proxy msl_actuator_msgs msl_sensor_msgs)
 
 find_package(Boost REQUIRED COMPONENTS system thread)
 
@@ -17,7 +17,7 @@ find_package(Boost REQUIRED COMPONENTS system thread)
 catkin_package(
   INCLUDE_DIRS include
 #  LIBRARIES msl_kick_control
-  CATKIN_DEPENDS can_connection system_config roscpp usb_can_proxy msl_actuator_msgs msl_sensor_msgs msl_robot_id
+  CATKIN_DEPENDS can_connection system_config roscpp usb_can_proxy msl_actuator_msgs msl_sensor_msgs
   DEPENDS ${Boost_LIBRARIES}
 )
 

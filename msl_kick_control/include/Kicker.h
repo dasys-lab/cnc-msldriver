@@ -61,7 +61,7 @@ class Kicker
         bool highResolution;
         int alivePeriod;
         int maxVoltage;
-        const msl::robot::IntRobotID *robotId;
+        std::vector<uint8_t> robotId;
     } settings;
 
   private:

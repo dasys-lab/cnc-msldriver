@@ -1,8 +1,5 @@
 #include "Kicker.h"
 
-#include <msl/robot/IntRobotID.h>
-#include <msl/robot/IntRobotIDFactory.h>
-
 using namespace std;
 using namespace supplementary;
 using namespace msl_actuator_msgs;
@@ -250,9 +247,8 @@ msldriver::Kicker::Kicker() : lastCapacitorsVoltage(0),lastPower (0), lastSupply
     for(int i = 0; i < sizeof(int); i++) {
     	robotId.push_back( *(((uint8_t*)&tmpID) + i) );
     }
-	msl::robot::IntRobotIDFactory factory;
-	auto id = factory.create(robotId);
-	settings.robotId = id;
+
+    settings.robotId = robotId;
 
 	ROS_INFO("Kicker Params:");
 	ROS_INFO("Alive period : %i", settings.alivePeriod);
@@ -327,7 +323,7 @@ void msldriver::Kicker::sendStatus(ros::Time now)
 	{
 		this->lastStatInfo = now;
 		msl_actuator_msgs::KickerStatInfo ksi;
-		ksi.senderID.id = settings.robotId->toByteVector();
+		ksi.senderID.id = settings.robotId;
 		ksi.supplyVoltage = lastSupplyVoltage;
 		ksi.capVoltage = lastCapacitorsVoltage;
 		this->kickerStat.publish(ksi);
