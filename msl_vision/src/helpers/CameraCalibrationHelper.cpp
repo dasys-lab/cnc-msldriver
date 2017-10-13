@@ -27,8 +27,26 @@ void CameraCalibrationHelper::initialize() {
 
     cameraSettings = new Settings();
     cameraSettingsMsgs = new msl_sensor_msgs::CameraSettings();
-    cameraSettingsMsgs->senderID = supplementary::SystemConfig::getOwnRobotID();
-    cameraSettingsMsgs->receiverID = -1;
+
+    int robotIntId = supplementary::SystemConfig::getOwnRobotID();
+    std::vector<uint8_t> robotIDVector;
+
+    for (int i = 0; i < sizeof(int); i++)
+    {
+    	robotIDVector.push_back(*(((uint8_t *)&robotIntId) + i));
+    }
+
+    cameraSettingsMsgs->senderID.id = robotIDVector;
+
+    int broadcastID = -1;
+    std::vector<uint8_t> broadcastIDVector;
+
+    for (int i = 0; i < sizeof(int); i++)
+    {
+    	broadcastIDVector.push_back(*(((uint8_t *)&robotIntId) + i));
+    }
+
+    cameraSettingsMsgs->receiverID.id = broadcastIDVector;
 
     settingPub = visionNode->advertise<msl_sensor_msgs::CameraSettings>("CNCalibration/CameraSettings", 1);
 
@@ -56,7 +74,17 @@ void CameraCalibrationHelper::sendSettings(Settings* settings) {
 }
 
 void CameraCalibrationHelper::handleCameraSettings(const msl_sensor_msgs::CameraSettings::ConstPtr& msg) {
-    if(supplementary::SystemConfig::getOwnRobotID() != msg->receiverID) return;
+    int intID = supplementary::SystemConfig::getOwnRobotID();
+    std::vector<uint8_t> intIDVector;
+
+    for (int i = 0; i < sizeof(int); i++)
+    {
+    	intIDVector.push_back(*(((uint8_t *)&intID) + i));
+    }
+
+    if (! (std::equal(intIDVector.begin(), intIDVector.end(), msg->receiverID.id.begin()) ))
+       return;
+
     std::cout << "CamCalib\thandleCameraSettings" << std::endl;
     cameraSettings->useBrightness = msg->useBrightness;
     cameraSettings->brightness = msg->brightness;
@@ -75,14 +103,26 @@ void CameraCalibrationHelper::handleCameraSettings(const msl_sensor_msgs::Camera
     setSettings = true;
 }
 
-void CameraCalibrationHelper::handleCameraSettingsRequest(const msl_sensor_msgs::CameraSettingsRequest::ConstPtr& msg) {
-    for (int i = 0; i < msg->receiverID.size(); ++i) {
-        if (msg->receiverID.at(i) == supplementary::SystemConfig::getOwnRobotID()) {
-            std::cout << "CamCalib\thandleCameraSettingsRequest" << std::endl;
-            settingsAreRequested = true;
-            return;
-        }
-    }
+void CameraCalibrationHelper::handleCameraSettingsRequest( const msl_sensor_msgs::CameraSettingsRequest::ConstPtr& msg)
+{
+	for (int i = 0; i < msg->receiverIDs.size(); ++i)
+	{
+		std::vector < uint8_t >  receiverID = msg->receiverIDs.at(i).id;
+		int intID = supplementary::SystemConfig::getOwnRobotID();
+		std::vector < uint8_t > intIDVector;
+
+		for (int i = 0; i < sizeof(int); i++)
+		{
+			intIDVector.push_back(*(((uint8_t *) &intID) + i));
+		}
+
+		if (std::equal(intIDVector.begin(), intIDVector.end(), receiverID.begin()))
+		{
+			std::cout << "CamCalib\thandleCameraSettingsRequest" << std::endl;
+			settingsAreRequested = true;
+			return;
+		}
+	}
 }
 
 void CameraCalibrationHelper::setCameraSettings(camera::ImagingSource* cam) {

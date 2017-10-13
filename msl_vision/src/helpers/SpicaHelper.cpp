@@ -106,13 +106,33 @@ void SpicaHelper::sendGameState() {
 }
 
 void SpicaHelper::handleVisionControl(const msl_sensor_msgs::VisionControl::ConstPtr& msg) {
-	if(supplementary::SystemConfig::getOwnRobotID() != msg->receiverID) return;
+	int intID = supplementary::SystemConfig::getOwnRobotID();
+	std::vector<uint8_t> intIDVector;
+
+	for (int i = 0; i < sizeof(int); i++)
+	{
+	   intIDVector.push_back(*(((uint8_t *)&intID) + i));
+	}
+
+	if (! (std::equal(intIDVector.begin(), intIDVector.end(), msg->receiverID.id.begin()) ))
+	   return;
+
 	key = msg->key;
 }
 
-void SpicaHelper::handleVisionRelocTrigger(const
-		msl_actuator_msgs::VisionRelocTrigger::ConstPtr& msg) {
-	if(supplementary::SystemConfig::getOwnRobotID() != msg->receiverID) return;
+void SpicaHelper::handleVisionRelocTrigger(const msl_actuator_msgs::VisionRelocTrigger::ConstPtr& msg)
+{
+	int intID = supplementary::SystemConfig::getOwnRobotID();
+	std::vector<uint8_t> intIDVector;
+
+	for (int i = 0; i < sizeof(int); i++)
+	{
+	   intIDVector.push_back(*(((uint8_t *)&intID) + i));
+	}
+
+	if (! (std::equal(intIDVector.begin(), intIDVector.end(), msg->receiverID.id.begin()) ))
+	   return;
+
 	reloc = true;
 }
 
@@ -155,7 +175,15 @@ void SpicaHelper::streamGreyMJPEG(unsigned char* img, int width, int height) {
 	cpar.push_back(CV_IMWRITE_JPEG_QUALITY);
 	cpar.push_back(45);
 
-	vi->senderID = supplementary::SystemConfig::getOwnRobotID();
+	int intID = supplementary::SystemConfig::getOwnRobotID();
+	std::vector<uint8_t> intIDVector;
+
+	for (int i = 0; i < sizeof(int); i++)
+	{
+	   intIDVector.push_back(*(((uint8_t *)&intID) + i));
+	}
+
+	vi->senderID.id = intIDVector;
 	vi->imageData.clear();
 	vi->width = width;
 	vi->height = height;

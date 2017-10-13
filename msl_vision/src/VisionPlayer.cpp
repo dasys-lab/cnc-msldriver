@@ -615,7 +615,15 @@ int main(int argc,char *argv[]){
 					SpicaHelper::vdd->ball = SpicaHelper::wm->ball;
 					SpicaHelper::vdd->locType.type = SpicaHelper::wm->odometry.locType.type;
 					SpicaHelper::vdd->obstacles = SpicaHelper::wm->obstacles;
-					SpicaHelper::vdd->senderID = supplementary::SystemConfig::getOwnRobotID();
+
+					int intID = supplementary::SystemConfig::getOwnRobotID();
+					std::vector<uint8_t> intIDVector;
+
+					for (int i = 0; i < sizeof(int); i++)
+					{
+					   intIDVector.push_back(*(((uint8_t *)&intID) + i));
+					}
+					SpicaHelper::vdd->senderID.id = intIDVector;
 				}
 				SpicaHelper::sendDebugMsg();
 				fclose(fd);

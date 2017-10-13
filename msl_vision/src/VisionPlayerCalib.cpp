@@ -20,18 +20,8 @@
  *
  * <description>
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <algorithm>
-
-#include <sys/time.h>
 
 #include "driver/imagingsource.h"
-
-#include <time.h>
-#include <sys/time.h>
 
 #include "XVDisplay.h"
 
@@ -86,9 +76,16 @@
 #include "camControl/Whitepoint.h"
 #include "camControl/Brightness.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <algorithm>
+#include <sys/time.h>
+#include <time.h>
 #include <SystemConfig.h>
 #include <DateTime.h>
-
+#include <vector>
 //jpeg stream
 //#include "ImageHandler.h"
 
@@ -622,7 +619,16 @@ int main(int argc,char *argv[]){
 					SpicaHelper::vdd->ball = SpicaHelper::wm->ball;
 					SpicaHelper::vdd->locType.type = SpicaHelper::wm->odometry.locType.type;
 					SpicaHelper::vdd->obstacles = SpicaHelper::wm->obstacles;
-					SpicaHelper::vdd->senderID = supplementary::SystemConfig::getOwnRobotID();
+
+					int intID = supplementary::SystemConfig::getOwnRobotID();
+					std::vector<uint8_t> intIDVector;
+
+					for (int i = 0; i < sizeof(int); i++)
+					{
+					   intIDVector.push_back(*(((uint8_t *)&intID) + i));
+					}
+
+					SpicaHelper::vdd->senderID.id = intIDVector;
 				}
 				SpicaHelper::sendDebugMsg();
 			}
