@@ -936,7 +936,8 @@ void MainWindow::handleReceivedImage(ImageResource *img) {
 }
 
 void MainWindow::handleReceivedSettings(const msl_sensor_msgs::CameraSettings::ConstPtr& msg) {
-    if (msg->senderID > -1) {
+	auto id = *reinterpret_cast<const int*>(msg->senderID.id);
+    if (id != 0) {
         cout << "msg->senderID=" << msg->senderID;
         cout << endl;
 

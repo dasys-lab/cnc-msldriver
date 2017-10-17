@@ -9,12 +9,8 @@ if (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 	add_definitions (-DCMAKE_ECLIPSE_GENERATE_SOURCE_PROJECT=TRUE)
 endif (${CMAKE_EXTRA_GENERATOR} MATCHES "Eclipse CDT4")
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
-find_package(catkin REQUIRED roscpp msl_vision msl_sensor_msgs system_config)
+find_package(catkin REQUIRED roscpp msl_vision msl_sensor_msgs system_config agent_id msl_robot_id)
 
-## System dependencies are found with CMake's conventions
 find_package(Boost REQUIRED COMPONENTS system)
 
 find_package(Qt5Core REQUIRED)

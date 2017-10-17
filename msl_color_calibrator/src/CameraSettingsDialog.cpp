@@ -3,13 +3,16 @@
 
 #include "mainwindow.h"
 
+#include <msl/robot/IntRobotID.h>
+#include <msl/robot/IntRobotIDFactory.h>
+
 #include "ROSCommunicator.h"
 
-CameraSettingsDialog* CameraSettingsDialog::instance;
+CameraSettingsDialog *CameraSettingsDialog::instance;
 
-CameraSettingsDialog::CameraSettingsDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::CameraSettingsDialog)
+CameraSettingsDialog::CameraSettingsDialog(QWidget *parent)
+    : QDialog(parent)
+    , ui(new Ui::CameraSettingsDialog)
 {
     ui->setupUi(this);
 
@@ -51,7 +54,7 @@ CameraSettingsDialog::CameraSettingsDialog(QWidget *parent) :
 
     connect(ui->sendSettingsButton, SIGNAL(released()), this, SLOT(sendSettingsSlot()));
 
-    connect(MainWindow::getInstance(), SIGNAL(selectedRobot(Robot*)), this, SLOT(selectRobotSlot(Robot*)));
+    connect(MainWindow::getInstance(), SIGNAL(selectedRobot(Robot *)), this, SLOT(selectRobotSlot(Robot *)));
 }
 
 CameraSettingsDialog::~CameraSettingsDialog()
@@ -59,27 +62,36 @@ CameraSettingsDialog::~CameraSettingsDialog()
     delete ui;
 }
 
-CameraSettingsDialog *CameraSettingsDialog::getInstance(QWidget *parent) {
-    if (instance == NULL) {
+CameraSettingsDialog *CameraSettingsDialog::getInstance(QWidget *parent)
+{
+    if (instance == NULL)
+    {
         instance = new CameraSettingsDialog(parent);
     }
     return instance;
 }
 
-void CameraSettingsDialog::sendSettingsSlot() {
-    Robot* robot = MainWindow::getInstance()->getSelectedRobot();
-    if (robot) {
-        if (!ROSCommunicator::isROScoreRunning()) {
+void CameraSettingsDialog::sendSettingsSlot()
+{
+    Robot *robot = MainWindow::getInstance()->getSelectedRobot();
+    if (robot)
+    {
+        if (!ROSCommunicator::isROScoreRunning())
+        {
             cout << "roscore is not running" << endl;
-        } else {
-            if (!ROSCommunicator::isInitialized()) {
+        }
+        else
+        {
+            if (!ROSCommunicator::isInitialized())
+            {
                 ROSCommunicator::initialize();
                 sleep(1); // wait for ros
             }
 
-            if (ros::ok()) {
+            if (ros::ok())
+            {
                 cout << "send camera values to: " << robot->getID() << endl;
-                CameraCalibration::Settings* settings = new CameraCalibration::Settings();
+                CameraCalibration::Settings *settings = new CameraCalibration::Settings();
                 //                 settings->useBrightness = true;
                 settings->brightness = ui->brightnessSpinBox->value();
                 settings->exposure = ui->exposureSpinBox->value();
@@ -94,18 +106,29 @@ void CameraSettingsDialog::sendSettingsSlot() {
                 settings->shutter = ui->shutterSpinBox->value();
                 settings->autoGain = ui->gainCheckBox->isChecked() == false;
                 settings->gain = ui->gainSpinBox->value();
+                auto intID = robot->getID();
+                std::vector<uint8_t> id;
 
-                ROSCommunicator::sendSettings(robot->getID(), settings);
+                for (int i = 0; i < sizeof(int); i++)
+                {
+                    id.push_back(*(((uint8_t *)&intID) + i));
+                }
+                msl::robot::IntRobotIDFactory factory;
+                auto robotID = factory.create(id);
+                ROSCommunicator::sendSettings(robotID, settings);
 
+                delete robotID;
                 delete settings;
             }
         }
     }
 }
 
-void CameraSettingsDialog::selectRobotSlot(Robot *robot) {
+void CameraSettingsDialog::selectRobotSlot(Robot *robot)
+{
     bool enableComponents = false;
-    if (robot) {
+    if (robot)
+    {
         enableComponents = true;
 
         ui->brightnessSlider->setMinimum(robot->brightnessMin);
@@ -165,19 +188,24 @@ void CameraSettingsDialog::selectRobotSlot(Robot *robot) {
         ui->gainCheckBox->setChecked(robot->isAutoGainUsed() == false);
         ui->gainSlider->setValue(robot->getGain());
 
-        if (robot->getLastUpdate() > 0) {
+        if (robot->getLastUpdate() > 0)
+        {
             time_t updateTime = robot->getLastUpdate();
-            struct tm * updateTimeInfo;
+            struct tm *updateTimeInfo;
             char buffer[80];
 
             updateTimeInfo = localtime(&updateTime);
 
             strftime(buffer, 80, "%T", updateTimeInfo);
             ui->settingsUpdatedLabel->setText(QString(buffer));
-        } else {
+        }
+        else
+        {
             ui->settingsUpdatedLabel->setText(QString("Never"));
         }
-    } else {
+    }
+    else
+    {
         ui->brightnessSlider->setValue(ui->brightnessSlider->minimum());
         ui->exposureSlider->setValue(ui->exposureSlider->minimum());
         ui->whiteBalance1Slider->setValue(ui->whiteBalance1Slider->minimum());
@@ -200,7 +228,7 @@ void CameraSettingsDialog::selectRobotSlot(Robot *robot) {
     ui->whiteBalance1SpinBox->setEnabled(enableComponents);
     ui->whiteBalance2Slider->setEnabled(enableComponents);
     ui->whiteBalance2SpinBox->setEnabled(enableComponents);
-//        ui->whiteBalanceCheckBox->setEnabled(enableComponents);
+    //        ui->whiteBalanceCheckBox->setEnabled(enableComponents);
 
     ui->hueSlider->setEnabled(enableComponents);
     ui->hueSpinBox->setEnabled(enableComponents);
@@ -223,7 +251,8 @@ void CameraSettingsDialog::selectRobotSlot(Robot *robot) {
     ui->sendSettingsButton->setEnabled(enableComponents);
 }
 
-void CameraSettingsDialog::show() {
+void CameraSettingsDialog::show()
+{
     QWidget::show();
 
     selectRobotSlot(MainWindow::getInstance()->getSelectedRobot());

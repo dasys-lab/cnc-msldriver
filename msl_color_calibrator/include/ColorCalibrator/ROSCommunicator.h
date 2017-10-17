@@ -11,6 +11,14 @@
 
 #include "helpers/CameraCalibrationHelper.h"
 
+namespace msl
+{
+namespace robot
+{
+	class IntRobotID;
+}
+}
+
 class ROSCommunicator : public QObject
 {
     Q_OBJECT
@@ -25,7 +33,7 @@ public:
 
     static void requestSettings(std::vector<int>& receiverIDs);
 
-    static void sendSettings(int receiverID, CameraCalibration::Settings* settings);
+    static void sendSettings(const msl::robot::IntRobotID* receiverID, CameraCalibration::Settings* settings);
 signals:
     void receivedSettings(const msl_sensor_msgs::CameraSettings::ConstPtr& msg);
 
