@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 
@@ -15,11 +14,21 @@
 #include "ImageResource.h"
 #include "NetworkCommunicator.h"
 #include "Robot.h"
+#include <msl/robot/IntRobotIDFactory.h>
+#include <supplementary/IAgentID.h>
 
 const int CC_AREA =             460;
 const int CC_IMAGE_WIDTH =      640;
 const int CC_IMAGE_HEIGHT =     480;
 const int CC_ROBOT_MAX_ID =     25;
+
+namespace msl
+{
+namespace robot
+{
+	class IntRobotID;
+}
+}
 
 namespace Ui {
 class MainWindow;
@@ -50,7 +59,7 @@ private:
     CommandList* m_commandList;
 
     std::list<ImageResource*> m_images;
-    std::map<int, Robot*> m_robots;
+    std::map<const msl::robot::IntRobotID*, Robot*, supplementary::IAgentIDComparator> m_robots;
 
     unsigned char * getCurrentLookupTable();
     QString getLookupTablePwd();
@@ -69,6 +78,7 @@ private:
     void saveAllImagesToFile(QString suffix);
     bool saveLookupTableToFile(unsigned char * lookupTable, QString filename);
     bool loadLookupTableToFile(unsigned char * lookupTable, QString filename);
+    msl::robot::IntRobotIDFactory factory;
 
 private Q_SLOTS:
     void updateCommands();
@@ -132,4 +142,3 @@ Q_SIGNALS:
     void selectedRobot(Robot *robot);
 };
 
-#endif // MAINWINDOW_H

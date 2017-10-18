@@ -31,7 +31,7 @@ public:
 
     static bool isROScoreRunning();
 
-    static void requestSettings(std::vector<int>& receiverIDs);
+    static void requestSettings(std::vector<const msl::robot::IntRobotID*>& receiverIDs);
 
     static void sendSettings(const msl::robot::IntRobotID* receiverID, CameraCalibration::Settings* settings);
 signals:

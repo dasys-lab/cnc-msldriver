@@ -83,37 +83,37 @@ void *ROSCommunicator::rosSpin(void *threadid)
     ros::spin();
 }
 
-void ROSCommunicator::requestSettings(std::vector<int> &receiverIDs)
+void ROSCommunicator::requestSettings(std::vector<const msl::robot::IntRobotID*>& receiverIDs)
 {
     cameraSettingsRequestMsgs->receiverIDs.clear();
     if (!receiverIDs.empty())
     {
         msl::robot::IntRobotIDFactory factory;
-        for (std::vector<int>::iterator it = receiverIDs.begin(); it != receiverIDs.end(); ++it)
+        for (int it = 0; it < receiverIDs.size(); it++)
         {
-            auto intID = *it;
+            auto intID = receiverIDs.at(it);
             std::vector<uint8_t> id;
 
             for (int i = 0; i < sizeof(int); i++)
             {
                 id.push_back(*(((uint8_t *)&intID) + i));
             }
-           const msl::robot::IntRobotID* tmpID = factory.create(id);
-
-            cameraSettingsRequestMsgs->receiverIDs.push_back(tmpID);
+            const msl::robot::IntRobotID *tmpID = factory.create(id);
+            cameraSettingsRequestMsgs->receiverIDs.push_back(msl_sensor_msgs::CameraSettingsRequest::_receiverIDs_type::value_type());
+            cameraSettingsRequestMsgs->receiverIDs.at(it).id = id;
         }
 
         settingRequestPub.publish(*cameraSettingsRequestMsgs);
         for (auto it = cameraSettingsRequestMsgs->receiverIDs.begin(); it != cameraSettingsRequestMsgs->receiverIDs.end();)
         {
-        	delete &it;
+            delete &it;
         }
     }
 }
 
 void ROSCommunicator::sendSettings(const msl::robot::IntRobotID *receiverID, CameraCalibration::Settings *settings)
 {
-    cameraSettingsMsgs->receiverID = receiverID;
+    cameraSettingsMsgs->receiverID.id = receiverID->toByteVector();
     cameraSettingsMsgs->useBrightness = settings->useBrightness;
     cameraSettingsMsgs->brightness = settings->brightness;
     cameraSettingsMsgs->exposure = settings->exposure;
