@@ -19,7 +19,11 @@
   <build_depend>msl_msgs</build_depend>
   <build_depend>message_generation</build_depend>
   <build_depend>tf</build_depend>
+  <build_depend>agent_id</build_depend>
+  <build_depend>msl_robot_id</build_depend>
   
+  <run_depend>agent_id</run_depend>
+  <run_depend>msl_rovbot_id</run_depend>
   <run_depend>system_config</run_depend>
   <run_depend>msl_vision</run_depend>
   <run_depend>msl_sensor_msgs</run_depend>

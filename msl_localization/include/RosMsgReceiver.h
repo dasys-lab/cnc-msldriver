@@ -1,8 +1,5 @@
-#ifndef RosMsgReceiver_h
-#define RosMsgReceiver_h
+#pragma once
 
-
-#include "ros/ros.h"
 #include "nav_msgs/OccupancyGrid.h"
 #include "nav_msgs/MapMetaData.h"
 #include "sensor_msgs/LaserScan.h"
@@ -14,7 +11,9 @@
 #include "msl_actuator_msgs/IMUData.h"
 #include "msl_sensor_msgs/CorrectedOdometryInfo.h"
 #include "msl_actuator_msgs/VisionRelocTrigger.h"
+#include <msl/robot/IntRobotIDFactory.h>
 
+#include <ros/ros.h>
 #include "SystemConfig.h"
 
 class RosMsgReceiver {
@@ -73,8 +72,8 @@ class RosMsgReceiver {
 		msl_actuator_msgs::RawOdometryInfoPtr odometryInfoMsg;
 		msl_sensor_msgs::LinePointListPtr currentLinePoints;
 		msl_actuator_msgs::IMUDataPtr imuData;
+		msl::robot::IntRobotIDFactory factory;
 
 
 };
 
-#endif
