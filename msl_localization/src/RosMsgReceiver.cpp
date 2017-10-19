@@ -97,17 +97,11 @@ void RosMsgReceiver::handleVisionRelocTriggerMessage(const msl_actuator_msgs::Vi
     for(int i = 0; i < sizeof(int); i++) {
     	robotId.push_back( *(((uint8_t*)&tmpID) + i) );
     }
-    auto ownID = factory.create(robotId);
-    auto receiverID = factory.create(msg->receiverID.id);
-    if (ownID != receiverID)
+    if (equal(robotId.begin(), robotId.end(), msg->receiverID.id.begin()))
     {
-    	delete ownID;
-    	delete receiverID;
         return;
     }
     reloc = true;
-    delete receiverID;
-    delete ownID;
 }
 
 void RosMsgReceiver::sendParticleCloud(geometry_msgs::PoseArray &p)
