@@ -45,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     int primaryScreen = QApplication::desktop()->primaryScreen();
     move(QApplication::desktop()->screen(primaryScreen)->rect().center() - rect().center());
 
@@ -114,7 +113,6 @@ MainWindow::MainWindow(QWidget *parent)
     graphicsView = ui->graphicsView_brightenedgray;
     scn = new QGraphicsScene(graphicsView);
     graphicsView->setScene(scn);
-
     // INIT LIST ITEMS
     SystemConfig *sc = SystemConfig::getInstance();
     Configuration *globals = (*sc)["Globals"];
@@ -136,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent)
         {
             // INIT ROBOTS
             Robot *robot = new Robot(id, (*team)[i].c_str());
-            m_robots.insert(std::pair<const msl::robot::IntRobotID *, Robot *>(tmp, robot));
+            m_robots.emplace(tmp, robot);
 
             // INIT TREEWIDGET
             QTreeWidgetItem *item = new QTreeWidgetItem();
@@ -150,7 +148,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
-    for (std::map<const msl::robot::IntRobotID *, Robot *, supplementary::IAgentIDComparator>::iterator it = m_robots.begin(); it != m_robots.end(); it++)
+    for (auto it = m_robots.begin(); it != m_robots.end(); it++)
     {
         Robot *robot = it->second;
 
@@ -277,9 +275,9 @@ MainWindow::MainWindow(QWidget *parent)
         {
             vector<const msl::robot::IntRobotID *> receiverIDs;
             cout << "request camera values from: ";
-            for (std::map<const msl::robot::IntRobotID *, Robot *, supplementary::IAgentIDComparator>::iterator it = m_robots.begin(); it != m_robots.end(); it++)
+            for (auto it = m_robots.begin(); it != m_robots.end(); it++)
             {
-                cout << it->first << " ";
+                cout << *(it->first) << " ";
                 receiverIDs.push_back(it->first);
             }
             cout << endl;
