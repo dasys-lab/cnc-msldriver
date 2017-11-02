@@ -98,16 +98,11 @@ void ROSCommunicator::requestSettings(std::vector<const msl::robot::IntRobotID*>
             {
                 id.push_back(*(((uint8_t *)&intID) + i));
             }
-            const msl::robot::IntRobotID *tmpID = factory.create(id);
             cameraSettingsRequestMsgs->receiverIDs.push_back(msl_sensor_msgs::CameraSettingsRequest::_receiverIDs_type::value_type());
             cameraSettingsRequestMsgs->receiverIDs.at(it).id = id;
         }
 
         settingRequestPub.publish(*cameraSettingsRequestMsgs);
-        for (auto it = cameraSettingsRequestMsgs->receiverIDs.begin(); it != cameraSettingsRequestMsgs->receiverIDs.end();)
-        {
-            delete &it;
-        }
     }
 }
 
