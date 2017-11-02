@@ -150,7 +150,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
-    for (std::map<const msl::robot::IntRobotID *, Robot *>::iterator it = m_robots.begin(); it != m_robots.end(); it++)
+    for (std::map<const msl::robot::IntRobotID *, Robot *, supplementary::IAgentIDComparator>::iterator it = m_robots.begin(); it != m_robots.end(); it++)
     {
         Robot *robot = it->second;
 
@@ -277,7 +277,7 @@ MainWindow::MainWindow(QWidget *parent)
         {
             vector<const msl::robot::IntRobotID *> receiverIDs;
             cout << "request camera values from: ";
-            for (std::map<const msl::robot::IntRobotID *, Robot *>::iterator it = m_robots.begin(); it != m_robots.end(); it++)
+            for (std::map<const msl::robot::IntRobotID *, Robot *, supplementary::IAgentIDComparator>::iterator it = m_robots.begin(); it != m_robots.end(); it++)
             {
                 cout << it->first << " ";
                 receiverIDs.push_back(it->first);
