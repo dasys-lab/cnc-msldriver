@@ -3,7 +3,6 @@
 #include <msl/robot/IntRobotID.h>
 #include <supplementary/IAgentID.h>
 #include <iostream>
-//#include <shared_ptr.h>
 
 RosMsgReceiver *RosMsgReceiver::instance = NULL;
 

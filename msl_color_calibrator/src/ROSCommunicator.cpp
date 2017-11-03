@@ -1,7 +1,6 @@
 #include "ROSCommunicator.h"
 
 #include <msl/robot/IntRobotID.h>
-#include <msl/robot/IntRobotIDFactory.h>
 #include <supplementary/IAgentID.h>
 
 #include <supplementary/BroadcastID.h>
@@ -88,7 +87,6 @@ void ROSCommunicator::requestSettings(std::vector<const msl::robot::IntRobotID*>
     cameraSettingsRequestMsgs->receiverIDs.clear();
     if (!receiverIDs.empty())
     {
-        msl::robot::IntRobotIDFactory factory;
         for (int it = 0; it < receiverIDs.size(); it++)
         {
             auto intID = receiverIDs.at(it);

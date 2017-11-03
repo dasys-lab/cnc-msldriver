@@ -11,7 +11,6 @@
 #include "msl_actuator_msgs/IMUData.h"
 #include "msl_sensor_msgs/CorrectedOdometryInfo.h"
 #include "msl_actuator_msgs/VisionRelocTrigger.h"
-#include <msl/robot/IntRobotIDFactory.h>
 
 #include <ros/ros.h>
 #include "SystemConfig.h"
@@ -72,7 +71,6 @@ class RosMsgReceiver {
 		msl_actuator_msgs::RawOdometryInfoPtr odometryInfoMsg;
 		msl_sensor_msgs::LinePointListPtr currentLinePoints;
 		msl_actuator_msgs::IMUDataPtr imuData;
-		msl::robot::IntRobotIDFactory factory;
 
 
 };
