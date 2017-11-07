@@ -3,9 +3,6 @@
 
 #include "mainwindow.h"
 
-#include <msl/robot/IntRobotID.h>
-#include <msl/robot/IntRobotIDFactory.h>
-
 #include "ROSCommunicator.h"
 
 CameraSettingsDialog *CameraSettingsDialog::instance;
@@ -113,11 +110,8 @@ void CameraSettingsDialog::sendSettingsSlot()
                 {
                     id.push_back(*(((uint8_t *)&intID) + i));
                 }
-                msl::robot::IntRobotIDFactory factory;
-                auto robotID = factory.create(id);
-                ROSCommunicator::sendSettings(robotID, settings);
+                ROSCommunicator::sendSettings(id, settings);
 
-                delete robotID;
                 delete settings;
             }
         }

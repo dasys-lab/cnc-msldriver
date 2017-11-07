@@ -33,7 +33,7 @@ public:
 
     static void requestSettings(std::vector<const msl::robot::IntRobotID*>& receiverIDs);
 
-    static void sendSettings(const msl::robot::IntRobotID* receiverID, CameraCalibration::Settings* settings);
+    static void sendSettings(std::vector<uint8_t> receiverID, CameraCalibration::Settings* settings);
 signals:
     void receivedSettings(const msl_sensor_msgs::CameraSettings::ConstPtr& msg);
 

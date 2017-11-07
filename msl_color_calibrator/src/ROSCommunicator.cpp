@@ -104,9 +104,9 @@ void ROSCommunicator::requestSettings(std::vector<const msl::robot::IntRobotID*>
     }
 }
 
-void ROSCommunicator::sendSettings(const msl::robot::IntRobotID *receiverID, CameraCalibration::Settings *settings)
+void ROSCommunicator::sendSettings(std::vector<uint8_t> receiverID, CameraCalibration::Settings *settings)
 {
-    cameraSettingsMsgs->receiverID.id = receiverID->toByteVector();
+    cameraSettingsMsgs->receiverID.id = receiverID;
     cameraSettingsMsgs->useBrightness = settings->useBrightness;
     cameraSettingsMsgs->brightness = settings->brightness;
     cameraSettingsMsgs->exposure = settings->exposure;
