@@ -14,7 +14,6 @@
 #include "ImageResource.h"
 #include "NetworkCommunicator.h"
 #include "Robot.h"
-#include <msl/robot/IntRobotIDFactory.h>
 #include <supplementary/IAgentID.h>
 
 const int CC_AREA =             460;
@@ -28,6 +27,11 @@ namespace robot
 {
 	class IntRobotID;
 }
+}
+
+namespace supplementary
+{
+	class AgentIDManager;
 }
 
 namespace Ui {
@@ -78,7 +82,7 @@ private:
     void saveAllImagesToFile(QString suffix);
     bool saveLookupTableToFile(unsigned char * lookupTable, QString filename);
     bool loadLookupTableToFile(unsigned char * lookupTable, QString filename);
-    msl::robot::IntRobotIDFactory factory;
+    supplementary::AgentIDManager* manager;
 
 private Q_SLOTS:
     void updateCommands();

@@ -35,6 +35,10 @@
 
 #include "ROSCommunicator.h"
 
+#include <supplementary/AgentIDManager.h>
+#include <msl/robot/IntRobotIDFactory.h>
+#include <msl/robot/IntRobotID.h>
+
 using namespace supplementary;
 using namespace std;
 
@@ -44,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+	this->manager = new supplementary::AgentIDManager(new msl::robot::IntRobotIDFactory());
     ui->setupUi(this);
     int primaryScreen = QApplication::desktop()->primaryScreen();
     move(QApplication::desktop()->screen(primaryScreen)->rect().center() - rect().center());
@@ -123,13 +128,7 @@ MainWindow::MainWindow(QWidget *parent)
     for (unsigned int i = 0; i < team->size(); i++)
     {
         int id = globals->get<int>("Globals", "Team", (*team)[i].c_str(), "ID", NULL);
-        std::vector<uint8_t> robotId;
-
-        for (int i = 0; i < sizeof(int); i++)
-        {
-            robotId.push_back(*(((uint8_t *)&id) + i));
-        }
-        auto tmp = factory.create(robotId);
+        auto tmp = dynamic_cast<const msl::robot::IntRobotID*>(this->manager->getID(id));
         if (id <= CC_ROBOT_MAX_ID)
         {
             // INIT ROBOTS
@@ -294,6 +293,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+	delete manager;
     delete ui;
 
     free(m_lookupTable);
@@ -354,20 +354,12 @@ Robot *MainWindow::getSelectedRobot()
     if (index > 0)
     {
         int robotID = ui->selectRobotComboBox->itemData(index).toInt();
-        std::vector<uint8_t> id;
-
-        for (int i = 0; i < sizeof(int); i++)
-        {
-            id.push_back(*(((uint8_t *)&robotID) + i));
-        }
-        auto tmpID = factory.create(id);
+        auto tmpID = dynamic_cast<const msl::robot::IntRobotID*>(this->manager->getID(robotID));
         if (m_robots.find(tmpID) != m_robots.end())
         {
             Robot *robot = m_robots.at(tmpID);
-            delete tmpID;
             return robot;
         }
-        delete tmpID;
     }
     return NULL;
 }
@@ -391,15 +383,8 @@ void MainWindow::processFilter()
         if (imgRes->getSender() != -1)
         {
             auto intID = imgRes->getSender();
-            std::vector<uint8_t> id;
-
-            for (int i = 0; i < sizeof(int); i++)
-            {
-                id.push_back(*(((uint8_t *)&intID) + i));
-            }
-            auto tmpID = factory.create(id);
+            auto tmpID = dynamic_cast<const msl::robot::IntRobotID*>(this->manager->getID(intID));
             Robot *robot = m_robots.at(tmpID);
-            delete tmpID;
             SystemConfig::setHostname(robot->getHostname());
         }
         else
@@ -457,79 +442,6 @@ void MainWindow::processFilter()
         QImage *img;
         int img_y, img_x;
         int value;
-
-        /*if (imgRes->getSender() != -1) {
-            ScanLineHelper scanHelper;
-            ScanLineHelperBall scanHelperBall;
-            DistanceLookupHelper distanceHelper(CC_AREA);
-            BallHelper ballHelper(CC_AREA);
-
-            FilterLinePoints filterLinePoints(CC_AREA);
-            FilterLinePointsROI filterLinePointsROI(CC_AREA);
-            FilterSobelDir filterSobelDir(CC_AREA, CC_AREA);
-            FilterTemplateMatching filterTMatch(CC_AREA, CC_AREA);
-
-
-
-            std::vector<LinePoint> linePoints;
-            linePoints.clear();
-
-            std::vector<LinePoint> linePointsROI;
-            linePointsROI.clear();
-
-            int *balls;
-            int ballCount = 0, clusterCount = 0;
-            BallClusterHelp ballClusterHelp;
-            ballCluster *cluster = new ballCluster[10000];
-
-            std::vector<ROIData> roiData;
-            ROIData curBallROI;
-
-            std::vector<BlobBounds> ballBlobs;
-            ballBlobs.clear();
-
-
-
-            if (ui->drawLinesCheckBox->isChecked()) {
-                cout << "Stage 4: Detect LinepointsballBlobs" << endl;
-                image_gray = filterLinePoints.process((unsigned char *) image_gray, CC_AREA, CC_AREA, linePoints, distanceHelper, scanHelper);
-            }
-
-            if (ui->searchBallCheckBox->isChecked()) {
-                cout << "Stage 5: Detect ROIs" << endl;
-                roiData = filterLinePointsROI.process((unsigned char *) image_uv, CC_AREA, CC_AREA, linePointsROI, distanceHelper, scanHelperBall);
-
-                cout << "Stage 6: Insert Tracked ROI into ROI List" << endl;
-                roiData.insert(roiData.end()-kickerCount, curBallROI);
-
-                cout << "Stage 7: Compute Sobel on ROIs" << endl;
-                imageSDir = filterSobelDir.process(image_uv, image_uv, roiData, CC_AREA, CC_AREA, edgethresh, edgemaskthresh);
-
-                cout << "Stage 8: Apply Templatematching" << endl;
-                imBall = filterTMatch.process(imageSDir, balls, ballCount, image_uv, roiData, maskThresh, CC_AREA, CC_AREA, 4, 19, 6, image_roi);
-
-                cout << "Stage 9:" << endl;
-                clusterCount = ballClusterHelp.clusterBalls(balls, ballCount, cluster, 200);
-
-                cout << "Stage 11: Cluster available Balls" << endl;
-                Particle maxParticle;
-                maxParticle.posx = 0;
-                maxParticle.posy = 0;
-                Point p = ballHelper.getBallFromBlobs(cluster, clusterCount, roiData, ballBlobs, &maxParticle);
-                if(roiData.size() > 0)
-                    curBallROI = roiData[0];
-
-                if(ui->drawBallCheckBox->isChecked()) {
-                    ballClusterHelp.visualizeCluster(image_gray, CC_AREA, CC_AREA, cluster, clusterCount);
-                    ballClusterHelp.visualizeCluster(image_roi, CC_AREA, CC_AREA, cluster, clusterCount);
-                }
-
-                if(ui->drawROICheckBox->isChecked()) {
-                    filterLinePointsROI.visualizeROIs(image_gray, roiData, CC_AREA, CC_AREA);
-                    filterLinePointsROI.visualizeROIs(image_roi, roiData, CC_AREA, CC_AREA);
-                }
-            }
-        }*/
 
         SystemConfig::resetHostname();
 
@@ -1064,8 +976,8 @@ void MainWindow::handleReceivedImage(ImageResource *img)
 
 void MainWindow::handleReceivedSettings(const msl_sensor_msgs::CameraSettings::ConstPtr &msg)
 {
-    auto id = *reinterpret_cast<const int *>(msg->senderID.id.data());
-    if (id != 0)
+	auto tmpID = dynamic_cast<const msl::robot::IntRobotID*>(this->manager->getIDFromBytes(msg->senderID.id));
+    if (tmpID->getId() != 0)
     {
         cout << "msg->senderID=" << msg->senderID;
         cout << endl;
@@ -1100,7 +1012,6 @@ void MainWindow::handleReceivedSettings(const msl_sensor_msgs::CameraSettings::C
         cout << " msg->gain=" << msg->gain;
         cout << endl;
 
-        auto tmpID = factory.create(msg->senderID.id);
         if (m_robots.find(tmpID) != m_robots.end())
         {
             Robot *robot = m_robots.at(tmpID);
@@ -1127,8 +1038,7 @@ void MainWindow::handleReceivedSettings(const msl_sensor_msgs::CameraSettings::C
             robot->setAutoGain(msg->autoGain);
             robot->setGain(msg->gain);
 
-            auto id = *reinterpret_cast<const int *>(msg->senderID.id.data());
-            if (getSelectedRobot() && getSelectedRobot()->getID() == id)
+            if (getSelectedRobot() && getSelectedRobot()->getID() == tmpID->getId())
             {
                 emit selectedRobot(robot);
             }
@@ -1401,13 +1311,7 @@ void MainWindow::on_selectRobotComboBox_currentIndexChanged(int index)
     if (index > -1)
     {
         int robotID = ui->selectRobotComboBox->itemData(index).toInt();
-        std::vector<uint8_t> id;
-
-        for (int i = 0; i < sizeof(int); i++)
-        {
-            id.push_back(*(((uint8_t *)&robotID) + i));
-        }
-        auto tmpID = factory.create(id);
+        auto tmpID = dynamic_cast<const msl::robot::IntRobotID*>(this->manager->getID(robotID));
 
         if (!ROSCommunicator::isROScoreRunning())
         {
@@ -1427,7 +1331,6 @@ void MainWindow::on_selectRobotComboBox_currentIndexChanged(int index)
                 vector<const msl::robot::IntRobotID *> receiverIDs;
                 receiverIDs.push_back(tmpID);
                 ROSCommunicator::requestSettings(receiverIDs);
-                delete tmpID;
             }
         }
     }
@@ -1477,19 +1380,12 @@ void MainWindow::on_loadImageFromFileAction_triggered()
                 if (filename.indexOf("_") > -1)
                 {
                     int robotID = filename.mid(0, filename.indexOf("_")).toInt();
-                    std::vector<uint8_t> id;
-
-                    for (int i = 0; i < sizeof(int); i++)
-                    {
-                        id.push_back(*(((uint8_t *)&robotID) + i));
-                    }
-                    auto tmpID = factory.create(id);
+                    auto tmpID = dynamic_cast<const msl::robot::IntRobotID*>(this->manager->getID(robotID));
                     if (m_robots.find(tmpID) != m_robots.end())
                     {
                         img->setSender(robotID);
                         img->setSenderIsFixed(true);
                     }
-                    delete tmpID;
                 }
                 addImage(img, i == qfilenames.size() - 1);
                 free(content);
