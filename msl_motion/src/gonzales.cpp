@@ -4,6 +4,8 @@
 #include <math.h>
 #include "RosHelper.h"
 #include "util.h"
+#include <queue>
+#include <valarray>
 
 #include <string.h>
 #include <DateTime.h>
@@ -35,7 +37,10 @@ double lengthAccMotor;
 double lengthDiffMotorGoal;
 double dynamicCorrection[4];
 
-double filteredRPM[4];
+std::queue<std::valarray<double>> Filtered;
+std::queue<std::valarray<double>> BeforeFiltered;
+double init[4] = {0.0, 0.0, 0.0, 0.0};
+std::valarray<double> filteredRPM;
 
 struct timeval odotime_last;
 struct timeval odotime_cur;
@@ -61,6 +66,10 @@ void gonz_init()
 	gonz_state.currentPosition.x = 0;
 	gonz_state.currentPosition.y = 0;
 	gonz_state.currentPosition.angle = 0;
+	BeforeFiltered.push(std::valarray<double>(init, 4));
+        BeforeFiltered.push(std::valarray<double>(init, 4));
+	Filtered.push(std::valarray<double>(init, 4));
+	Filtered.push(std::valarray<double>(init, 4));
 
 	decayFactor = 0;
 
@@ -311,60 +320,53 @@ void gonz_calc_odometry()
 
 
 
-    //define queues
-//            std::queue<std::valarray<double>> pastTranslations;
-//            std::queue<std::valarray<double>> pastControlInput;
-
-        //define at beginning to be able to write 0 into array
-        //change to 4 dimensional
-//    double init[3] = {0.0, 0.0, 0.0};
 
     //Clear last three values in filter and write 0
-//                pastControlInput.push(std::valarray<double>(init, 3));
-//                pastControlInput.push(std::valarray<double>(init, 3));
-//                pastControlInput.push(std::valarray<double>(init, 3));
-//                pastTranslations.push(std::valarray<double>(init, 3));
-//                pastTranslations.push(std::valarray<double>(init, 3));
-//                pastTranslations.push(std::valarray<double>(init, 3));
-//                pastControlInput.pop();
-//                pastControlInput.pop();
-//                pastControlInput.pop();
-//                pastTranslations.pop();
-//                pastTranslations.pop();
-//                pastTranslations.pop();
 
-//    // slope variable
-//    double a = 6.33333 - 4.0 / 3000.0 * lastJump;
-//    // changing point for slope
-//    double b = pow(a, 2.0);
-//    // sending frequency
-//    double TA = 1.0 / 30.0;
-//
-//    double n1 = 1.0 - exp(-a * TA) - exp(-a * TA) * a * TA;
-//    double n2 = exp(-2 * a * TA) - exp(-a * TA) + exp(-a * TA) * TA * a;
-//
-//    double d1 = -2 * exp(-a * TA);
-//    double d2 = exp(-2 * a * TA);
-//
-//
-//    pastTranslations.push(std::valarray<double>(init, 3));
-//    pastTranslations.back() += n2 * pastControlInput.front() - d2 * pastTranslations.front();
-//    pastControlInput.pop();
-//    pastTranslations.pop();
-//    pastTranslations.back() += n1 * pastControlInput.front() - d1 * pastTranslations.front();
-//
-//    return pastTranslations.back();
+//                BeforeFiltered.push(std::valarray<double>(init, 4));
+//                BeforeFiltered.push(std::valarray<double>(init, 4));
+//                Filtered.push(std::valarray<double>(init, 4));
+//                Filtered.push(std::valarray<double>(init, 4));
+//                Filtered.push(std::valarray<double>(init, 4));
+//                BeforeFiltered.pop();
+//                BeforeFiltered.pop();
+//                BeforeFiltered.pop();
+//                Filtered.pop();
+//                Filtered.pop();
+//                Filtered.pop();
+
+    auto newValue = std::valarray<double>{(double) ep->ActualRPM(0), (double)ep->ActualRPM(1), (double)ep->ActualRPM(2), (double)ep->ActualRPM(3)};
+    BeforeFiltered.push(newValue);
+    // slope variable
+    double a = 6.33333;
+    // changing point for slope
+    // double b = pow(a, 2.0);
+    // sending frequency
+    double TA = 1.0 / 30.0;
+
+    double n1 = 1.0 - exp(-a * TA) - exp(-a * TA) * a * TA;
+    double n2 = exp(-2 * a * TA) - exp(-a * TA) + exp(-a * TA) * TA * a;
+
+    double d1 = -2 * exp(-a * TA);
+    double d2 = exp(-2 * a * TA);
+
+    //Filtered.push(std::valarray<double>(init, 4));
 
 
-
+    Filtered.back() += n2 * BeforeFiltered.front() - d2 * Filtered.front();
+    BeforeFiltered.pop();
+    Filtered.pop();
+    Filtered.back() += n1 * BeforeFiltered.front() - d1 * Filtered.front();
 
 
 
 
-        filteredRPM[0]= ep->ActualRPM(0);
-        filteredRPM[1]= ep->ActualRPM(1);
-        filteredRPM[2]= ep->ActualRPM(2);
-        filteredRPM[3]= ep->ActualRPM(3);
+
+
+
+
+
+        filteredRPM = Filtered.back();
 
 	unsigned char i;
 	gonz_state.actualMotion.rotation = 0;
