@@ -307,6 +307,60 @@ void gonz_calc_odometry()
 	//-v1-v2+v3+v4 = 4*vx*cos(phi)
 	//v1-v2-v3+v4 = 4*vy*sin(phi)
 
+
+
+
+
+    //define queues
+//            std::queue<std::valarray<double>> pastTranslations;
+//            std::queue<std::valarray<double>> pastControlInput;
+
+        //define at beginning to be able to write 0 into array
+        //change to 4 dimensional
+//    double init[3] = {0.0, 0.0, 0.0};
+
+    //Clear last three values in filter and write 0
+//                pastControlInput.push(std::valarray<double>(init, 3));
+//                pastControlInput.push(std::valarray<double>(init, 3));
+//                pastControlInput.push(std::valarray<double>(init, 3));
+//                pastTranslations.push(std::valarray<double>(init, 3));
+//                pastTranslations.push(std::valarray<double>(init, 3));
+//                pastTranslations.push(std::valarray<double>(init, 3));
+//                pastControlInput.pop();
+//                pastControlInput.pop();
+//                pastControlInput.pop();
+//                pastTranslations.pop();
+//                pastTranslations.pop();
+//                pastTranslations.pop();
+
+//    // slope variable
+//    double a = 6.33333 - 4.0 / 3000.0 * lastJump;
+//    // changing point for slope
+//    double b = pow(a, 2.0);
+//    // sending frequency
+//    double TA = 1.0 / 30.0;
+//
+//    double n1 = 1.0 - exp(-a * TA) - exp(-a * TA) * a * TA;
+//    double n2 = exp(-2 * a * TA) - exp(-a * TA) + exp(-a * TA) * TA * a;
+//
+//    double d1 = -2 * exp(-a * TA);
+//    double d2 = exp(-2 * a * TA);
+//
+//
+//    pastTranslations.push(std::valarray<double>(init, 3));
+//    pastTranslations.back() += n2 * pastControlInput.front() - d2 * pastTranslations.front();
+//    pastControlInput.pop();
+//    pastTranslations.pop();
+//    pastTranslations.back() += n1 * pastControlInput.front() - d1 * pastTranslations.front();
+//
+//    return pastTranslations.back();
+
+
+
+
+
+
+
         filteredRPM[0]= ep->ActualRPM(0);
         filteredRPM[1]= ep->ActualRPM(1);
         filteredRPM[2]= ep->ActualRPM(2);
