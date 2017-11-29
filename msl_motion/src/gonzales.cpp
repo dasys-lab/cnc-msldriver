@@ -35,6 +35,8 @@ double lengthAccMotor;
 double lengthDiffMotorGoal;
 double dynamicCorrection[4];
 
+double filteredRPM[4];
+
 struct timeval odotime_last;
 struct timeval odotime_cur;
 struct timeval lastOdoSendTime;
@@ -305,26 +307,31 @@ void gonz_calc_odometry()
 	//-v1-v2+v3+v4 = 4*vx*cos(phi)
 	//v1-v2-v3+v4 = 4*vy*sin(phi)
 
+        filteredRPM[0]= ep->ActualRPM(0);
+        filteredRPM[1]= ep->ActualRPM(1);
+        filteredRPM[2]= ep->ActualRPM(2);
+        filteredRPM[3]= ep->ActualRPM(3);
+
 	unsigned char i;
 	gonz_state.actualMotion.rotation = 0;
 	for (i = 0; i < 4; i++)
 	{
-		gonz_state.actualMotion.rotation += ep->ActualRPM(i);
+		gonz_state.actualMotion.rotation += filteredRPM[i];
 	}
 	//Umrechnung von 4*RPM auf mm/s -> RobotRadius in mm, 60 s/min
 	gonz_state.actualMotion.rotation *= (0.25 * 1024.0 * wheelcirc * current_settings.gear_ratio_nominator
 			/ (current_settings.gear_ratio_denominator * current_settings.robotRadius * 60.0));
-	gonz_state.actualMotion.x = -ep->ActualRPM(0);
-	gonz_state.actualMotion.x += -ep->ActualRPM(1);
-	gonz_state.actualMotion.x += ep->ActualRPM(2);
-	gonz_state.actualMotion.x += ep->ActualRPM(3);
+	gonz_state.actualMotion.x = -filteredRPM[0];
+	gonz_state.actualMotion.x += -filteredRPM[1];
+	gonz_state.actualMotion.x += filteredRPM[2];
+	gonz_state.actualMotion.x += filteredRPM[3];
 	gonz_state.actualMotion.x *= ((double)current_settings.gear_ratio_nominator)
 			/ ((double)current_settings.gear_ratio_denominator * cosphi * 4.0 * 60.0) * wheelcirc;
 
-	gonz_state.actualMotion.y = ep->ActualRPM(0);
-	gonz_state.actualMotion.y += -ep->ActualRPM(1);
-	gonz_state.actualMotion.y += -ep->ActualRPM(2);
-	gonz_state.actualMotion.y += ep->ActualRPM(3);
+	gonz_state.actualMotion.y = filteredRPM[0];
+	gonz_state.actualMotion.y += -filteredRPM[1];
+	gonz_state.actualMotion.y += -filteredRPM[2];
+	gonz_state.actualMotion.y += filteredRPM[3];
 	gonz_state.actualMotion.y *= (double)current_settings.gear_ratio_nominator
 			/ ((double)current_settings.gear_ratio_denominator * sinphi * 4.0 * 60.0) * wheelcirc;
 
