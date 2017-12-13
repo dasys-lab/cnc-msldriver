@@ -338,11 +338,11 @@ void gonz_calc_odometry()
     auto newValue = std::valarray<double>{(double) ep->ActualRPM(0), (double)ep->ActualRPM(1), (double)ep->ActualRPM(2), (double)ep->ActualRPM(3)};
     BeforeFiltered.push(newValue);
     // slope variable
-    double a = 6.33333;
+    double a = 40;
     // changing point for slope
     // double b = pow(a, 2.0);
     // sending frequency
-    double TA = 1.0 / 30.0;
+    double TA = 1.0 / 200.0;
 
     double n1 = 1.0 - exp(-a * TA) - exp(-a * TA) * a * TA;
     double n2 = exp(-2 * a * TA) - exp(-a * TA) + exp(-a * TA) * TA * a;
