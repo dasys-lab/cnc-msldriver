@@ -62,8 +62,8 @@ typedef struct {
 	double maxRotationErrorInt;
 	double rotationControlByVeloP;
 	
-	
 	int newGearHack;
+	unsigned int profile_acceleration;
 
 } controller_settings;
 

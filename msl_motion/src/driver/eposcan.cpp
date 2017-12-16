@@ -185,6 +185,17 @@ int EposCan::InitNode(int nodeid)
 	buf[0] = 0x2F; buf[1] = 0x60; buf[2]=0x60; buf[3]=0x00; buf[4]=0x03; buf[5]=0x0; //one byte to 6060 00 
 	can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,6);
 	if(SdoDownloadConfirmation(nodeid,buf)<=0)	return 0;
+
+	//Use sinusodial curve
+	buf[0] = 0x2F; buf[1] = 0x60; buf[2]=0x86; buf[3]=0x00; buf[4]=0x01; buf[5]=0x0;
+	can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,6);
+	if(SdoDownloadConfirmation(nodeid,buf)<=0)	return 0;
+
+	//Define Profile Acceleration
+	buf[0] = 0x2F; buf[1] = 0x60; buf[2]=0x83;
+	INT2BYTEPOS(current_settings.maxRPM,buf,4);
+	can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,6);
+	if(SdoDownloadConfirmation(nodeid,buf)<=0)	return 0;
 	
 	//MAX VELOCITY
 	printf("MaxRPM: %d\n",current_settings.maxRPM); //With Gear
@@ -220,7 +231,7 @@ int EposCan::InitNode(int nodeid)
 	can->SendCanMsg(CAN_ID_SDO_WRITE|nodeid,buf,8);
 	if(SdoDownloadConfirmation(nodeid,buf)<=0)	return 0;
 	
-	//CURRENT and VELOCITY control params set by tuning tool
+	//CURRENT and VELOCITY control params set by tuning too
 	
 	//Current Limits:
 	printf("Cont. Amp Limit: %d\n",current_settings.max_continous_amp);

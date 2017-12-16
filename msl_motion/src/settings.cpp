@@ -78,6 +78,7 @@ void settings_init() {
 	default_settings.rotationControlByVeloP = motion->get<double>("Motion","RotationControl","PropByVelocity",NULL);
 	
 	default_settings.newGearHack = motion->tryGet<int>(-1,"Motion","NewGearHack",NULL);
+	default_settings.profile_acceleration = motion->get<int>("Motion","MotionControl","ProfileAcceleration",NULL);
 
 //   std::string traceData = motion->get<std::string>("Motion","Logging","AdditionalTraceData",NULL);
     /*
