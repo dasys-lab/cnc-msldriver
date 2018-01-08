@@ -605,8 +605,8 @@ Point BallHelper::getBallFromBlobs(ballCluster * cluster, int clusterCount, std:
 		//covMatrix->setValues(covariances);
 
 	}
-		
-		
+	cout<<"BallHelper::getBallfromBlobs: Ball Position: "<<ballPoint.x<<";"<<ballPoint.y<<";"<<ballPoint.z<<endl;
+	cout<<"BallHelper::getBallfromBlobs: Ball Velocity: "<<ballVelocity.vx<<";"<<ballVelocity.vy<<";"<<ballVelocity.vz<<endl;
 
 		//merge to dev
 		//BallInfoCovMatrixPtr bi = BallInfoCovMatrix::create();
