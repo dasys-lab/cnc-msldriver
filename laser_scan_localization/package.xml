@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>laser_scan_localization</name>
+  <version>0.0.0</version>
+  <description>The laser_scan_localization package</description>
+
+  <maintainer email="cn@todo.todo">cn</maintainer>
+
+
+  <license>MIT</license>
+
+
+  <!-- <url type="website">http://wiki.ros.org/laser_scan_localization</url> -->
+
+
+  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>
