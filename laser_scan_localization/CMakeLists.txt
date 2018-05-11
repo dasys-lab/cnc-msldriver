@@ -51,7 +51,11 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME} 
+add_executable(${PROJECT_NAME}
+	src/LaserScan.cpp
+)
+
+add_executable(${PROJECT_NAME}_talker
 	src/Talker.cpp
 )
 
@@ -65,6 +69,9 @@ add_executable(${PROJECT_NAME}_listener
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}
+   ${catkin_LIBRARIES}
+)
+target_link_libraries(${PROJECT_NAME}_talker
    ${catkin_LIBRARIES}
 )
 target_link_libraries(${PROJECT_NAME}_listener
