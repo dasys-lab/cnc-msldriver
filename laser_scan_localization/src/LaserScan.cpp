@@ -8,13 +8,18 @@
 #include "sensor_msgs/LaserScan.h"
 #include "ros/ros.h"
 #include <vector>
+// #include "laser_scan_localization/LaserLocalization.h"
+#include <std_msgs/String.h>
+
+// Ausgabe fuer die verarbeiteten Laser Scans
+ros::Publisher out;
 
 // Maximum bestimmen fuer den Vektor
-int maxIntensityOfScan(const std::vector<float> &intensities)
+int maxIntensityOfScan(const std::vector<float> &intensities, int start, int end)
 {
     float maxIntensity = 0.0;
     int maxIndex = 0.0;
-    for (unsigned int i = 0; i < intensities.size(); i = i + 1)
+    for (unsigned int i = start; i < end; i = i + 1)
     {
         float x = intensities[i];
         // ROS_INFO("Element: %lu - [%f]", i, x);
@@ -55,59 +60,93 @@ void processScan(const sensor_msgs::LaserScan::ConstPtr &scan)
     // angle_min = -2.356194
     // angle_max = +2.356194
 
-    int maxIndex = maxIntensityOfScan(scan->intensities);
+    int maxIndex = maxIntensityOfScan(scan->intensities, 0, scan->intensities.size());
     // printInfo(scan, maxIndex);
 
 
+    //
     // Bestimmen von zwei Bereichen mit hohen Ausschlaegen
+    //
+
+    // true -> aktueller index liegt in einem Bereich mit hohen Ausschlag
     bool testIntervall = false;
-    int g1 = -1;
-    int g2 = -1;
-    int g3 = -1;
-    int g4 = -1;
-    const float GRENZWERT = 10000;
+
+    // Grenzen fuer die Ausschlaege. Wir gehen davon aus das es IMMER 2 Bereiche mit hoher Intensitaet gibt
+    int firstMaxBorderLeft = -1;
+    int firstMaxBorderRight = -1;
+    int secondMaxBorderLeft = -1;
+    int secondMaxBorderRight = -1;
+
+    // Grenzwert zum erkennen der Bereiche mit hohen Ausschlaegen
+    const float MAX_INTENSITY_THRESHOLD = 10000;
+
+    // Grenzen bestimmen
     for (unsigned int i = 0; i < scan->intensities.size(); i = i + 1)
     {
         float x = scan->intensities[i];
-        if (x > GRENZWERT && testIntervall == false)
+        if (x > MAX_INTENSITY_THRESHOLD && testIntervall == false)
         {
             testIntervall = true;
-            if (g1 == -1)
+            if (firstMaxBorderLeft == -1)
             {
-                g1 = i;
+                firstMaxBorderLeft = i;
             }
             else
             {
-                g3 = i;
+                secondMaxBorderLeft = i;
             }
         }
-        if (x < GRENZWERT && testIntervall == true)
+        if (x < MAX_INTENSITY_THRESHOLD && testIntervall == true)
         {
             testIntervall = false;
-            if (g2 == -1)
+            if (firstMaxBorderRight == -1)
             {
-                g2 = i;
+                firstMaxBorderRight = i;
             }
             else
             {
-                g4 = i;
+                secondMaxBorderRight = i;
             }
         }
     }
 
-    ROS_INFO("g1: %d", g1);
-    ROS_INFO("g2: %d", g2);
-    ROS_INFO("g3: %d", g3);
-    ROS_INFO("g4: %d", g4);
+    // Testweise Grenzen ausgeben
+    ROS_INFO("g1: %d", firstMaxBorderLeft);
+	ROS_INFO("g2: %d", firstMaxBorderRight);
+	ROS_INFO("g3: %d", secondMaxBorderLeft);
+	ROS_INFO("g4: %d", secondMaxBorderRight);
 
-    // TODO Fuer jeden Bereich das Maximum bestimmen und daraus unsere Position bestimmen (Trigonometrie)
+    // Indexe mit Maximas bestimmen
+    int firstMaxIndex = maxIntensityOfScan(scan->intensities, firstMaxBorderLeft, firstMaxBorderRight);
+    int secondMaxIndex = maxIntensityOfScan(scan->intensities, secondMaxBorderLeft, secondMaxBorderRight);
+
+    // Testweise Info ausgeben
+    ROS_INFO("INFO FIRST MAX:");
+    printInfo(scan, firstMaxIndex);
+
+    ROS_INFO("INFO SECOND MAX:");
+    printInfo(scan, secondMaxIndex);
+
+    // TODO eigene Nachricht zusammenbauen
+//    laser_scan_localization::LaserLocalization msg;
+    std_msgs::String msg;
+	msg.data = "TODO OUTPUT";
+	out.publish(msg);
+
+    // TODO unsere Position bestimmen (Trigonometrie) - ALICA?
 }
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "myscan");
     ros::NodeHandle n;
-    ros::Subscriber sub = n.subscribe("scan", 2000, processScan);
+
+    // Gibt verarbeiteten Informationen wieder aus
+    out = n.advertise<std_msgs::String>("laser_scan_localization", 1000);
+
+    // Verarbeitet die Nachrichten von urg_node
+    ros::Subscriber in = n.subscribe("scan", 2000, processScan);
+
     ros::spin();
 
     return 0;
