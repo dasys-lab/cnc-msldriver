@@ -8,8 +8,10 @@
 #include "sensor_msgs/LaserScan.h"
 #include "ros/ros.h"
 #include <vector>
-// #include "laser_scan_localization/LaserLocalization.h"
+#include "laser_scan_localization/LaserLocalization.h"
 #include <std_msgs/String.h>
+#include <geometry_msgs/Point.h>
+#include <LaserScan.h>
 
 // Ausgabe fuer die verarbeiteten Laser Scans
 ros::Publisher out;
@@ -127,13 +129,19 @@ void processScan(const sensor_msgs::LaserScan::ConstPtr &scan)
     ROS_INFO("INFO SECOND MAX:");
     printInfo(scan, secondMaxIndex);
 
-    // TODO eigene Nachricht zusammenbauen
+
 //    laser_scan_localization::LaserLocalization msg;
-    std_msgs::String msg;
-	msg.data = "TODO OUTPUT";
-	out.publish(msg);
+    laser_scan_localization::LaserLocalization msg;
+	//msg.data = "TODO OUTPUT";
+   geometry_msgs::Point msgPoint;
+   msgPoint.x=2;
+   msgPoint.y=3;
+   msgPoint.z=0;
+    out.publish(msgPoint);
 
     // TODO unsere Position bestimmen (Trigonometrie) - ALICA?
+	// standpunkt torfosten , robotor 0,0
+
 }
 
 int main(int argc, char **argv)
@@ -142,7 +150,7 @@ int main(int argc, char **argv)
     ros::NodeHandle n;
 
     // Gibt verarbeiteten Informationen wieder aus
-    out = n.advertise<std_msgs::String>("laser_scan_localization", 1000);
+    out = n.advertise<laser_scan_localization::LaserLocalization>("laser_scan_localization", 1000);
 
     // Verarbeitet die Nachrichten von urg_node
     ros::Subscriber in = n.subscribe("scan", 2000, processScan);
