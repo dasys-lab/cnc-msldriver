@@ -1,6 +1,5 @@
 #include <ros/ros.h>
 #include <string>
-#include "msl_msgs/PositionInfo.h"
 #include "geometry_msgs/PointStamped.h"
 
 
@@ -20,6 +19,6 @@ namespace msl
 		int secondMaxBorderLeft;
 		int secondMaxBorderRight;
 
+	};
 
-
-	}
+};
