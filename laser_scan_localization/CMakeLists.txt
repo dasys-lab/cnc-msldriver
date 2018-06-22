@@ -59,25 +59,11 @@ add_executable(${PROJECT_NAME}
 	src/LaserScan.cpp
 )
 
-add_executable(${PROJECT_NAME}_talker
-	src/Talker.cpp
-)
-
-add_executable(${PROJECT_NAME}_listener
-	src/Listener.cpp
-)
-
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 #add_dependencies(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}
-   ${catkin_LIBRARIES}
-)
-target_link_libraries(${PROJECT_NAME}_talker
-   ${catkin_LIBRARIES}
-)
-target_link_libraries(${PROJECT_NAME}_listener
    ${catkin_LIBRARIES}
 )
