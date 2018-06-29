@@ -5,8 +5,8 @@
  *      Author: Carpe Noctem
  */
 
-#include "laser_scan_localization/LaserLocalization.h"
 #include "LaserScan.h"
+#include <msl_sensor_msgs/LaserLocalization.h>
 #include <SystemConfig.h>
 #include <geometry_msgs/Point.h>
 #include <math.h>
@@ -23,7 +23,7 @@ LaserScan::LaserScan() {
     ros::NodeHandle n;
 
     // Gibt verarbeiteten Informationen wieder aus
-    this->out = n.advertise<laser_scan_localization::LaserLocalization>("laser_scan_localization", 1000);
+    this->out = n.advertise<msl_sensor_msgs::LaserLocalization>("laser_scan_localization", 1000);
 
     // Verarbeitet die Nachrichten von urg_node
     this->in = n.subscribe("scan", 2000, &LaserScan::processScan, (LaserScan*) this);
@@ -49,7 +49,7 @@ int LaserScan::maxIntensityOfScan(const std::vector<float> intensities, int star
 
 void LaserScan::sendLocalization(const sensor_msgs::LaserScan::ConstPtr &scan, int firstMaxIndex, int secondMaxIndex)
 {
-    laser_scan_localization::LaserLocalization msg;
+	msl_sensor_msgs::LaserLocalization msg;
 
     float c = scan->ranges[firstMaxIndex] * 1000;
     float b = scan->ranges[secondMaxIndex] * 1000;
@@ -73,7 +73,7 @@ void LaserScan::sendLocalization(const sensor_msgs::LaserScan::ConstPtr &scan, i
 
 void LaserScan::sendLocalizationV2(const sensor_msgs::LaserScan::ConstPtr &scan, int firstMaxIndex, int secondMaxIndex)
 {
-    laser_scan_localization::LaserLocalization msg;
+    msl_sensor_msgs::LaserLocalization msg;
 
     float c = scan->ranges[firstMaxIndex] * 1000;
     float b = scan->ranges[secondMaxIndex] * 1000;

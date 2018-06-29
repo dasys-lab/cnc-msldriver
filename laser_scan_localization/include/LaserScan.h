@@ -1,6 +1,5 @@
 #include <ros/ros.h>
 #include <string>
-#include <geometry_msgs/PointStamped.h>
 #include <vector>
 #include <sensor_msgs/LaserScan.h>
 
