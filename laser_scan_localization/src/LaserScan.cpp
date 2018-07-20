@@ -203,7 +203,7 @@ void LaserScan::processScan(const sensor_msgs::LaserScan::ConstPtr &scan)
     printInfo(scan, secondMaxIndex);
 
     // Bestimme Positionen und versende Nachricht
-    sendLocalization(scan, firstMaxIndex, secondMaxIndex);
+    sendLocalizationV2(scan, firstMaxIndex, secondMaxIndex);
     // sendLocalizationV2(scan, firstMaxIndex, secondMaxIndex);
 }
 }
