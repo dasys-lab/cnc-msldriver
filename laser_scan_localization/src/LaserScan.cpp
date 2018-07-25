@@ -55,8 +55,8 @@ void LaserScan::sendLocalization(const sensor_msgs::LaserScan::ConstPtr &scan, i
     float r2 = scan->ranges[secondMaxIndex] * 1000;
     float al2 = scan->angle_min + scan->angle_increment * secondMaxIndex;
     geometry_msgs::Point msgPointTwo;
-    msgPointTwo.x = r2 * cos(al2);
-    msgPointTwo.y = r2 * sin(al2);
+    msgPointTwo.x = -r2 * cos(al2);
+    msgPointTwo.y = -r2 * sin(al2);
     msgPointTwo.z = 0;
     msg.points.push_back(msgPointTwo);
 
@@ -64,8 +64,8 @@ void LaserScan::sendLocalization(const sensor_msgs::LaserScan::ConstPtr &scan, i
     float r1 = scan->ranges[firstMaxIndex] * 1000;
     float al1 = scan->angle_min + scan->angle_increment * firstMaxIndex;
     geometry_msgs::Point msgPointOne;
-    msgPointOne.x = r1 * cos(al1);
-    msgPointOne.y = r1 * sin(al1);
+    msgPointOne.x = -r1 * cos(al1);
+    msgPointOne.y = -r1 * sin(al1);
     msgPointOne.z = 0;
     msg.points.push_back(msgPointOne);
 
