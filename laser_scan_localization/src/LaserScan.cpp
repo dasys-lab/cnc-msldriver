@@ -51,14 +51,7 @@ void LaserScan::sendLocalization(const sensor_msgs::LaserScan::ConstPtr &scan, i
 {
     msl_sensor_msgs::LaserLocalization msg;
 
-    float r1 = scan->ranges[firstMaxIndex] * 1000;
-    float al1 = scan->angle_min + scan->angle_increment * firstMaxIndex;
-    geometry_msgs::Point msgPointOne;
-    msgPointOne.x = r1 * cos(al1);
-    msgPointOne.y = r1 * sin(al1);
-    msgPointOne.z = 0;
-    msg.points.push_back(msgPointOne);
-
+    // Linke Torpfosten
     float r2 = scan->ranges[secondMaxIndex] * 1000;
     float al2 = scan->angle_min + scan->angle_increment * secondMaxIndex;
     geometry_msgs::Point msgPointTwo;
@@ -66,6 +59,15 @@ void LaserScan::sendLocalization(const sensor_msgs::LaserScan::ConstPtr &scan, i
     msgPointTwo.y = r2 * sin(al2);
     msgPointTwo.z = 0;
     msg.points.push_back(msgPointTwo);
+
+    // Rechte Torpfosten
+    float r1 = scan->ranges[firstMaxIndex] * 1000;
+    float al1 = scan->angle_min + scan->angle_increment * firstMaxIndex;
+    geometry_msgs::Point msgPointOne;
+    msgPointOne.x = r1 * cos(al1);
+    msgPointOne.y = r1 * sin(al1);
+    msgPointOne.z = 0;
+    msg.points.push_back(msgPointOne);
 
     out.publish(msg);
 }
@@ -170,11 +172,10 @@ void LaserScan::processScan(const sensor_msgs::LaserScan::ConstPtr &scan)
     int secondMaxIndex = maxIntensityOfScan(scan->intensities, secondMaxBorderLeft, secondMaxBorderRight);
 
     // Testweise Info ausgeben
-    ROS_INFO("INFO FIRST MAX:");
-    printInfo(scan, firstMaxIndex);
-
-    ROS_INFO("INFO SECOND MAX:");
+    ROS_INFO("INFO SECOND MAX (LEFT):");
     printInfo(scan, secondMaxIndex);
+    ROS_INFO("INFO FIRST MAX (RIGHT):");
+    printInfo(scan, firstMaxIndex);
 
     // Bestimme Positionen und versende Nachricht
     sendLocalization(scan, firstMaxIndex, secondMaxIndex);
