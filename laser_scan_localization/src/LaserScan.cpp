@@ -49,48 +49,22 @@ int LaserScan::maxIntensityOfScan(const std::vector<float> intensities, int star
 
 void LaserScan::sendLocalization(const sensor_msgs::LaserScan::ConstPtr &scan, int firstMaxIndex, int secondMaxIndex)
 {
-	msl_sensor_msgs::LaserLocalization msg;
-
-    float c = scan->ranges[firstMaxIndex] * 1000;
-    float b = scan->ranges[secondMaxIndex] * 1000;
-    float a = goalWidth;
-
-    geometry_msgs::Point msgPointOne;
-    msgPointOne.x = (scan->ranges[firstMaxIndex]) * 1000;
-    msgPointOne.y = 0;
-    msgPointOne.z = 0;
-
-    geometry_msgs::Point msgPointTwo;
-    msgPointTwo.x = ((pow(b, 2) + pow(c, 2) - pow(a, 2)) / (2 * c));
-    msgPointTwo.y = sqrt(pow(b, 2) - pow(msgPointTwo.x, 2));
-    msgPointTwo.z = 0;
-
-    msg.points.push_back(msgPointOne);
-    msg.points.push_back(msgPointTwo);
-
-    out.publish(msg);
-}
-
-void LaserScan::sendLocalizationV2(const sensor_msgs::LaserScan::ConstPtr &scan, int firstMaxIndex, int secondMaxIndex)
-{
     msl_sensor_msgs::LaserLocalization msg;
 
-    float c = scan->ranges[firstMaxIndex] * 1000;
-    float b = scan->ranges[secondMaxIndex] * 1000;
-    float a = goalWidth;
-    float al = (scan->angle_increment * abs(firstMaxIndex - secondMaxIndex));
-
+    float r1 = scan->ranges[firstMaxIndex] * 1000;
+    float al1 = scan->angle_min + scan->angle_increment * firstMaxIndex;
     geometry_msgs::Point msgPointOne;
-    msgPointOne.x = (scan->ranges[firstMaxIndex]) * 1000;
-    msgPointOne.y = 0;
+    msgPointOne.x = r1 * cos(al1);
+    msgPointOne.y = r1 * sin(al1);
     msgPointOne.z = 0;
-
-    geometry_msgs::Point msgPointTwo;
-    msgPointTwo.x = b * cos(al);
-    msgPointTwo.y = b * sin(al);
-    msgPointTwo.z = al;
-
     msg.points.push_back(msgPointOne);
+
+    float r2 = scan->ranges[secondMaxIndex] * 1000;
+    float al2 = scan->angle_min + scan->angle_increment * secondMaxIndex;
+    geometry_msgs::Point msgPointTwo;
+    msgPointTwo.x = r2 * cos(al2);
+    msgPointTwo.y = r2 * sin(al2);
+    msgPointTwo.z = 0;
     msg.points.push_back(msgPointTwo);
 
     out.publish(msg);
@@ -203,8 +177,7 @@ void LaserScan::processScan(const sensor_msgs::LaserScan::ConstPtr &scan)
     printInfo(scan, secondMaxIndex);
 
     // Bestimme Positionen und versende Nachricht
-    sendLocalizationV2(scan, firstMaxIndex, secondMaxIndex);
-    // sendLocalizationV2(scan, firstMaxIndex, secondMaxIndex);
+    sendLocalization(scan, firstMaxIndex, secondMaxIndex);
 }
 }
 
