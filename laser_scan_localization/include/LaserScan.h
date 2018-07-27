@@ -19,11 +19,6 @@ namespace msl
 
 		ros::Subscriber in;
 
-		/**
-		 * Abstand zwischen den beiden Torpfosten (FIX!)
-		 */
-		double goalWidth;
-
 		// Grenzen der Intervalle
 		int firstMaxBorderLeft;
 		int firstMaxBorderRight;
@@ -33,9 +28,9 @@ namespace msl
 
 		void processScan(const sensor_msgs::LaserScan::ConstPtr &scan);
 
+                int maxIntensityOfScan(int start, int end);
 		int maxIntensityOfScan(const std::vector<float> intensities, int start, int end);
 		void sendLocalization(const sensor_msgs::LaserScan::ConstPtr &scan, int firstMaxIndex, int secondMaxIndex);
-		void sendLocalizationV2(const sensor_msgs::LaserScan::ConstPtr &scan, int firstMaxIndex, int secondMaxIndex);
 		void printInfo(const sensor_msgs::LaserScan::ConstPtr &scan, int &maxIndex);
 
 	};
