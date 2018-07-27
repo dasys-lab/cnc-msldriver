@@ -16,10 +16,6 @@ namespace msl
 {
 
 LaserScan::LaserScan() {
-	supplementary::SystemConfig *sc = supplementary::SystemConfig::getInstance();
-
-    this->goalWidth = (*sc)["LaserScanLocalization"]->get<double>("LaserScanLocalization", "goalWidth", NULL);
-
     ros::NodeHandle n;
 
     // Gibt verarbeiteten Informationen wieder aus
@@ -29,7 +25,7 @@ LaserScan::LaserScan() {
     this->in = n.subscribe("scan", 2000, &LaserScan::processScan, (LaserScan*) this);
 }
 
-// Maximum bestimmen fuer den Vektor
+// Maximale Intensitaet zwischen start und end.
 int LaserScan::maxIntensityOfScan(const std::vector<float> intensities, int start, int end)
 {
     float maxIntensity = 0.0;
@@ -45,6 +41,12 @@ int LaserScan::maxIntensityOfScan(const std::vector<float> intensities, int star
         }
     }
     return maxIndex;
+}
+
+// Maximum ist der Index zwischen start und end.
+int LaserScan::maxIntensityOfScan(int start, int end)
+{
+	return start + round((end - start) / 2);
 }
 
 void LaserScan::sendLocalization(const sensor_msgs::LaserScan::ConstPtr &scan, int firstMaxIndex, int secondMaxIndex)
@@ -106,9 +108,6 @@ void LaserScan::processScan(const sensor_msgs::LaserScan::ConstPtr &scan)
         return;
     }
 
-    int maxIndex = maxIntensityOfScan(scan->intensities, 0, scan->intensities.size());
-    // printInfo(scan, maxIndex);
-
     //
     // Bestimmen von zwei Bereichen mit hohen Ausschlaegen
     //
@@ -157,7 +156,7 @@ void LaserScan::processScan(const sensor_msgs::LaserScan::ConstPtr &scan)
 
     if (firstMaxBorderLeft == -1 || firstMaxBorderRight == -1 || secondMaxBorderLeft == -1 || secondMaxBorderRight == -1)
     {
-        // Bad scan!
+        // Invalider Scan: Es konnten nicht zwei Ausschlaege gefunden werden
         ROS_INFO("Invalid max interval!");
 
         ROS_INFO("g1: %d", firstMaxBorderLeft);
@@ -168,8 +167,8 @@ void LaserScan::processScan(const sensor_msgs::LaserScan::ConstPtr &scan)
     }
 
     // Indexe mit Maximas bestimmen
-    int firstMaxIndex = maxIntensityOfScan(scan->intensities, firstMaxBorderLeft, firstMaxBorderRight);
-    int secondMaxIndex = maxIntensityOfScan(scan->intensities, secondMaxBorderLeft, secondMaxBorderRight);
+    int firstMaxIndex = maxIntensityOfScan(firstMaxBorderLeft, firstMaxBorderRight);
+    int secondMaxIndex = maxIntensityOfScan(secondMaxBorderLeft, secondMaxBorderRight);
 
     // Testweise Info ausgeben
     ROS_INFO("INFO SECOND MAX (LEFT):");
