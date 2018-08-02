@@ -109,8 +109,8 @@ namespace camera
             void enableGamma(bool value);
             bool isGamma();
 
-            void setGamma(unsigned char value);
-            unsigned char getGamma();
+            void setGamma(unsigned short value);
+            unsigned short getGamma();
 
             //set Shutter ... 0 4000
             void setShutter(unsigned short value);

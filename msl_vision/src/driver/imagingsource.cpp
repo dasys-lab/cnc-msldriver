@@ -264,14 +264,14 @@ namespace camera
         return isFeature(DC1394_FEATURE_GAMMA);
     }
 
-    void ImagingSource::setGamma(unsigned char value)
+    void ImagingSource::setGamma(unsigned short value)
     {
         setFeatureValue(DC1394_FEATURE_GAMMA, value);
     }
 
-    unsigned char ImagingSource::getGamma()
+    unsigned short ImagingSource::getGamma()
     {
-        return getFeatureValue<unsigned char>(DC1394_FEATURE_GAMMA);
+        return getFeatureValue<unsigned short>(DC1394_FEATURE_GAMMA);
     }
 
     void ImagingSource::setShutter(unsigned short value)
